@@ -2,6 +2,7 @@ from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel, Field
 from tcc.dominio.enums.tipo_cliente import TipoCliente
+from tcc.dominio.enums.como_encontrou import ComoEncontrou
 
 
 class ClienteCriarRequest(BaseModel):
@@ -35,7 +36,11 @@ class ClienteCriarRequest(BaseModel):
         examples=['fagner99@gmail.com']
     )
 
-    como_encontrou: str = Field()
+    como_encontrou: str = Field(
+        ...,
+        default=ComoEncontrou.CONTATO_DIRETO,
+        examples=['Contato Direto']
+    )
 
     tipo: str = Field(
         default=TipoCliente.INTERESSADO,
