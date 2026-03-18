@@ -14,12 +14,12 @@ class ClienteCriarRequest(BaseModel):
         examples=['Fagner Silva dos Santos']
     )
 
-    codigo: str | int = Field(
+    codigo: int = Field(
         ...,
         min_length=5,
         max_length=10,
         description='Código de referência do cliente.',
-        examples=['007512', 'ASD3123']
+        examples=['007512', '113123']
     )
 
     celular: int = Field(
@@ -37,12 +37,12 @@ class ClienteCriarRequest(BaseModel):
     )
 
     como_encontrou: str = Field(
-        ...,
         default=ComoEncontrou.CONTATO_DIRETO,
         examples=['Contato Direto']
     )
 
     tipo: str = Field(
+        max_length=12,
         default=TipoCliente.INTERESSADO,
         description='Tipo do cliente.',
         examples=['Interessado']
