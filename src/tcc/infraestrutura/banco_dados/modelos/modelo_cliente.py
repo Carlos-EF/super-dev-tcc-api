@@ -38,6 +38,11 @@ class ModeloCliente(ModeloBase):
     )
 
     como_encontrou = Column(
-        String(),
+        String(14),
         nullable=True
+    )
+
+    status = Column(
+        String(7),
+        nullable=False
     )
