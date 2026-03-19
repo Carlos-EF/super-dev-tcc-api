@@ -3,9 +3,17 @@ from uuid import UUID
 from pydantic import BaseModel, Field
 from tcc.dominio.enums.tipo_cliente import TipoCliente
 from tcc.dominio.enums.como_encontrou import ComoEncontrou
+from tcc.dominio.enums.status import Status
 
 
 class ClienteCriarRequest(BaseModel):
+    status: str = Field(
+        default=Status.ATIVO,
+        description='Status do cliente dentro do sistema.',
+        examples=['ATIVO']
+    )
+
+
     nome: str = Field(
         ...,
         min_length=3,
