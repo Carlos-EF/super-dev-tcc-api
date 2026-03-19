@@ -6,8 +6,9 @@ from tcc.dominio.enums.como_encontrou import ComoEncontrou
 from tcc.dominio.enums.status import Status
 
 
-class ClienteCriarRequest(BaseModel):
+class CriarClienteRequest(BaseModel):
     status: str = Field(
+        ...,
         default=Status.ATIVO,
         description='Status do cliente dentro do sistema.',
         examples=['ATIVO']
@@ -45,11 +46,14 @@ class ClienteCriarRequest(BaseModel):
     )
 
     como_encontrou: str = Field(
+        ...,
         default=ComoEncontrou.CONTATO_DIRETO,
+        description='Como o cliente entrou em contato.',
         examples=['Contato Direto']
     )
 
     tipo: str = Field(
+        ...,
         max_length=12,
         default=TipoCliente.INTERESSADO,
         description='Tipo do cliente.',
@@ -81,8 +85,72 @@ class AlterarClienteRequest(BaseModel):
     )
 
     tipo: str = Field(
+        ...,
         max_length=12,
         default=TipoCliente.INTERESSADO,
         description='Tipo do cliente.',
         examples=['Interessado']
+    )
+
+
+class ClienteResponse(BaseModel):
+    id: UUID = Field(
+        ...,
+        description=['Identificador (UUID v7) único do cliente.'],
+        examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
+    )
+
+    status: str = Field(
+        ...,
+        description='Status do cliente dentro do sistema.',
+        examples=['ATIVO']
+    )
+
+
+    nome: str = Field(
+        ...,
+        description='Nome completo do cliente.',
+        examples=['Fagner Silva dos Santos']
+    )
+
+    codigo: int = Field(
+        ...,
+        description='Código de referência do cliente.',
+        examples=['007512', '113123']
+    )
+
+    celular: int = Field(
+        ...,
+        description='Número de celular do cliente.',
+        examples=['47912345679']
+    )
+
+    email: str = Field(
+        ...,
+        description='E-Mail do cliente.',
+        examples=['fagner99@gmail.com']
+    )
+
+    como_encontrou: str = Field(
+        ...,
+        description='Como o cliente entrou em contato.',
+        examples=['Contato Direto']
+    )
+
+    tipo: str = Field(
+        ...,
+        description='Tipo do cliente.',
+        examples=['Interessado']
+    )
+
+    criado_em: datetime = Field(
+        ...,
+        description='Data e hora da criação do registro do cliente.',
+        examples=['2026-03-19T10:30:00']
+    )
+
+    alterado_em: datetime | None = Field(
+        None,
+        description='Data e hora da última modificação do registro do cliente.',
+        examples=['2026-03-19T12:00:43']
     )
