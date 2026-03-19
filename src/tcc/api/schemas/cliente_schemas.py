@@ -55,3 +55,34 @@ class ClienteCriarRequest(BaseModel):
         description='Tipo do cliente.',
         examples=['Interessado']
     )
+
+
+class AlterarClienteRequest(BaseModel):
+    nome: str = Field(
+        ...,
+        min_length=3,
+        max_length=100,
+        description='Nome completo do cliente.',
+        examples=['Fagner Silva dos Santos']
+    )
+
+    celular: int = Field(
+        ...,
+        max_length=11,
+        description='Número de celular do cliente.',
+        examples=['47912345679']
+    )
+
+    email: str = Field(
+        ...,
+        max_length=40,
+        description='E-Mail do cliente.',
+        examples=['fagner99@gmail.com']
+    )
+
+    tipo: str = Field(
+        max_length=12,
+        default=TipoCliente.INTERESSADO,
+        description='Tipo do cliente.',
+        examples=['Interessado']
+    )
