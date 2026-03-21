@@ -66,3 +66,37 @@ def listar_clientes(
     repositorio = RepositorioCliente(sessao=session)
     clientes = repositorio.listar()
     return clientes
+
+
+@router.put(
+    '/{id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Editar dados de um cliente',
+    responses= {
+        204: {
+            'description': 'Cliente encontrado e modificado com sucesso.'
+        },
+        404: {
+            'description': 'Cliente não encontrado.'
+        }
+    }
+)
+def editar_cliente(
+    id: UUID,
+    dados: AlterarClienteRequest,
+    session: Session = Depends(obter_sessao)
+):
+    """Editar dados de um cliente já cadastrado buscando por seu ID."""
+    repositorio = RepositorioCliente(sessao=session)
+    editou = repositorio.editar(
+        id,
+        nome=dados.nome,
+        celular=dados.celular,
+        email=dados.email,
+        tipo=dados.tipo
+    )
+    if not editou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Cliente não encontrado.'
+        )
