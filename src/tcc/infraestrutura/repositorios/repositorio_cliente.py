@@ -21,21 +21,18 @@ class RepositorioCliente:
             self,
             id: UUID,
             nome: str,
-            codigo: int,
             tipo: str,
             celular: int,
             email: str,
-            como_encontrou: str):
+            ):
         cliente = self.sessao.query(ModeloCliente).filter(ModeloCliente.id == id).first()
         if not cliente:
             return False
         
         cliente.nome = nome
-        cliente.codigo = codigo
         cliente.tipo = tipo
         cliente.celular = celular
         cliente.email = email
-        cliente.como_encontrou = como_encontrou
 
         self.sessao.commit()
         return True
