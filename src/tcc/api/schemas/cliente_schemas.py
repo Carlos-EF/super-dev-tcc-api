@@ -60,6 +60,20 @@ class CriarClienteRequest(BaseModel):
         examples=['Interessado']
     )
 
+    model_config= {
+        'json_schema_extra': {
+            'examples': {
+                'status': 'ATIVO',
+                'nome': 'Fagner Silva dos Santos',
+                'codigo': '113123',
+                'celular': '47912345679',
+                'email': 'fagner99@gmail.com',
+                'como_encontrou': 'Contato Direto',
+                'tipo': 'Interessado',
+            }
+        }
+    }
+
 
 class AlterarClienteRequest(BaseModel):
     nome: str = Field(
@@ -92,6 +106,17 @@ class AlterarClienteRequest(BaseModel):
         examples=['Interessado']
     )
 
+    model_config= {
+        'json_schema_extra': {
+            'examples': {
+                'nome': 'Fagner Silva dos Santos',
+                'celular': '47912345679',
+                'email': 'fagner99@gmail.com',
+                'tipo': 'Interessado',
+            }
+        }
+    }
+
 
 class ClienteResponse(BaseModel):
     id: UUID = Field(
@@ -116,7 +141,7 @@ class ClienteResponse(BaseModel):
     codigo: int = Field(
         ...,
         description='Código de referência do cliente.',
-        examples=['007512', '113123']
+        examples=['113123']
     )
 
     celular: int = Field(
@@ -154,3 +179,20 @@ class ClienteResponse(BaseModel):
         description='Data e hora da última modificação do registro do cliente.',
         examples=['2026-03-19T12:00:43']
     )
+
+    model_config= {
+        'json_schema_extra': {
+            'examples': {
+                'id': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
+                'status': 'ATIVO',
+                'nome': 'Fagner Silva dos Santos',
+                'codigo': '113123',
+                'celular': '47912345679',
+                'email': 'fagner99@gmail.com',
+                'como_encontrou': 'Contato Direto',
+                'tipo': 'Interessado',
+                'criado_em': '2026-03-19T10:30:00',
+                'alterado_em': None,
+            }
+        }
+    }
