@@ -45,3 +45,24 @@ def criar_cliente(
     repositorio = RepositorioCliente(sessao=session)
     cliente = repositorio.criar(cliente)
     return cliente
+
+
+@router.get(
+    "",
+    response_model=list[ClienteResponse],
+    status_code=status.HTTP_200_OK,
+    summary='Listar todos os clientes cadastrados',
+    responses= {
+        200: {
+            'description': 'Lista de clientes cadastrados',
+            'model': list[ClienteResponse]
+        }
+    }
+)
+def listar_clientes(
+    session: Session = Depends(obter_sessao)
+):
+    """Listagem de todos os clientes cadastrados."""
+    repositorio = RepositorioCliente(sessao=session)
+    clientes = repositorio.listar()
+    return clientes
