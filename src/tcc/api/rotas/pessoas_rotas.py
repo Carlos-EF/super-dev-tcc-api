@@ -122,7 +122,7 @@ def buscar_cliente(
 ):
     """Busca um cliente por seu ID."""
     repositorio = RepositorioCliente(sessao=session)
-    cliente = repositorio.buscar_por_id(id)
+    cliente = repositorio.obter_por_id(id)
     if not cliente:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
@@ -130,3 +130,57 @@ def buscar_cliente(
         )
     
     return cliente
+
+
+@router.put(
+    '{id}/inativar',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Inativar o cliente.',
+    responses= {
+        204: {
+            'description': 'Cliente inativado com sucesso.'
+        },
+        404: {
+            'description': 'Cliente não encontrado.'
+        },
+    },
+)
+def inativar_cliente(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Inativar um cliente buscando por seu ID."""
+    repositorio = RepositorioCliente(sessao=session)
+    inativou = repositorio.inativar(id)
+    if not inativou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Cliente não encontrado.'
+        )
+
+
+@router.put(
+    '{id}/ativar',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Ativar o cliente.',
+    responses= {
+        204: {
+            'description': 'Cliente ativado com sucesso.'
+        },
+        404: {
+            'description': 'Cliente não encontrado.'
+        },
+    },
+)
+def ativar_cliente(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Ativar um cliente buscando por seu ID."""
+    repositorio = RepositorioCliente(sessao=session)
+    ativou = repositorio.ativar(id)
+    if not ativou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Cliente não encontrado.'
+        )
