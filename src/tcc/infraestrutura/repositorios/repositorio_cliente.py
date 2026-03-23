@@ -72,3 +72,11 @@ class RepositorioCliente:
         self.sessao.delete(cliente)
         self.sessao.commit()
         return True
+    
+
+    def obter_por_id(self, id: UUID) -> ModeloCliente | None:
+        cliente = self.sessao.query(ModeloCliente).filter(ModeloCliente.id == id).first()
+        if not cliente:
+            return False
+        
+        return cliente
