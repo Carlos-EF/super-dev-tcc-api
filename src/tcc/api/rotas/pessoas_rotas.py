@@ -184,3 +184,32 @@ def ativar_cliente(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Cliente não encontrado.'
         )
+    
+
+@router.delete(
+    '{id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Deletar um cliente.',
+    description='Apaga um cliente quando encontrado',
+    responses={
+        204: {
+            'description': 'Cliente encontrado e deletado com sucesso.'
+        },
+        404: {
+            'description': 'Cliente não encontrado.'
+        },
+    },
+)
+def apagar_cliente(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Deleta um cliente buscando por seu ID."""
+    repositorio = RepositorioCliente(sessao=session)
+
+    apagou = repositorio.apagar(id)
+    if not apagou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Cliente não encontrado.'
+        )
