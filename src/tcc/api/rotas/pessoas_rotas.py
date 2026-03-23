@@ -100,3 +100,33 @@ def editar_cliente(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Cliente não encontrado.'
         )
+    
+
+@router.get(
+    "/{id}",
+    response_model=ClienteResponse,
+    status_code=status.HTTP_200_OK,
+    summary='Buscar um cliente filtrando por seu ID.',
+    description="""
+        Busca um cliente específico pelo seu ID (UUID v7).""",
+    responses= {
+        200: {
+            'description': 'Cliente encontrado.',
+            'model': ClienteResponse
+        },
+    },
+)
+def buscar_cliente(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Busca um cliente por seu ID."""
+    repositorio = RepositorioCliente(sessao=session)
+    cliente = repositorio.buscar_por_id(id)
+    if not cliente:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Cliente não encontrado.'
+        )
+    
+    return cliente
