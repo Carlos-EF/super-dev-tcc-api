@@ -91,3 +91,16 @@ class RepositorioCorretor:
         corretor.status = "ATIVO"
         self.sessao.commit()
         return True
+    
+
+    def inativar(
+            self,
+            id: UUID
+    ):
+        corretor = self.sessao.query(ModeloCorretor).filter(ModeloCorretor.id == id).first()
+        if not corretor:
+            return False
+
+        corretor.status = "INATIVO"
+        self.sessao.commit()
+        return True
