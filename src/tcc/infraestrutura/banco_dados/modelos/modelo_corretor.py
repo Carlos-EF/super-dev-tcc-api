@@ -12,6 +12,11 @@ class ModeloCorretor(ModeloBase):
         nullable=False
     )
 
+    status = Column(
+        String(7),
+        nullable=False
+    )
+
     nome_completo = Column(
         String(60),
         nullable=False
