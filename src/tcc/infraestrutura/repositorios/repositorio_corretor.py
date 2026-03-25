@@ -78,3 +78,16 @@ class RepositorioCorretor:
         self.sessao.delete(corretor)
         self.sessao.commit()
         return True
+    
+
+    def ativar(
+            self,
+            id: UUID
+    ):
+        corretor = self.sessao.query(ModeloCorretor).filter(ModeloCorretor.id == id).first()
+        if not corretor:
+            return False
+
+        corretor.status = "ATIVO"
+        self.sessao.commit()
+        return True
