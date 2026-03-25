@@ -46,3 +46,11 @@ class RepositorioCorretor:
 
         self.sessao.commit()
         return True
+    
+
+    def listar(
+            self
+    ) -> list[ModeloCorretor]:
+        corretores = self.sessao.query(ModeloCorretor).all()
+
+        return corretores
