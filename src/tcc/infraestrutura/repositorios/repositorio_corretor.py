@@ -1,5 +1,6 @@
 from uuid import UUID
 from sqlalchemy.orm import Session
+from datetime import datetime
 from tcc.infraestrutura.banco_dados.modelos.modelo_corretor import ModeloCorretor
 
 
@@ -20,3 +21,28 @@ class RepositorioCorretor:
         self.sessao.flush(corretor)
 
         return corretor
+    
+
+    def editar(
+            self,
+            id: UUID,
+            nome: str,
+            celular: int,
+            email: str,
+            data_nascimento: datetime,
+            rg: int,
+            cpf: int
+    ):
+        corretor = self.sessao.query(ModeloCorretor).filter(ModeloCorretor.id == id).first()
+        if not corretor:
+            return False
+        
+        corretor.nome_completo = nome
+        corretor.celular = celular
+        corretor.email = email
+        corretor.data_nascimento = data_nascimento
+        corretor.rg = rg
+        corretor.cpf = cpf
+
+        self.sessao.commit()
+        return True
