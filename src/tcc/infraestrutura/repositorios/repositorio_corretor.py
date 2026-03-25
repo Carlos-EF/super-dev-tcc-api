@@ -65,3 +65,16 @@ class RepositorioCorretor:
             return False
         
         return corretor
+    
+
+    def apagar(
+            self,
+            id: UUID
+    ):
+        corretor = self.sessao.query(ModeloCorretor).filter(ModeloCorretor.id == id).first()
+        if not corretor:
+            return False
+        
+        self.sessao.delete(corretor)
+        self.sessao.commit()
+        return True
