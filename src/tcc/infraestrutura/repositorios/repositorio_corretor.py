@@ -54,3 +54,14 @@ class RepositorioCorretor:
         corretores = self.sessao.query(ModeloCorretor).all()
 
         return corretores
+    
+
+    def obter_por_id(
+            self,
+            id: UUID
+    ) -> ModeloCorretor | None:
+        corretor = self.sessao.query(ModeloCorretor).filter(ModeloCorretor.id == id).first()
+        if not corretor:
+            return False
+        
+        return corretor
