@@ -23,7 +23,7 @@ class CriarClienteRequest(BaseModel):
         examples=['Fagner Silva dos Santos']
     )
 
-    codigo: int = Field(
+    codigo: str = Field(
         ...,
         min_length=5,
         max_length=10,
@@ -31,7 +31,7 @@ class CriarClienteRequest(BaseModel):
         examples=['007512', '113123']
     )
 
-    celular: int = Field(
+    celular: str = Field(
         ...,
         max_length=11,
         description='Número de celular do cliente.',
@@ -84,7 +84,7 @@ class AlterarClienteRequest(BaseModel):
         examples=['Fagner Silva dos Santos']
     )
 
-    celular: int = Field(
+    celular: str = Field(
         ...,
         max_length=11,
         description='Número de celular do cliente.',
@@ -138,13 +138,13 @@ class ClienteResponse(BaseModel):
         examples=['Fagner Silva dos Santos']
     )
 
-    codigo: int = Field(
+    codigo: str = Field(
         ...,
         description='Código de referência do cliente.',
         examples=['113123']
     )
 
-    celular: int = Field(
+    celular: str = Field(
         ...,
         description='Número de celular do cliente.',
         examples=['47912345679']
