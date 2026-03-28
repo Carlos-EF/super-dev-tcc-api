@@ -129,3 +129,30 @@ def editar_corretor(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Corretor não encontrado.'
         )
+
+
+@router.put(
+    '/{id}/ativar',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Ativar um corretor',
+    responses= {
+        204: {
+            'description': 'Corretor encontrado e ativado com sucesso.'
+        },
+        404: {
+            'description': 'Corretor não encontrado.'
+        },
+    },
+)
+def ativar_corretor(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Ativa um corretor filtrando por seu ID."""
+    repositorio = RepositorioCorretor(sessao=session)
+    ativou = repositorio.ativar(id)
+    if not ativou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Corretor não encontrado.'
+        )
