@@ -37,7 +37,7 @@ def listar_corretores(
 
 
 @router.get(
-    '{id}',
+    '/{id}',
     response_model= CorretorResponse,
     status_code=status.HTTP_200_OK,
     summary='Busca um corretor filtrando por seu ID.',
@@ -67,7 +67,7 @@ def buscar_corretor(
 
 
 @router.delete(
-    '{id}',
+    '/{id}',
     status_code=status.HTTP_204_NO_CONTENT,
     summary='Deleta um corretor.',
     description="""
@@ -89,6 +89,42 @@ def deletar_corretor(
     repositorio = RepositorioCorretor(sessao=session)
     apagou = repositorio.apagar(id)
     if not apagou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Corretor não encontrado.'
+        )
+    
+
+@router.put(
+    '/{id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Editar dados de um corretor',
+    responses= {
+        204: {
+            'description': 'Corretor encontrado e alterado com sucesso.'
+        },
+        404: {
+            'description': 'Corretor não encontrado.'
+        },
+    },
+)
+def editar_corretor(
+    id: UUID,
+    dados: AlterarCorretorRequest,
+    session: Session = Depends(obter_sessao)
+):
+    """Editar dados de um corretor já cadastrado filtrando por seu ID."""
+    repositorio = RepositorioCorretor(sessao=session)
+    editou = repositorio.editar(
+        id,
+        nome=dados.nome_completo,
+        celular=dados.celular,
+        email=dados.email,
+        data_nascimento=dados.data_nascimento,
+        rg=dados.rg,
+        cpf=dados.cpf
+        )
+    if not editou:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Corretor não encontrado.'
