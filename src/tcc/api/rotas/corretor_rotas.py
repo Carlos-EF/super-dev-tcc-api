@@ -183,3 +183,38 @@ def inativar_corretor(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Corretor não encontrado.'
         )
+    
+
+router.post(
+    '',
+    response_model=CorretorResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary='Criar novo corretor',
+    responses={
+        201: {
+            'description': 'Corretor criado com sucesso.',
+            'model': CorretorResponse
+        },
+    },
+)
+def criar_corretor(
+        dados: CriarCorretorRequest,
+        session: Session = Depends(obter_sessao)
+) -> CorretorResponse:
+    """Cadastrar um novo Corretor."""
+    corretor = ModeloCorretor(
+        id=uuid7(),
+        status=dados.status,
+        nome=dados.nome_completo,
+        codigo=dados.codigo,
+        celular=dados.celular,
+        email=dados.email,
+        creci=dados.creci,
+        data_nascimento=dados.data_nascimento,
+        rg=dados.rg,
+        cpf=dados.cpf      
+    )
+
+    repositorio = RepositorioCorretor(sessao=session)
+    corretor = repositorio.criar(corretor)
+    return corretor
