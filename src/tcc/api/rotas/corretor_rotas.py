@@ -54,7 +54,7 @@ def buscar_corretor(
     id: UUID,
     session: Session = Depends(obter_sessao)
 ):
-    """Listagem de todos os corretores cadastrados."""
+    """Busca um corretor por seu ID."""
     repositorio = RepositorioCorretor(sessao=session)
     corretor = repositorio.obter_por_id(id)
     if not corretor:
@@ -64,3 +64,32 @@ def buscar_corretor(
         )
     
     return corretor
+
+
+@router.delete(
+    '{id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Deleta um corretor.',
+    description="""
+        Busca um corretor específico pelo seu ID (UUID v7) e o apaga.""",
+    responses= {
+        204: {
+            'description': 'Corretor encontrado e deletado com sucesso.',
+        },
+        404: {
+            'description': 'Corretor não encontrado.',
+        },
+    },
+)
+def deletar_corretor(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Deleta um corretor buscando por seu ID."""
+    repositorio = RepositorioCorretor(sessao=session)
+    apagou = repositorio.apagar(id)
+    if not apagou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Corretor não encontrado.'
+        )
