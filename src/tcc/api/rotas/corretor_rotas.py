@@ -156,3 +156,30 @@ def ativar_corretor(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Corretor não encontrado.'
         )
+    
+
+@router.put(
+    '/{id}/inativar',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Inativar um corretor',
+    responses= {
+        204: {
+            'description': 'Corretor encontrado e inativado com sucesso.'
+        },
+        404: {
+            'description': 'Corretor não encontrado.'
+        },
+    },
+)
+def inativar_corretor(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Inativa um corretor filtrando por seu ID."""
+    repositorio = RepositorioCorretor(sessao=session)
+    inativou = repositorio.inativar(id)
+    if not inativou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Corretor não encontrado.'
+        )
