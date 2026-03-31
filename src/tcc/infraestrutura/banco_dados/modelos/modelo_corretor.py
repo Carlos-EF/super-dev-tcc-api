@@ -28,7 +28,7 @@ class ModeloCorretor(ModeloBase):
     )
 
     celular = Column(
-        Integer(11),
+        String(11),
         nullable=False
     )
 
@@ -48,12 +48,12 @@ class ModeloCorretor(ModeloBase):
     )
 
     rg = Column(
-        Integer(7),
+        String(7),
         nullable=True
     )
 
     cpf = Column(
-        Integer(11), 
+        String(11), 
         nullable=True
     )
 
