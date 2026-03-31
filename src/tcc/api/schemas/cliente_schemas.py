@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel, Field
-from tcc.dominio.enums.tipo_cliente import TipoCliente
+from src.tcc.dominio.enums.tipo_pessoa import TipoPessoa
 from tcc.dominio.enums.como_encontrou import ComoEncontrou
 from tcc.dominio.enums.status import Status
 
@@ -55,7 +55,7 @@ class CriarClienteRequest(BaseModel):
     tipo: str = Field(
         ...,
         max_length=12,
-        default=TipoCliente.INTERESSADO,
+        default=TipoPessoa.INTERESSADO,
         description='Tipo do cliente.',
         examples=['Interessado']
     )
@@ -101,7 +101,7 @@ class AlterarClienteRequest(BaseModel):
     tipo: str = Field(
         ...,
         max_length=12,
-        default=TipoCliente.INTERESSADO,
+        default=TipoPessoa.INTERESSADO,
         description='Tipo do cliente.',
         examples=['Interessado']
     )
