@@ -1,7 +1,8 @@
 from enum import Enum
 
 
-class TipoCliente(str, Enum):
+class TipoPessoa(str, Enum):
     INTERESSADO = 'Interessado'
     PROPRIETARIO = 'Proprietário'
     LOCATARIO = 'Locatário'
+    CORRETOR = 'Corretor'
