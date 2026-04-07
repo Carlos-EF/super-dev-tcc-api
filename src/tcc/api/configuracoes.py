@@ -18,7 +18,7 @@ class Configuracoes(BaseSettings):
         return self.AMBIENTE.lower() == 'prod'
     @property
     def swagger_habilitado(self) -> bool:
-        return not self.producao
+        return not self.eh_producao
     
 
 configuracoes = Configuracoes()
