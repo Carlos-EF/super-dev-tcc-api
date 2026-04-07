@@ -47,7 +47,7 @@ class CriarCorretorRequest(BaseModel):
         ...,
         max_length=5,
         description='CRECI ativo do corretor.',
-        examples=['34.215']
+        examples=['34.215F']
     )
 
     data_nascimento: str | None = Field(
@@ -78,7 +78,7 @@ class CriarCorretorRequest(BaseModel):
                 'status': 'ATIVO',
                 'nome_completo': 'Maria Souza dos Santos',
                 'codigo': '1111032',
-                'creci': '34.215',
+                'creci': '34.215F',
                 'celular': '(47) 90123-4567',
                 'email': 'maria.santos44@outlook.com',
                 'data_nascimento': '1999-02-10',
@@ -198,7 +198,7 @@ class CorretorResponse(BaseModel):
         ...,
         max_length=5,
         description='CRECI ativo do corretor.',
-        examples=['34.215']
+        examples=['34.215F']
     )
 
     data_nascimento: str | None = Field(
@@ -243,7 +243,7 @@ class CorretorResponse(BaseModel):
                 'codigo': '1111032',
                 'celular': '(47) 90123-4567',
                 'email': 'maria.santos44@outlook.com',
-                'creci': '34.215',
+                'creci': '34.215F',
                 'data_nascimento': '1999-02-10',
                 'rg': '9.543.265',
                 'cpf': '789.865.321-14',
