@@ -38,7 +38,7 @@ class ModeloCorretor(ModeloBase):
     )
 
     creci = Column(
-        Integer(5),
+        String(5),
         nullable=False
     )
 
