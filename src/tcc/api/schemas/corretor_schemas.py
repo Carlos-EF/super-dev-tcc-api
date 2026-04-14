@@ -7,10 +7,15 @@ from datetime import datetime
 
 class CriarCorretorRequest(BaseModel):
     status: str = Field(
-        ...,
         default=Status.ATIVO,
         description='Status do corretor dentro do sistema.',
         examples=['ATIVO']
+    )
+
+    tipo: str = Field(
+        default=TipoPessoa.CORRETOR,
+        description='Tipo de pessoa dentro do sistema.',
+        examples=['CORRETOR']
     )
 
     nome_completo: str = Field(
@@ -23,16 +28,14 @@ class CriarCorretorRequest(BaseModel):
 
     codigo: int = Field(
         ...,
-        min_length=5,
-        max_length=10,
         description='Código de referência do corretor.',
         examples=[100302, 1111032]
     )
 
     celular: str = Field(
         ...,
-        min_length=11,
-        max_length=11,
+        min_length=15,
+        max_length=15,
         description='Número de celular do corretor.',
         examples=['(47) 90123-4567']
     )
@@ -46,7 +49,7 @@ class CriarCorretorRequest(BaseModel):
 
     creci: str = Field(
         ...,
-        max_length=5,
+        max_length=7,
         description='CRECI ativo do corretor.',
         examples=['34.215F']
     )
@@ -59,24 +62,25 @@ class CriarCorretorRequest(BaseModel):
 
     rg: str | None = Field(
         None,
-        min_length=7,
-        max_length=7,
+        min_length=9,
+        max_length=9,
         description='RG do corretor.',
         examples=['9.543.265']
     )
 
     cpf: str | None = Field(
         None,
-        min_length=11,
-        max_length=11,
+        min_length=14,
+        max_length=14,
         description='CPF do corretor.',
         examples=['789.865.321-14']
     )
 
     model_config = {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'status': 'ATIVO',
+                'tipo': 'CORRETOR',
                 'nome_completo': 'Maria Souza dos Santos',
                 'codigo': 1111032,
                 'creci': '34.215F',
@@ -85,7 +89,7 @@ class CriarCorretorRequest(BaseModel):
                 'data_nascimento': '10/02/1999',
                 'rg': '9.543.265',
                 'cpf': '789.865.321-14',
-            }
+            }]
         }
     }
 
@@ -101,8 +105,8 @@ class AlterarCorretorRequest(BaseModel):
 
     celular: str = Field(
         ...,
-        min_length=11,
-        max_length=11,
+        min_length=15,
+        max_length=15,
         description='Número de celular do corretor.',
         examples=['(47) 90123-4567']
     )
@@ -122,30 +126,30 @@ class AlterarCorretorRequest(BaseModel):
 
     rg: str | None = Field(
         None,
-        min_length=7,
-        max_length=7,
+        min_length=9,
+        max_length=9,
         description='RG do corretor.',
         examples=['9.543.265']
     )
 
     cpf: str | None = Field(
         None,
-        min_length=11,
-        max_length=11,
+        min_length=14,
+        max_length=14,
         description='CPF do corretor.',
         examples=['789.865.321-14']
     )
 
     model_config = {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'nome_completo': 'Maria Souza dos Santos',
                 'celular': '(47) 90123-4567',
                 'email': 'maria.santos44@outlook.com',
                 'data_nascimento': '10/02/1999',
                 'rg': '9543265',
                 'cpf': '789.865.321-14',
-            }
+            }]
         }
     }
 
@@ -158,14 +162,12 @@ class CorretorResponse(BaseModel):
     )
 
     tipo : str = Field(
-        ...,
         default=TipoPessoa.CORRETOR,
         description='Tipo de pessoa dentro do sistema.',
         examples=['CORRETOR']
     )
     
     status: str = Field(
-        ...,
         default=Status.ATIVO,
         description='Status do corretor dentro do sistema.',
         examples=['ATIVO']
@@ -181,16 +183,14 @@ class CorretorResponse(BaseModel):
 
     codigo: int = Field(
         ...,
-        min_length=5,
-        max_length=10,
         description='Código de referência do corretor.',
         examples=[100302, 1111032]
     )
 
     celular: str = Field(
         ...,
-        min_length=11,
-        max_length=11,
+        min_length=15,
+        max_length=15,
         description='Número de celular do corretor.',
         examples=['(47) 90123-4567']
     )
@@ -204,7 +204,7 @@ class CorretorResponse(BaseModel):
 
     creci: str = Field(
         ...,
-        max_length=5,
+        max_length=7,
         description='CRECI ativo do corretor.',
         examples=['34.215F']
     )
@@ -217,16 +217,16 @@ class CorretorResponse(BaseModel):
 
     rg: str | None = Field(
         None,
-        min_length=7,
-        max_length=7,
+        min_length=9,
+        max_length=9,
         description='RG do corretor.',
         examples=['9.543.265']
     )
 
     cpf: str | None = Field(
         None,
-        min_length=11,
-        max_length=11,
+        min_length=14,
+        max_length=14,
         description='CPF do corretor.',
         examples=['789.865.321-14']
     )
@@ -245,7 +245,7 @@ class CorretorResponse(BaseModel):
 
     model_config = {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'status': 'ATIVO',
                 'tipo': 'CORRETOR',
                 'nome_completo': 'Maria Souza dos Santos',
@@ -258,6 +258,6 @@ class CorretorResponse(BaseModel):
                 'cpf': '789.865.321-14',
                 'criado_em': '2026-03-26T08:35:00',
                 'alterado_em': None
-            }
+            }]
         }
     }

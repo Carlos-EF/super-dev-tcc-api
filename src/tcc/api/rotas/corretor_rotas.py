@@ -185,8 +185,8 @@ def inativar_corretor(
         )
     
 
-router.post(
-    '',
+@router.post(
+    "",
     response_model=CorretorResponse,
     status_code=status.HTTP_201_CREATED,
     summary='Criar novo corretor',
@@ -205,7 +205,8 @@ def criar_corretor(
     corretor = ModeloCorretor(
         id=uuid7(),
         status=dados.status,
-        nome=dados.nome_completo,
+        tipo=dados.tipo,
+        nome_completo=dados.nome_completo,
         codigo=dados.codigo,
         celular=dados.celular,
         email=dados.email,

@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 def criar_aplicacao() -> FastAPI:
-    if configuracoes.eh_producao:
+    if configuracoes.producao:
         logger.info('Iniciando aplicação em modo PRODUÇÃO (Swagger desabilitado)')
         app = FastAPI(
             docs_url= None,
@@ -39,8 +39,8 @@ def criar_aplicacao() -> FastAPI:
         allow_origins =[
             'http://localhost:4200',
         ],
-        allow_credencials=False,
-        allow_methods=['GET', 'POST', 'PUT', 'DELETE'],
+        allow_credentials=False,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allow_headers=['*']
     )
 

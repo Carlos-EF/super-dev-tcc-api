@@ -1,4 +1,4 @@
-from uuid import UUID
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column, Integer, String, Date
 from tcc.infraestrutura.banco_dados.modelos.modelo_base import ModeloBase
 
@@ -28,12 +28,12 @@ class ModeloCorretor(ModeloBase):
     )
 
     codigo = Column(
-        Integer(10),
+        Integer,
         nullable=False
     )
 
     celular = Column(
-        String(11),
+        String(15),
         nullable=False
     )
 
@@ -43,7 +43,7 @@ class ModeloCorretor(ModeloBase):
     )
 
     creci = Column(
-        String(5),
+        String(7),
         nullable=False
     )
 
@@ -53,12 +53,12 @@ class ModeloCorretor(ModeloBase):
     )
 
     rg = Column(
-        String(7),
+        String(9),
         nullable=True
     )
 
     cpf = Column(
-        String(11), 
+        String(14), 
         nullable=True
     )
 
