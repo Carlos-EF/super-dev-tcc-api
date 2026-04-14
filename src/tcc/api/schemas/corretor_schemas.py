@@ -21,12 +21,12 @@ class CriarCorretorRequest(BaseModel):
         examples=['Maria Souza dos Santos']
     )
 
-    codigo: str = Field(
+    codigo: int = Field(
         ...,
         min_length=5,
         max_length=10,
         description='Código de referência do corretor.',
-        examples=['100302', '1111032']
+        examples=[100302, 1111032]
     )
 
     celular: str = Field(
@@ -78,11 +78,11 @@ class CriarCorretorRequest(BaseModel):
             'examples': {
                 'status': 'ATIVO',
                 'nome_completo': 'Maria Souza dos Santos',
-                'codigo': '1111032',
+                'codigo': 1111032,
                 'creci': '34.215F',
                 'celular': '(47) 90123-4567',
                 'email': 'maria.santos44@outlook.com',
-                'data_nascimento': '1999-02-10',
+                'data_nascimento': '10/02/1999',
                 'rg': '9.543.265',
                 'cpf': '789.865.321-14',
             }
@@ -117,7 +117,7 @@ class AlterarCorretorRequest(BaseModel):
     data_nascimento: str | None = Field(
         None,
         description='Data de nascimento do corretor.',
-        examples=['1999-02-10']
+        examples=['10/02/1999']
     )
 
     rg: str | None = Field(
@@ -142,7 +142,7 @@ class AlterarCorretorRequest(BaseModel):
                 'nome_completo': 'Maria Souza dos Santos',
                 'celular': '(47) 90123-4567',
                 'email': 'maria.santos44@outlook.com',
-                'data_nascimento': '1999-02-10',
+                'data_nascimento': '10/02/1999',
                 'rg': '9543265',
                 'cpf': '789.865.321-14',
             }
@@ -179,12 +179,12 @@ class CorretorResponse(BaseModel):
         examples=['Maria Souza dos Santos']
     )
 
-    codigo: str = Field(
+    codigo: int = Field(
         ...,
         min_length=5,
         max_length=10,
         description='Código de referência do corretor.',
-        examples=['100302', '1111032']
+        examples=[100302, 1111032]
     )
 
     celular: str = Field(
@@ -212,7 +212,7 @@ class CorretorResponse(BaseModel):
     data_nascimento: str | None = Field(
         None,
         description='Data de nascimento do corretor.',
-        examples=['1999-02-10']
+        examples=['10/02/1999']
     )
 
     rg: str | None = Field(
@@ -249,11 +249,11 @@ class CorretorResponse(BaseModel):
                 'status': 'ATIVO',
                 'tipo': 'CORRETOR',
                 'nome_completo': 'Maria Souza dos Santos',
-                'codigo': '1111032',
+                'codigo': 1111032,
                 'celular': '(47) 90123-4567',
                 'email': 'maria.santos44@outlook.com',
                 'creci': '34.215F',
-                'data_nascimento': '1999-02-10',
+                'data_nascimento': '10/02/1999',
                 'rg': '9.543.265',
                 'cpf': '789.865.321-14',
                 'criado_em': '2026-03-26T08:35:00',
