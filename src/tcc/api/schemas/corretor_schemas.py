@@ -1,6 +1,7 @@
 from uuid import UUID
 from pydantic import BaseModel, Field
 from tcc.dominio.enums.status import Status
+from tcc.dominio.enums.tipo_pessoa import TipoPessoa
 from datetime import datetime
 
 
@@ -155,6 +156,13 @@ class CorretorResponse(BaseModel):
         description='Indentificador único (UUID v7) do corretor',
         examples=['019d45ea-997b-7451-9905-cb38b791fe93']
     )
+
+    tipo : str = Field(
+        ...,
+        default=TipoPessoa.CORRETOR,
+        description='Tipo de pessoa dentro do sistema.',
+        examples=['CORRETOR']
+    )
     
     status: str = Field(
         ...,
@@ -239,6 +247,7 @@ class CorretorResponse(BaseModel):
         'json_schema_extra': {
             'examples': {
                 'status': 'ATIVO',
+                'tipo': 'CORRETOR',
                 'nome_completo': 'Maria Souza dos Santos',
                 'codigo': '1111032',
                 'celular': '(47) 90123-4567',
