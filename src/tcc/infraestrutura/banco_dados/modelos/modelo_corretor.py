@@ -48,7 +48,7 @@ class ModeloCorretor(ModeloBase):
     )
 
     data_nascimento = Column(
-        Date,
+        String(10),
         nullable=True
     )
 
