@@ -1,5 +1,6 @@
 import logging
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from tcc.api.configuracoes import configuracoes
 from tcc.api.rotas.corretor_rotas import router as corretor_router
 
@@ -33,6 +34,15 @@ def criar_aplicacao() -> FastAPI:
         )
 
     logger.info('Configurando middleware de CORS')
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins =[
+            'http://localhost:4200',
+        ],
+        allow_credencials=False,
+        allow_methods=['GET', 'POST', 'PUT', 'DELETE'],
+        allow_headers=['*']
+    )
 
 
     logger.info('Registrando rotas')
