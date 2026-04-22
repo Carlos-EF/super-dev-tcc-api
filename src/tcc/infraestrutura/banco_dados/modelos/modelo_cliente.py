@@ -28,7 +28,7 @@ class ModeloCliente(ModeloBase):
     )
 
     celular = Column(
-        Integer(11),
+        String(14),
         nullable=False
     )
 
