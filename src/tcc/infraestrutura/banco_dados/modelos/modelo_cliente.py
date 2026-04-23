@@ -46,3 +46,65 @@ class ModeloCliente(ModeloBase):
         String(7),
         nullable=False
     )
+
+
+class ModeloClienteInteressado(ModeloBase):
+    id = Column(
+        UUID(as_uuid=True),
+        nullable=False
+    )
+
+    id_cliente = Column(
+        UUID(as_uuid=True),
+        nullable=False
+    )
+
+    procurando = Column(
+        String(11),
+        nullable=False
+    )
+
+    orcamento = Column(
+        Integer,
+        nullable=False
+    )
+
+    orcamento_minimo = Column(
+        Integer,
+        nullable=True
+    )
+    
+    orcamento_maximo = Column(
+        Integer,
+        nullable=True
+    )
+
+    quantidade_quartos = Column(
+        Integer,
+        nullable=True
+    )
+
+    quantidade_suites = Column(
+        Integer,
+        nullable=True
+    )
+    
+    quantidade_banheiros = Column(
+        Integer,
+        nullable=True
+    )
+
+    quantidade_vagas_garagem = Column(
+        Integer,
+        nullable=True
+    )
+    
+    quantidade_andares = Column(
+        Integer,
+        nullable=True
+    )
+
+    quantidade_salas = Column(
+        Integer,
+        nullable=True
+    )
