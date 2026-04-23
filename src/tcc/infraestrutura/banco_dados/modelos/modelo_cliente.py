@@ -125,3 +125,20 @@ class ModeloClienteProprietario(ModeloBase):
         String,
         nullable=True
     )
+
+
+class ModeloClienteLocatario(ModeloBase):
+    id = Column(
+        UUID(as_uuid=True),
+        nullable=False
+    )
+
+    id_cliente = Column(
+        UUID(as_uuid=True),
+        nullable=False
+    )
+
+    imovel_locatario = Column(
+        String,
+        nullable=True
+    )
