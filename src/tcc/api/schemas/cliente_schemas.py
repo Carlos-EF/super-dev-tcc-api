@@ -196,3 +196,88 @@ class ClienteResponse(BaseModel):
             }
         }
     }
+
+
+class CriarClienteInteressadoRequest(BaseModel):
+    id: UUID = Field(
+    ...,
+    description=['Identificador (UUID v7) único do cliente na tabela de intessado.'],
+    examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
+)
+    
+    id_cliente: UUID = Field(
+        ...,
+        description=['Identificador (UUID v7) único do cliente.'],
+        examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
+    )
+
+    tipo_imovel: str = Field(
+        ...,
+        description=['Tipo de imóvel que o cliente está procurando.'],
+        examples=['Casa']
+    )
+
+    orcamento: int = Field(
+        ...,
+        description=['Orçamento do cliente.'],
+        examples=[500000]
+    )
+
+    orcamento_minimo: int = Field(
+        description=['Orçamento mínimo do cliente'],
+        examples=[350000]
+    )
+
+    orcamento_maximo: int = Field(
+        description=['Orçamento máximo do cliente'],
+        examples=[650000]
+    )
+
+    quantidade_quartos: int = Field(
+        description=['Quantidade desejada de quartos do cliente.'],
+        examples=[3]
+    )
+
+    quantidade_suites: int = Field(
+        description=['Quantidade desejada de suítes do cliente.'],
+        examples=[1]
+    )
+
+    quantidade_banheiros: int = Field(
+        description=['Quantidade desejada de banheiros do cliente.'],
+        examples=[2]
+    )
+
+    quantidade_vagas_garagem: int = Field(
+        description=['Quantidade desejada de vagas de garagem do cliente.'],
+        examples=[2]
+    )
+
+    quantidade_andares: int = Field(
+        description=['Quantidade desejada de andares do cliente.'],
+        examples=[1]
+    )
+
+    quantidade_salas: int = Field(
+        description=['Quantidade desejada de salas do cliente.'],
+        examples=[1]
+    )
+
+    model_config = {
+    'json_schema_extra': {
+        'examples': {
+            'id': '019db9eb-db4c-7246-9025-0e0b7da207d7',
+            'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
+            'tipo_imovel': 'Casa',
+            'orcamento': 500000,
+            'orcamento_minimo': 350000,
+            'orcamento_maximo': 650000,
+            'quantidade_quartos': 3,
+            'quantidade_suites': 1,
+            'quantidade_banheiros': 2,
+            'quantidade_vagas': 2,
+            'quantidade_andares': 1,
+            'quantidade_salas': 1
+        }
+    }
+}
