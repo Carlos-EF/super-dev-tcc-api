@@ -453,7 +453,7 @@ class ClienteInteressadoResponse(BaseModel):
 }
     
 
-class CriarClienteProprietario(BaseModel):
+class CriarClienteProprietarioRequest(BaseModel):
     id: UUID = Field(
         ...,
         description=['Identificador (UUIDv7) único do cliente na tabela de proprietários.'],
@@ -476,6 +476,21 @@ class CriarClienteProprietario(BaseModel):
             'examples': {
                 'id': '019dbf01-46bf-7d93-89fc-41235daeda65',
                 'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
+                'imovel_associado': None
+            }
+        }
+    }   
+
+
+class EditarClienteProprietarioRequest(BaseModel):
+    imovel_associado: str | None = Field(
+        description=['Link do imóvel cadastrado do proprietário.'],
+        examples=['']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': {
                 'imovel_associado': None
             }
         }
