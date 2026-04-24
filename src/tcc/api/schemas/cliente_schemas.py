@@ -494,4 +494,46 @@ class EditarClienteProprietarioRequest(BaseModel):
                 'imovel_associado': None
             }
         }
-    }   
+    }
+
+
+class ClienteProprietarioResponse(BaseModel):
+    id: UUID = Field(
+        ...,
+        description=['Identificador (UUIDv7) único do cliente na tabela de proprietários.'],
+        examples=['019dbf01-46bf-7d93-89fc-41235daeda65']
+    )
+
+    id_cliente: UUID = Field(
+        ...,
+        description=['Identificador (UUID v7) único do cliente.'],
+        examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
+    )
+
+    imovel_associado: str | None = Field(
+        description=['Link do imóvel cadastrado do proprietário.'],
+        examples=['']
+    )
+
+    criado_em: datetime = Field(
+        description='Data e hora da Criação do registro do cliente.',
+        examples=['2026-04-24T08:25:14']
+    )
+
+    alterado_em: datetime | None = Field(
+        None,
+        description='Data e hora da última modificação do registro do cliente.',
+        examples=['']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': {
+                'id': '019dbf01-46bf-7d93-89fc-41235daeda65',
+                'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
+                'imovel_associado': None,
+                'criado_em': '2026-04-24T08:25:14',
+                'alterado_em': None,
+            }
+        }
+    }      
