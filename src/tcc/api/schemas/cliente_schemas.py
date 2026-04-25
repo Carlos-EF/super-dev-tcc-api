@@ -561,3 +561,44 @@ class EditarClienteLocatarioRequest(BaseModel):
         }
     }
 
+
+class ClienteLocatarioResponse(BaseModel):
+    id: UUID = Field(
+        ...,
+        description=['Identificador (UUIDv7) único do cliente na tabela de Locatários.'],
+        examples=['019dc4a4-4c49-776d-9243-175708f3b652']
+    )
+
+    id_cliente: UUID = Field(
+        ...,
+        description=['Identificador (UUIDv7) único do cliente.'],
+        examples=['019dc49d-4b0f-72e7-a6b5-4a6669038742']
+    )
+
+    imovel_associado: str | None = Field(
+        description=['Imovél associado ao cliente.'],
+        examples=['']
+    )
+
+    criado_em: datetime = Field(
+        ...,
+        description=['Data da criação do registro'],
+        examples=['2026-04-25T09:38:00']
+    )
+
+    alterado_em: datetime | None = Field(
+        description=['Data da última modificação dos dados do cliente.'],
+        examples=['']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': {
+                'id': '019dc4a4-4c49-776d-9243-175708f3b652',
+                'id_cliente': '019dc49d-4b0f-72e7-a6b5-4a6669038742',
+                'imovel_associado': None,
+                'criado_em': '2026-04-25T09:38:00',
+                'alterado_em': None
+            }
+        }
+    }
