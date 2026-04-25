@@ -546,4 +546,18 @@ class CriarClienteLocatarioRequest(BaseModel):
         }
     }
 
-    
+
+class EditarClienteLocatarioRequest(BaseModel):
+    imovel_associado: str | None = Field(
+        description=['Imovél associado ao cliente'],
+        examples=['']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': {
+                'imovel_associado': None
+            }
+        }
+    }
+
