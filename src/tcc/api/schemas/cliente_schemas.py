@@ -199,12 +199,6 @@ class ClienteResponse(BaseModel):
 
 
 class CriarClienteInteressadoRequest(BaseModel):
-    id: UUID = Field(
-    ...,
-    description=['Identificador (UUID v7) único do cliente na tabela de intessado.'],
-    examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
-    )
-    
     id_cliente: UUID = Field(
         ...,
         description=['Identificador (UUID v7) único do cliente.'],
@@ -266,7 +260,6 @@ class CriarClienteInteressadoRequest(BaseModel):
     model_config = {
     'json_schema_extra': {
         'examples': {
-            'id': '019db9eb-db4c-7246-9025-0e0b7da207d7',
             'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
             'tipo_imovel': 'Casa',
             'orcamento': 500000,
@@ -454,12 +447,6 @@ class ClienteInteressadoResponse(BaseModel):
     
 
 class CriarClienteProprietarioRequest(BaseModel):
-    id: UUID = Field(
-        ...,
-        description=['Identificador (UUIDv7) único do cliente na tabela de proprietários.'],
-        examples=['019dbf01-46bf-7d93-89fc-41235daeda65']
-    )
-
     id_cliente: UUID = Field(
         ...,
         description=['Identificador (UUID v7) único do cliente.'],
@@ -474,7 +461,6 @@ class CriarClienteProprietarioRequest(BaseModel):
     model_config = {
         'json_schema_extra': {
             'examples': {
-                'id': '019dbf01-46bf-7d93-89fc-41235daeda65',
                 'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
                 'imovel_associado': None
             }
@@ -536,4 +522,83 @@ class ClienteProprietarioResponse(BaseModel):
                 'alterado_em': None,
             }
         }
-    }      
+    }
+
+
+class CriarClienteLocatarioRequest(BaseModel):
+    id_cliente: UUID = Field(
+        ...,
+        description=['Identificador (UUID v7) único do cliente.'],
+        examples=['019dc49d-4b0f-72e7-a6b5-4a6669038742']
+    )
+
+    imovel_associado: str | None = Field(
+        description=['Imóvel associado ao cliente.'],
+        examples=['']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': {
+                'id_cliente': '019dc49d-4b0f-72e7-a6b5-4a6669038742',
+                'imovel_associado': None
+            }
+        }
+    }
+
+
+class EditarClienteLocatarioRequest(BaseModel):
+    imovel_associado: str | None = Field(
+        description=['Imovél associado ao cliente'],
+        examples=['']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': {
+                'imovel_associado': None
+            }
+        }
+    }
+
+
+class ClienteLocatarioResponse(BaseModel):
+    id: UUID = Field(
+        ...,
+        description=['Identificador (UUIDv7) único do cliente na tabela de Locatários.'],
+        examples=['019dc4a4-4c49-776d-9243-175708f3b652']
+    )
+
+    id_cliente: UUID = Field(
+        ...,
+        description=['Identificador (UUIDv7) único do cliente.'],
+        examples=['019dc49d-4b0f-72e7-a6b5-4a6669038742']
+    )
+
+    imovel_associado: str | None = Field(
+        description=['Imovél associado ao cliente.'],
+        examples=['']
+    )
+
+    criado_em: datetime = Field(
+        ...,
+        description=['Data da criação do registro'],
+        examples=['2026-04-25T09:38:00']
+    )
+
+    alterado_em: datetime | None = Field(
+        description=['Data da última modificação dos dados do cliente.'],
+        examples=['']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': {
+                'id': '019dc4a4-4c49-776d-9243-175708f3b652',
+                'id_cliente': '019dc49d-4b0f-72e7-a6b5-4a6669038742',
+                'imovel_associado': None,
+                'criado_em': '2026-04-25T09:38:00',
+                'alterado_em': None
+            }
+        }
+    }
