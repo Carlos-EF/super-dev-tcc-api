@@ -1,5 +1,6 @@
 from uuid import UUID
 from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 from tcc.infraestrutura.banco_dados.modelos.modelo_base import ModeloBase
 
 
@@ -18,7 +19,7 @@ class ModeloCliente(ModeloBase):
     )
 
     codigo = Column(
-        Integer(10),
+        Integer,
         nullable=False
     )
 
@@ -47,10 +48,19 @@ class ModeloCliente(ModeloBase):
         nullable=False
     )
 
+    interessado = relationship('ModeloClienteInteressado', back_populates='cliente')
+
+    proprietario = relationship('ModeloClienteProprietario', back_populates='cliente')
+
+    locatario = relationship('ModeloClienteLocatario', back_populates='cliente')
+
 
 class ModeloClienteInteressado(ModeloBase):
+    __tablename__ = 'interessados'
+
     id = Column(
         UUID(as_uuid=True),
+        primary_key=True,
         nullable=False
     )
 
@@ -110,15 +120,21 @@ class ModeloClienteInteressado(ModeloBase):
         nullable=True
     )
 
+    cliente = relationship('ModeloCliente', back_populates='interessado')
+
 
 class ModeloClienteProprietario(ModeloBase):
+    __tablename__ = 'proprietarios'
+
     id = Column(
         UUID(as_uuid=True),
+        primary_key=True,
         nullable=False
     )
 
     id_cliente = Column(
         UUID(as_uuid=True),
+        ForeignKey('clientes.id')
         nullable=False
     )
 
@@ -127,10 +143,15 @@ class ModeloClienteProprietario(ModeloBase):
         nullable=True
     )
 
+    cliente = relationship('ModeloCliente', back_populates='proprietario')
+
 
 class ModeloClienteLocatario(ModeloBase):
+    __tablename__ = 'locatarios'
+
     id = Column(
         UUID(as_uuid=True),
+        primary_key=True,
         nullable=False
     )
 
@@ -143,3 +164,5 @@ class ModeloClienteLocatario(ModeloBase):
         String,
         nullable=True
     )
+
+    cliente = relationship('ModeloCliente', back_populates='locatario')
