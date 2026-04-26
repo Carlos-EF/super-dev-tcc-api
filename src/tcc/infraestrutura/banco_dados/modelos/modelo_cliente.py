@@ -1,5 +1,6 @@
 from uuid import UUID
 from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 from tcc.infraestrutura.banco_dados.modelos.modelo_base import ModeloBase
 
 
@@ -47,8 +48,16 @@ class ModeloCliente(ModeloBase):
         nullable=False
     )
 
+    interessado = relationship('Interessado', back_populates='cliente')
+
+    proprietario = relationship('Proprietario', back_populates='cliente')
+
+    locatario = relationship('Locatario', back_populates='cliente')
+
 
 class ModeloClienteInteressado(ModeloBase):
+    __tablename__ = 'interessados'
+
     id = Column(
         UUID(as_uuid=True),
         nullable=False
@@ -109,6 +118,8 @@ class ModeloClienteInteressado(ModeloBase):
         Integer,
         nullable=True
     )
+
+    cliente = relationship('Cliente', back_populates='interessado')
 
 
 class ModeloClienteProprietario(ModeloBase):
