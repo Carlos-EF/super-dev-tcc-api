@@ -134,7 +134,7 @@ class ModeloClienteProprietario(ModeloBase):
 
     id_cliente = Column(
         UUID(as_uuid=True),
-        ForeignKey('clientes.id')
+        ForeignKey('clientes.id'),
         nullable=False
     )
 
@@ -157,6 +157,7 @@ class ModeloClienteLocatario(ModeloBase):
 
     id_cliente = Column(
         UUID(as_uuid=True),
+        ForeignKey('clientes.id'),
         nullable=False
     )
 
