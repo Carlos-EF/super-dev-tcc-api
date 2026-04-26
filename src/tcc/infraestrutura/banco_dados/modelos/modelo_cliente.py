@@ -19,7 +19,7 @@ class ModeloCliente(ModeloBase):
     )
 
     codigo = Column(
-        Integer(10),
+        Integer,
         nullable=False
     )
 
@@ -48,11 +48,11 @@ class ModeloCliente(ModeloBase):
         nullable=False
     )
 
-    interessado = relationship('Interessado', back_populates='cliente')
+    interessado = relationship('ModeloClienteInteressado', back_populates='cliente')
 
-    proprietario = relationship('Proprietario', back_populates='cliente')
+    proprietario = relationship('ModeloClienteProprietario', back_populates='cliente')
 
-    locatario = relationship('Locatario', back_populates='cliente')
+    locatario = relationship('ModeloClienteLocatario', back_populates='cliente')
 
 
 class ModeloClienteInteressado(ModeloBase):
@@ -60,6 +60,7 @@ class ModeloClienteInteressado(ModeloBase):
 
     id = Column(
         UUID(as_uuid=True),
+        primary_key=True,
         nullable=False
     )
 
@@ -119,17 +120,21 @@ class ModeloClienteInteressado(ModeloBase):
         nullable=True
     )
 
-    cliente = relationship('Cliente', back_populates='interessado')
+    cliente = relationship('ModeloCliente', back_populates='interessado')
 
 
 class ModeloClienteProprietario(ModeloBase):
+    __tablename__ = 'proprietarios'
+
     id = Column(
         UUID(as_uuid=True),
+        primary_key=True,
         nullable=False
     )
 
     id_cliente = Column(
         UUID(as_uuid=True),
+        ForeignKey('clientes.id')
         nullable=False
     )
 
@@ -137,6 +142,8 @@ class ModeloClienteProprietario(ModeloBase):
         String,
         nullable=True
     )
+
+    cliente = relationship('ModeloCliente', back_populates='proprietario')
 
 
 class ModeloClienteLocatario(ModeloBase):
