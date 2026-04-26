@@ -1,5 +1,5 @@
 from uuid import UUID
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, ForeignKey
 from tcc.infraestrutura.banco_dados.modelos.modelo_base import ModeloBase
 
 
@@ -56,6 +56,7 @@ class ModeloClienteInteressado(ModeloBase):
 
     id_cliente = Column(
         UUID(as_uuid=True),
+        ForeignKey('clientes.id'),
         nullable=False
     )
 

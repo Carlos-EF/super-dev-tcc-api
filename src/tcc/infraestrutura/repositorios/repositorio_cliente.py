@@ -1,6 +1,6 @@
-from uuid import UUID
+from uuid import UUID, uuid7
 from sqlalchemy.orm import Session
-from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente
+from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado
 
 
 class RepositorioCliente:
@@ -10,9 +10,12 @@ class RepositorioCliente:
 
     def criar(self, cliente: ModeloCliente) -> ModeloCliente:
         self.sessao.add(cliente)
-        self.sessao.commit()
         self.sessao.flush(cliente)
 
+        if cliente.tipo == "Interessado":
+            self.criar_cliente_interessado(cliente) 
+
+        self.sessao.commit()
 
         return cliente
     
@@ -80,3 +83,24 @@ class RepositorioCliente:
             return False
         
         return cliente
+    
+    
+    def criar_cliente_interessado(self, cliente: ModeloCliente, dados: ModeloClienteInteressado) -> ModeloClienteInteressado:
+        cliente_interessado = ModeloClienteInteressado(
+            id = uuid7(),
+            id_cliente = cliente.id,
+            procurando = dados.procurando,
+            orcamento = dados.orcamento,
+            orcamento_minimo = dados.orcamento_minimo,
+            orcamento_maximo = dados.orcamento_maximo,
+            quantidade_quartos = dados.quantidade_quartos,
+            quantidade_suites = dados.quantidade_suites,
+            quantidade_banheiros = dados.quantidade_banheiros,
+            quantidade_vagas_garagem = dados.quantidade_vagas_garagem,
+            quantidade_andares = dados.quantidade_andares,
+            quantidade_salas = dados.quantidade_salas,
+        )
+
+        self.sessao.add(cliente_interessado)
+
+        return cliente_interessado
