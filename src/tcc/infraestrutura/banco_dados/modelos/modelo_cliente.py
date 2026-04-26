@@ -147,8 +147,11 @@ class ModeloClienteProprietario(ModeloBase):
 
 
 class ModeloClienteLocatario(ModeloBase):
+    __tablename__ = 'locatarios'
+
     id = Column(
         UUID(as_uuid=True),
+        primary_key=True,
         nullable=False
     )
 
@@ -161,3 +164,5 @@ class ModeloClienteLocatario(ModeloBase):
         String,
         nullable=True
     )
+
+    cliente = relationship('ModeloCliente', back_populates='locatario')
