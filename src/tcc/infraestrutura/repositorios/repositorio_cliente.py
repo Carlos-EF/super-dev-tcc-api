@@ -97,6 +97,12 @@ class RepositorioCliente:
         
         return cliente
     
+
+    def listar_clientes_interessados(self) -> list[ModeloClienteInteressado]:
+        clientes_interessados = self.sessao.query(ModeloClienteInteressado).all()
+
+        return clientes_interessados
+    
     
     def criar_cliente_interessado(self, cliente: ModeloCliente, dados: ModeloClienteInteressado) -> ModeloClienteInteressado:
         cliente_interessado = ModeloClienteInteressado(
@@ -140,6 +146,12 @@ class RepositorioCliente:
         return cliente_prorietario
     
 
+    def listar_clientes_proprietarios(self) -> list[ModeloClienteInteressado]:
+        clientes_proprietarios = self.sessao.query(ModeloClienteProprietario).all()
+
+        return clientes_proprietarios
+    
+
     def apagar_cliente_proprietario(self, id: UUID) -> bool:
         cliente_proprietario = self.sessao.query(ModeloClienteProprietario).filter(ModeloClienteProprietario.id_cliente == id).first()
         if not cliente_proprietario:
@@ -159,6 +171,12 @@ class RepositorioCliente:
         self.sessao.add(cliente_locatario)
 
         return cliente_locatario
+    
+
+    def listar_clientes_locatarios(self) -> list[ModeloClienteLocatario]:
+        clientes_locatarios = self.sessao.query(ModeloClienteLocatario).all()
+
+        return clientes_locatarios
     
 
     def apagar_cliente_locatario(self, id: UUID) -> bool:
