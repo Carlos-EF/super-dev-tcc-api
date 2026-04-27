@@ -80,6 +80,8 @@ class RepositorioCliente:
         cliente_tipo = cliente.tipo
         if cliente_tipo == 'Interessado':
             self.apagar_cliente_interessado(cliente.id)
+        elif cliente_tipo == 'Locatário':
+            self.apagar_cliente_locatario(cliente.id)
         
         self.sessao.delete(cliente)
         self.sessao.commit()
@@ -146,3 +148,12 @@ class RepositorioCliente:
         self.sessao.add(cliente_locatario)
 
         return cliente_locatario
+    
+
+    def apagar_cliente_locatario(self, id: UUID) -> bool:
+        cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
+        if not cliente_locatario:
+            return False
+        
+        self.sessao.delete(cliente_locatario)
+        return True
