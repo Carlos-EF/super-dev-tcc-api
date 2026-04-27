@@ -173,6 +173,12 @@ class RepositorioCliente:
         return cliente_locatario
     
 
+    def listar_clientes_locatarios(self) -> list[ModeloClienteLocatario]:
+        clientes_locatarios = self.sessao.query(ModeloClienteLocatario).all()
+
+        return clientes_locatarios
+    
+
     def apagar_cliente_locatario(self, id: UUID) -> bool:
         cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
         if not cliente_locatario:
