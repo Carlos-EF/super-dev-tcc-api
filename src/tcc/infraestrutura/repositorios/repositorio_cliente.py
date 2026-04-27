@@ -97,6 +97,12 @@ class RepositorioCliente:
         
         return cliente
     
+
+    def listar_clientes_interessados(self) -> list[ModeloClienteInteressado]:
+        clientes_interessados = self.sessao.query(ModeloClienteInteressado).all()
+
+        return clientes_interessados
+    
     
     def criar_cliente_interessado(self, cliente: ModeloCliente, dados: ModeloClienteInteressado) -> ModeloClienteInteressado:
         cliente_interessado = ModeloClienteInteressado(
