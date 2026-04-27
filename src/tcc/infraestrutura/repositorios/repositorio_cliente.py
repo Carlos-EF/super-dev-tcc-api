@@ -1,6 +1,6 @@
 from uuid import UUID, uuid7
 from sqlalchemy.orm import Session
-from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado, ModeloClienteProprietario
+from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado, ModeloClienteLocatario, ModeloClienteProprietario
 
 
 class RepositorioCliente:
@@ -15,7 +15,10 @@ class RepositorioCliente:
         if cliente.tipo == 'Interessado':
             self.criar_cliente_interessado(cliente)
         elif cliente.tipo == 'Proprietário':
-            self.criar_cliente_proprietario(cliente) 
+            self.criar_cliente_proprietario(cliente)
+        elif cliente.tipo == 'Locatário':
+            self.criar_cliente_locatario(cliente)
+         
 
         self.sessao.commit()
 
@@ -118,3 +121,15 @@ class RepositorioCliente:
         self.sessao.add(cliente_prorietario)
 
         return cliente_prorietario
+    
+
+    def criar_cliente_locatario(self, cliente: ModeloCliente, dados: ModeloClienteLocatario) -> ModeloClienteLocatario:
+        cliente_locatario = ModeloClienteLocatario(
+            id = uuid7(),
+            id_cliente = cliente.id,
+            imovel_associado = dados.imovel_locatario
+        )
+
+        self.sessao.add(cliente_locatario)
+
+        return cliente_locatario
