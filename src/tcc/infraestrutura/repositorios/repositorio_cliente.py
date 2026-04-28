@@ -185,6 +185,7 @@ class RepositorioCliente:
             return False
         
         cliente_proprietario_para_alterar.imovel_proprietario = dados.imovel_proprietario
+        
         self.sessao.commit()
         return True
     
@@ -214,6 +215,21 @@ class RepositorioCliente:
         self.sessao.add(cliente_locatario)
 
         return cliente_locatario
+    
+
+    def editar_cliente_locatario(
+            self,
+            id: UUID,
+            dados: ModeloClienteLocatario
+    ) -> bool:
+        cliente_locatario_para_alterar = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
+        if not cliente_locatario_para_alterar:
+            return False
+        
+        cliente_locatario_para_alterar.imovel_locatario = dados.imovel_locatario
+
+        self.sessao.commit()
+        return True
     
 
     def listar_clientes_locatarios(self) -> list[ModeloClienteLocatario]:
