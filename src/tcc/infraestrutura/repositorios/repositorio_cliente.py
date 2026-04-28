@@ -41,6 +41,8 @@ class RepositorioCliente:
         if tipo_original != tipo:
             self.criar_cliente_novo_tipo(cliente, tipo)
             self.apagar_cliente_por_tipo(cliente, tipo_original)
+        else:
+            self.editar_cliente_por_tipo(cliente, tipo)
 
         cliente.nome = nome
         cliente.tipo = tipo
@@ -257,3 +259,12 @@ class RepositorioCliente:
             self.criar_cliente_locatario(cliente)
         elif tipo == 'Proprietário':
             self.criar_cliente_proprietario(cliente)
+
+
+    def editar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str):
+        if tipo == 'Interessado':
+            self.editar_cliente_interessado(cliente.id)
+        elif tipo == 'Locatário':
+            self.editar_cliente_locatario(cliente.id)
+        elif tipo == 'Proprietário':
+            self.editar_cliente_proprietario(cliente.id)
