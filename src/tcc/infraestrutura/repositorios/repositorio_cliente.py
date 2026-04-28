@@ -40,7 +40,7 @@ class RepositorioCliente:
         tipo_original = cliente.tipo
         if tipo_original != tipo:
             self.criar_cliente_novo_tipo(cliente, tipo)
-            self.apagar_cliente_tipo_mudado(cliente, tipo_original)
+            self.apagar_cliente_por_tipo(cliente, tipo_original)
 
         cliente.nome = nome
         cliente.tipo = tipo
@@ -175,6 +175,20 @@ class RepositorioCliente:
         return cliente_proprietario
     
 
+    def editar_cliente_proprietario(
+            self,
+            id: UUID,
+            dados: ModeloClienteProprietario
+    ) -> bool:
+        cliente_proprietario_para_alterar = self.sessao.query(ModeloClienteProprietario).filter(ModeloClienteProprietario.id_cliente == id).first()
+        if not cliente_proprietario_para_alterar:
+            return False
+        
+        cliente_proprietario_para_alterar.imovel_proprietario = dados.imovel_proprietario
+        self.sessao.commit()
+        return True
+    
+
     def listar_clientes_proprietarios(self) -> list[ModeloClienteInteressado]:
         clientes_proprietarios = self.sessao.query(ModeloClienteProprietario).all()
 
@@ -217,7 +231,7 @@ class RepositorioCliente:
         return True
     
 
-    def apagar_cliente_tipo_mudado(self, cliente: ModeloCliente, tipo_original: str):
+    def apagar_cliente_por_tipo(self, cliente: ModeloCliente, tipo_original: str):
         if tipo_original == 'Interessado':
             self.apagar_cliente_interessado(cliente.id)
         elif tipo_original == 'Locatário':
