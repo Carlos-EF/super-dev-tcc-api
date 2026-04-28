@@ -131,6 +131,29 @@ class RepositorioCliente:
         return cliente_interessado
     
 
+    def editar_cliente_interessado(
+            self,
+            id: UUID,
+            dados: ModeloClienteInteressado
+    ) -> bool:
+        cliente_interessado_para_alterar = self.sessao.query(ModeloClienteInteressado).filter(ModeloClienteInteressado.id_cliente == id).first()
+        if not cliente_interessado_para_alterar:
+            return False
+        
+        cliente_interessado_para_alterar.orcamento = dados.orcamento
+        cliente_interessado_para_alterar.orcamento_maximo = dados.orcamento_maximo
+        cliente_interessado_para_alterar.procurando = dados.procurando
+        cliente_interessado_para_alterar.quantidade_andares = dados.quantidade_andares
+        cliente_interessado_para_alterar.quantidade_banheiros = dados.quantidade_banheiros
+        cliente_interessado_para_alterar.quantidade_quartos = dados.quantidade_quartos
+        cliente_interessado_para_alterar.quantidade_salas = dados.quantidade_salas
+        cliente_interessado_para_alterar.quantidade_suites = dados.quantidade_suites
+        cliente_interessado_para_alterar.quantidade_vagas_garagem = dados.quantidade_vagas_garagem
+
+        self.sessao.commit()
+        return True
+    
+
     def apagar_cliente_interessado(self, id: UUID) -> bool:
         cliente_interessado = self.sessao.query(ModeloClienteInteressado).filter(ModeloClienteInteressado.id_cliente == id).first()
         if not cliente_interessado:
@@ -141,15 +164,15 @@ class RepositorioCliente:
     
 
     def criar_cliente_proprietario(self, cliente: ModeloCliente, dados: ModeloClienteProprietario) -> ModeloClienteProprietario:
-        cliente_prorietario = ModeloClienteProprietario(
+        cliente_proprietario = ModeloClienteProprietario(
             id = uuid7(),
             id_cliente = cliente.id,
             imovel_proprietario = dados.imovel_proprietario,
         )
 
-        self.sessao.add(cliente_prorietario)
+        self.sessao.add(cliente_proprietario)
 
-        return cliente_prorietario
+        return cliente_proprietario
     
 
     def listar_clientes_proprietarios(self) -> list[ModeloClienteInteressado]:
