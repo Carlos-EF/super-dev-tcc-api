@@ -79,19 +79,13 @@ class RepositorioCliente:
     
 
     def apagar(self, id: UUID) -> bool:
-        cliente = self.sessao.query(ModeloCliente).filter(ModeloCliente.id == id).first()
-        if not cliente:
+        cliente_para_apagar = self.sessao.query(ModeloCliente).filter(ModeloCliente.id == id).first()
+        if not cliente_para_apagar:
             return False
         
-        cliente_tipo = cliente.tipo
-        if cliente_tipo == 'Interessado':
-            self.apagar_cliente_interessado(cliente.id)
-        elif cliente_tipo == 'Locatário':
-            self.apagar_cliente_locatario(cliente.id)
-        elif cliente_tipo == 'Proprietário':
-            self.apagar_cliente_proprietario(cliente.id)
+        self.apagar_cliente_por_tipo(cliente_para_apagar)
         
-        self.sessao.delete(cliente)
+        self.sessao.delete(cliente_para_apagar)
         self.sessao.commit()
         return True
     
@@ -247,12 +241,12 @@ class RepositorioCliente:
         return True
     
 
-    def apagar_cliente_por_tipo(self, cliente: ModeloCliente, tipo_original: str):
-        if tipo_original == 'Interessado':
+    def apagar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str):
+        if tipo == 'Interessado':
             self.apagar_cliente_interessado(cliente.id)
-        elif tipo_original == 'Locatário':
+        elif tipo == 'Locatário':
             self.apagar_cliente_locatario(cliente.id)
-        elif tipo_original == 'Proprietário':
+        elif tipo == 'Proprietário':
             self.apagar_cliente_proprietario(cliente.id)
 
     
