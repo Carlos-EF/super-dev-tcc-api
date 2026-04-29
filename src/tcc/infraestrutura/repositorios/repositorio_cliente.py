@@ -117,6 +117,14 @@ class RepositorioCliente:
         return cliente_proprietario
     
 
+    def obter_cliente_interessado_por_id(self, id: UUID) -> ModeloClienteInteressado | None:
+        cliente_interessado = self.sessao.query(ModeloClienteInteressado).filter(ModeloClienteInteressado.id_cliente == id).first()
+        if not cliente_interessado:
+            return False
+        
+        return cliente_interessado
+    
+
     def listar_clientes_interessados(self) -> list[ModeloClienteInteressado]:
         clientes_interessados = self.sessao.query(ModeloClienteInteressado).all()
 
