@@ -100,6 +100,15 @@ class RepositorioCliente:
         return cliente
     
 
+    def obter_cliente_locatario_por_id(self, id: UUID) -> ModeloClienteLocatario | None:
+        cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
+        if not cliente_locatario:
+            return False
+        
+
+        return cliente_locatario
+    
+
     def listar_clientes_interessados(self) -> list[ModeloClienteInteressado]:
         clientes_interessados = self.sessao.query(ModeloClienteInteressado).all()
 
