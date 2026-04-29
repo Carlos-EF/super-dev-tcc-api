@@ -97,7 +97,11 @@ class RepositorioCliente:
         if not cliente:
             return False
         
-        return cliente
+        dados_adicionais = self.obter_cliente_por_tipo(cliente.tipo, cliente.id)
+        if not dados_adicionais:
+            return False
+        
+        return cliente, dados_adicionais
     
 
     def obter_cliente_locatario_por_id(self, id: UUID) -> ModeloClienteLocatario | None:
