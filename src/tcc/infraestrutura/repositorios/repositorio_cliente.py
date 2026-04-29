@@ -293,3 +293,12 @@ class RepositorioCliente:
             self.editar_cliente_locatario(cliente.id)
         elif tipo == 'Proprietário':
             self.editar_cliente_proprietario(cliente.id)
+
+
+    def obter_cliente_por_tipo(self, tipo: str, id: UUID):
+        if tipo == 'Interessado':
+            self.obter_cliente_interessado_por_id(id)
+        elif tipo == 'Locatário':
+            self.obter_cliente_locatario_por_id(id)
+        elif tipo == 'Proprietário':
+            self.obter_cliente_proprietario_por_id(id)
