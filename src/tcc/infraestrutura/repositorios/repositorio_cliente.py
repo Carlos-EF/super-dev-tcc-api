@@ -97,7 +97,36 @@ class RepositorioCliente:
         if not cliente:
             return False
         
-        return cliente
+        dados_adicionais = self.obter_cliente_por_tipo(cliente.tipo, cliente.id)
+        if not dados_adicionais:
+            return False
+        
+        return cliente, dados_adicionais
+    
+
+    def obter_cliente_locatario_por_id(self, id: UUID) -> ModeloClienteLocatario | None:
+        cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
+        if not cliente_locatario:
+            return False
+        
+
+        return cliente_locatario
+    
+
+    def obter_cliente_proprietario_por_id(self, id: UUID) -> ModeloClienteProprietario | None:
+        cliente_proprietario = self.sessao.query(ModeloClienteProprietario).filter(ModeloClienteProprietario.id_cliente == id).first()
+        if not cliente_proprietario:
+            return False
+        
+        return cliente_proprietario
+    
+
+    def obter_cliente_interessado_por_id(self, id: UUID) -> ModeloClienteInteressado | None:
+        cliente_interessado = self.sessao.query(ModeloClienteInteressado).filter(ModeloClienteInteressado.id_cliente == id).first()
+        if not cliente_interessado:
+            return False
+        
+        return cliente_interessado
     
 
     def listar_clientes_interessados(self) -> list[ModeloClienteInteressado]:
@@ -268,3 +297,12 @@ class RepositorioCliente:
             self.editar_cliente_locatario(cliente.id)
         elif tipo == 'Proprietário':
             self.editar_cliente_proprietario(cliente.id)
+
+
+    def obter_cliente_por_tipo(self, tipo: str, id: UUID):
+        if tipo == 'Interessado':
+            self.obter_cliente_interessado_por_id(id)
+        elif tipo == 'Locatário':
+            self.obter_cliente_locatario_por_id(id)
+        elif tipo == 'Proprietário':
+            self.obter_cliente_proprietario_por_id(id)
