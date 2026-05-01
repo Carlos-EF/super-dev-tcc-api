@@ -12,13 +12,7 @@ class RepositorioCliente:
         self.sessao.add(cliente)
         self.sessao.flush(cliente)
 
-        if cliente.tipo == 'Interessado':
-            self.criar_cliente_interessado(cliente)
-        elif cliente.tipo == 'Proprietário':
-            self.criar_cliente_proprietario(cliente)
-        elif cliente.tipo == 'Locatário':
-            self.criar_cliente_locatario(cliente)
-         
+        self.criar_cliente_por_tipo(cliente, cliente.tipo)
 
         self.sessao.commit()
 
@@ -39,7 +33,7 @@ class RepositorioCliente:
         
         tipo_original = cliente.tipo
         if tipo_original != tipo:
-            self.criar_cliente_novo_tipo(cliente, tipo)
+            self.criar_cliente_por_tipo(cliente, tipo)
             self.apagar_cliente_por_tipo(cliente, tipo_original)
         else:
             self.editar_cliente_por_tipo(cliente, tipo)
@@ -281,7 +275,7 @@ class RepositorioCliente:
             self.apagar_cliente_proprietario(cliente.id)
 
     
-    def criar_cliente_novo_tipo(self, cliente: ModeloCliente, tipo: str):
+    def criar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str):
         if tipo == 'Interessado':
             self.criar_cliente_interessado(cliente)
         elif tipo == 'Locatário':

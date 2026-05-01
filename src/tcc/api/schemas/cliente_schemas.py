@@ -45,14 +45,14 @@ class CriarClienteRequest(BaseModel):
         examples=['fagner99@gmail.com']
     )
 
-    como_encontrou: str = Field(
+    como_encontrou: ComoEncontrou = Field(
         ...,
         default=ComoEncontrou.CONTATO_DIRETO,
         description='Como o cliente entrou em contato.',
         examples=['Contato Direto']
     )
 
-    tipo: str = Field(
+    tipo: TipoPessoa = Field(
         ...,
         max_length=12,
         default=TipoPessoa.INTERESSADO,
@@ -62,15 +62,17 @@ class CriarClienteRequest(BaseModel):
 
     model_config= {
         'json_schema_extra': {
-            'examples': {
-                'status': 'ATIVO',
-                'nome': 'Fagner Silva dos Santos',
-                'codigo': '113123',
-                'celular': '47912345679',
-                'email': 'fagner99@gmail.com',
-                'como_encontrou': 'Contato Direto',
-                'tipo': 'Interessado',
-            }
+            'examples': [
+                    {
+                    'status': 'ATIVO',
+                    'nome': 'Fagner Silva dos Santos',
+                    'codigo': '113123',
+                    'celular': '47912345679',
+                    'email': 'fagner99@gmail.com',
+                    'como_encontrou': 'Contato Direto',
+                    'tipo': 'Interessado',
+                }
+            ]
         }
     }
 

@@ -41,8 +41,8 @@ def criar_cliente(
         tipo=dados.tipo,
         como_encontrou=dados.como_encontrou
     )
-
     repositorio = RepositorioCliente(sessao=session)
+
     cliente = repositorio.criar(cliente)
     return cliente
 
