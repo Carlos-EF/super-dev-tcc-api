@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union
 from uuid import UUID
 from pydantic import BaseModel, Field
 from src.tcc.dominio.enums.tipo_pessoa import TipoPessoa
@@ -59,6 +60,8 @@ class CriarClienteRequest(BaseModel):
         description='Tipo do cliente.',
         examples=['Interessado']
     )
+
+    dados_adicionais: DadosAdicionaisCliente
 
     model_config= {
         'json_schema_extra': {
@@ -604,3 +607,9 @@ class ClienteLocatarioResponse(BaseModel):
             }
         }
     }
+
+
+class DadosAdicionaisCliente: Union[
+        ClienteInteressadoResponse | 
+        ClienteProprietarioResponse |
+        ClienteLocatarioResponse]
