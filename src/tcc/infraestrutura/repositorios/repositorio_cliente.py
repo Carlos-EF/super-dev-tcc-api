@@ -1,6 +1,7 @@
 from typing import Union
 from uuid import UUID, uuid7
 from sqlalchemy.orm import Session
+from src.tcc.api.schemas.cliente_schemas import CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado, ModeloClienteLocatario, ModeloClienteProprietario
 
 
@@ -9,13 +10,11 @@ class RepositorioCliente:
         self.sessao = sessao
 
 
-    def criar(self, cliente: ModeloCliente, dados_adicionais: Union[ModeloClienteInteressado, ModeloClienteLocatario, ModeloClienteProprietario]):
+    def criar(self, cliente: ModeloCliente, dados_adicionais):
         self.sessao.add(cliente)
         self.sessao.flush(cliente)
 
-        dados_adicionais_selecionado = self.escolher_dados_adicionais_por_tipo(cliente.tipo, dados_adicionais)
-
-        self.criar_cliente_por_tipo(cliente, cliente.tipo, dados_adicionais_selecionado)
+        self.criar_cliente_por_tipo(cliente, cliente.tipo, dados_adicionais)
 
         self.sessao.commit()
 
@@ -132,7 +131,7 @@ class RepositorioCliente:
         return clientes_interessados
     
     
-    def criar_cliente_interessado(self, cliente: ModeloCliente, dados: ModeloClienteInteressado) -> ModeloClienteInteressado:
+    def criar_cliente_interessado(self, cliente: ModeloCliente, dados: CriarClienteInteressadoRequest) -> ModeloClienteInteressado:
         cliente_interessado = ModeloClienteInteressado(
             id = uuid7(),
             id_cliente = cliente.id,
@@ -185,11 +184,11 @@ class RepositorioCliente:
         return True
     
 
-    def criar_cliente_proprietario(self, cliente: ModeloCliente, dados: ModeloClienteProprietario) -> ModeloClienteProprietario:
+    def criar_cliente_proprietario(self, cliente: ModeloCliente, dados: CriarClienteProprietarioRequest) -> ModeloClienteProprietario:
         cliente_proprietario = ModeloClienteProprietario(
             id = uuid7(),
             id_cliente = cliente.id,
-            imovel_proprietario = dados.imovel_proprietario,
+            imovel_associado = dados.imovel_associado,
         )
 
         self.sessao.add(cliente_proprietario)
@@ -227,11 +226,11 @@ class RepositorioCliente:
         return True
     
 
-    def criar_cliente_locatario(self, cliente: ModeloCliente, dados: ModeloClienteLocatario) -> ModeloClienteLocatario:
+    def criar_cliente_locatario(self, cliente: ModeloCliente, dados: CriarClienteLocatarioRequest) -> ModeloClienteLocatario:
         cliente_locatario = ModeloClienteLocatario(
             id = uuid7(),
             id_cliente = cliente.id,
-            imovel_associado = dados.imovel_locatario
+            imovel_associado = dados.imovel_associado
         )
 
         self.sessao.add(cliente_locatario)
@@ -278,7 +277,7 @@ class RepositorioCliente:
             self.apagar_cliente_proprietario(cliente.id)
 
     
-    def criar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str, dados_adicionais: Union[ModeloClienteInteressado | ModeloClienteLocatario | ModeloClienteProprietario]):
+    def criar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str, dados_adicionais):
         if tipo == 'Interessado':
             self.criar_cliente_interessado(cliente, dados_adicionais)
         elif tipo == 'Locatário':
@@ -305,13 +304,3 @@ class RepositorioCliente:
             self.obter_cliente_proprietario_por_id(id)
 
 
-    def escolher_dados_adicionais_por_tipo(self, tipo: str, dados_adicionais: ModeloClienteInteressado | ModeloClienteLocatario | ModeloClienteProprietario):
-        if tipo == 'Interessado':
-            dados_adicionais = ModeloClienteInteressado
-            return dados_adicionais
-        elif tipo == 'Locatário':
-            dados_adicionais = ModeloClienteLocatario
-            return dados_adicionais
-        elif tipo == 'Proprietário':
-            dados_adicionais = ModeloClienteProprietario
-            return dados_adicionais

@@ -28,7 +28,6 @@ router.post(
 )
 def criar_cliente(
         dados: CriarClienteRequest,
-        dados_adicionais: DadosAdicionaisCliente,
         session: Session = Depends(obter_sessao)
 ) -> ClienteResponse:
     """Cadastrar um novo cliente."""
@@ -44,7 +43,7 @@ def criar_cliente(
     )
     repositorio = RepositorioCliente(sessao=session)
 
-    cliente = repositorio.criar(cliente, dados_adicionais)
+    cliente = repositorio.criar(cliente, dados.dados_adicionais)
     return cliente
 
 
