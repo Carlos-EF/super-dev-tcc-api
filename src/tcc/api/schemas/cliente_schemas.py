@@ -61,8 +61,6 @@ class CriarClienteRequest(BaseModel):
         examples=['Interessado']
     )
 
-    dados_adicionais: DadosAdicionaisCliente
-
     model_config= {
         'json_schema_extra': {
             'examples': [
