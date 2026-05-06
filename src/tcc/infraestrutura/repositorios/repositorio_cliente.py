@@ -1,7 +1,7 @@
 from typing import Union
 from uuid import UUID, uuid7
-from sqlalchemy.orm import Session
-from src.tcc.api.schemas.cliente_schemas import CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest
+from sqlalchemy.orm import Session, joinedload
+from src.tcc.api.schemas.cliente_schemas import ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado, ModeloClienteLocatario, ModeloClienteProprietario
 
 
@@ -51,9 +51,15 @@ class RepositorioCliente:
     
 
     def listar(self) -> list[ModeloCliente]:
-        clientes = self.sessao.query(ModeloCliente).all()
+        clientes = self.sessao.query(ModeloCliente).options(
+            joinedload(ModeloCliente.interessado), 
+            joinedload(ModeloCliente.locatario), 
+            joinedload(ModeloCliente.proprietario)).all()
 
-        return clientes
+        return [
+            self.montar_resposta_clientes(clientes)
+            for clientes in clientes
+            ]
     
 
     def inativar(self, id: UUID) -> bool:
@@ -304,3 +310,17 @@ class RepositorioCliente:
             self.obter_cliente_proprietario_por_id(id)
 
 
+    def montar_resposta_clientes(self, cliente: ModeloCliente) -> dict:
+        dados_adicionais = self.obter_dados_por_tipo(cliente)
+
+        return ClienteResponse(
+            id=cliente.id,
+            nome=cliente.nome,
+            status=cliente.status,
+            codigo=cliente.codigo,
+            celular=cliente.celular,
+            email=cliente.email,
+            tipo=cliente.tipo,
+            como_encontrou=cliente.como_encontrou,
+            dados_adicionais=dados_adicionais
+        )

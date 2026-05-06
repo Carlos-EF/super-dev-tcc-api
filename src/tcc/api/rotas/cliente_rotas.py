@@ -7,7 +7,7 @@ from uuid6 import uuid7
 from tcc.infraestrutura.conexao import obter_sessao
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente
 from tcc.infraestrutura.repositorios.repositorio_cliente import RepositorioCliente
-from tcc.api.schemas.cliente_schemas import AlterarClienteRequest, ClienteResponse, CriarClienteRequest, DadosAdicionaisCliente
+from tcc.api.schemas.cliente_schemas import AlterarClienteRequest, ClienteResponse, CriarClienteRequest
 
 
 router = APIRouter(
