@@ -133,12 +133,22 @@ class RepositorioCliente:
         return cliente_interessado
     
 
-    def listar_clientes_interessados(self) -> list[ModeloClienteInteressado]:
-        clientes_interessados = self.sessao.query(ModeloClienteInteressado).all()
+    def listar_clientes_interessados(self) -> list[ClienteResponse]:
+        clientes_interessados = self.sessao.query(
+            ModeloCliente
+            ).options(
+                joinedload(ModeloCliente.interessado)
+            ).filter(
+                ModeloCliente.tipo == "Interessado"
+            ).all()
+
+        clientes_interessados = [
+            self.montar_resposta_clientes(cliente) for cliente in clientes_interessados
+        ]
 
         return clientes_interessados
     
-    
+
     def criar_cliente_interessado(self, cliente: ModeloCliente, dados: CriarClienteInteressadoRequest) -> ModeloClienteInteressado:
         cliente_interessado = ModeloClienteInteressado(
             id = uuid7(),
@@ -219,8 +229,18 @@ class RepositorioCliente:
         return True
     
 
-    def listar_clientes_proprietarios(self) -> list[ModeloClienteInteressado]:
-        clientes_proprietarios = self.sessao.query(ModeloClienteProprietario).all()
+    def listar_clientes_proprietarios(self) -> list[ClienteResponse]:
+        clientes_proprietarios = self.sessao.query(
+            ModeloCliente
+            ).options(
+            joinedload(ModeloCliente.proprietario)
+            ).filter(
+            ModeloCliente.tipo == 'Proprietário'
+            ).all()
+
+        clientes_proprietarios = [
+            self.montar_resposta_clientes(cliente) for cliente in clientes_proprietarios
+            ]
 
         return clientes_proprietarios
     
@@ -270,9 +290,13 @@ class RepositorioCliente:
                 ModeloCliente.tipo == 'Locatário'
                 ).all()
         
-        return [
+        clientes_locatarios = [
             self.montar_resposta_clientes(cliente) 
-            for cliente in clientes_locatarios]
+            for cliente in clientes_locatarios
+        ]
+
+        return clientes_locatarios
+
 
     def apagar_cliente_locatario(self, id: UUID) -> bool:
         cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
