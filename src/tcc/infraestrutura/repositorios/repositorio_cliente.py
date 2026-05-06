@@ -1,7 +1,7 @@
 from typing import Union
 from uuid import UUID, uuid7
-from sqlalchemy.orm import Session
-from src.tcc.api.schemas.cliente_schemas import CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest
+from sqlalchemy.orm import Session, joinedload
+from src.tcc.api.schemas.cliente_schemas import ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado, ModeloClienteLocatario, ModeloClienteProprietario
 
 
@@ -50,9 +50,17 @@ class RepositorioCliente:
         return True
     
 
-    def listar(self) -> list[ModeloCliente]:
-        clientes = self.sessao.query(ModeloCliente).all()
+    def listar(self) -> list[ClienteResponse]:
+        clientes = self.sessao.query(ModeloCliente).options(
+            joinedload(ModeloCliente.interessado), 
+            joinedload(ModeloCliente.locatario), 
+            joinedload(ModeloCliente.proprietario)).all()
 
+        clientes = [
+            self.montar_resposta_clientes(clientes)
+            for clientes in clientes
+            ]
+        
         return clientes
     
 
@@ -125,12 +133,22 @@ class RepositorioCliente:
         return cliente_interessado
     
 
-    def listar_clientes_interessados(self) -> list[ModeloClienteInteressado]:
-        clientes_interessados = self.sessao.query(ModeloClienteInteressado).all()
+    def listar_clientes_interessados(self) -> list[ClienteResponse]:
+        clientes_interessados = self.sessao.query(
+            ModeloCliente
+            ).options(
+                joinedload(ModeloCliente.interessado)
+            ).filter(
+                ModeloCliente.tipo == "Interessado"
+            ).all()
+
+        clientes_interessados = [
+            self.montar_resposta_clientes(cliente) for cliente in clientes_interessados
+        ]
 
         return clientes_interessados
     
-    
+
     def criar_cliente_interessado(self, cliente: ModeloCliente, dados: CriarClienteInteressadoRequest) -> ModeloClienteInteressado:
         cliente_interessado = ModeloClienteInteressado(
             id = uuid7(),
@@ -211,8 +229,18 @@ class RepositorioCliente:
         return True
     
 
-    def listar_clientes_proprietarios(self) -> list[ModeloClienteInteressado]:
-        clientes_proprietarios = self.sessao.query(ModeloClienteProprietario).all()
+    def listar_clientes_proprietarios(self) -> list[ClienteResponse]:
+        clientes_proprietarios = self.sessao.query(
+            ModeloCliente
+            ).options(
+            joinedload(ModeloCliente.proprietario)
+            ).filter(
+            ModeloCliente.tipo == 'Proprietário'
+            ).all()
+
+        clientes_proprietarios = [
+            self.montar_resposta_clientes(cliente) for cliente in clientes_proprietarios
+            ]
 
         return clientes_proprietarios
     
@@ -253,11 +281,22 @@ class RepositorioCliente:
         return True
     
 
-    def listar_clientes_locatarios(self) -> list[ModeloClienteLocatario]:
-        clientes_locatarios = self.sessao.query(ModeloClienteLocatario).all()
+    def listar_clientes_locatarios(self) -> list[ClienteResponse]:
+        clientes_locatarios = self.sessao.query(
+            ModeloCliente
+            ).options(
+            joinedload(ModeloCliente.locatario)
+            ).filter(
+                ModeloCliente.tipo == 'Locatário'
+                ).all()
+        
+        clientes_locatarios = [
+            self.montar_resposta_clientes(cliente) 
+            for cliente in clientes_locatarios
+        ]
 
         return clientes_locatarios
-    
+
 
     def apagar_cliente_locatario(self, id: UUID) -> bool:
         cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
@@ -303,4 +342,29 @@ class RepositorioCliente:
         elif tipo == 'Proprietário':
             self.obter_cliente_proprietario_por_id(id)
 
+
+    def montar_resposta_clientes(self, cliente: ModeloCliente) -> ClienteResponse:
+        dados_adicionais = self.obter_dados_por_tipo(cliente)
+
+        return ClienteResponse(
+            id=cliente.id,
+            nome=cliente.nome,
+            status=cliente.status,
+            codigo=cliente.codigo,
+            celular=cliente.celular,
+            email=cliente.email,
+            tipo=cliente.tipo,
+            como_encontrou=cliente.como_encontrou,
+            dados_adicionais=dados_adicionais
+        )
+    
+
+    def obter_dados_por_tipo(self, cliente: ModeloCliente):
+        if cliente.tipo == 'Interessado':
+            return cliente.interessado
+        elif cliente.tipo == 'Locatário':
+            return cliente.locatario
+        elif cliente.tipo == 'Proprietário':
+            return cliente.proprietario
+        
 

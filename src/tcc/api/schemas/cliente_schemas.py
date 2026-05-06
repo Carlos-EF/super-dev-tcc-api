@@ -61,7 +61,7 @@ class CriarClienteRequest(BaseModel):
         examples=['Interessado']
     )
 
-    dados_adicionais: DadosAdicionaisCliente
+    dados_adicionais: CriarDadosAdicionaisCliente
 
     model_config= {
         'json_schema_extra': {
@@ -76,7 +76,7 @@ class CriarClienteRequest(BaseModel):
                     'tipo': 'Interessado',
                     'dados_adicionais': {
                         'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
-                        'tipo_imovel': 'Casa',
+                        'procurando': 'Casa',
                         'orcamento': 500000,
                         'orcamento_minimo': 350000,
                         'orcamento_maximo': 650000,
@@ -186,6 +186,8 @@ class ClienteResponse(BaseModel):
         examples=['Interessado']
     )
 
+    dados_adicionais: DadosAdicionais
+
     criado_em: datetime = Field(
         ...,
         description='Data e hora da criação do registro do cliente.',
@@ -209,6 +211,18 @@ class ClienteResponse(BaseModel):
                 'email': 'fagner99@gmail.com',
                 'como_encontrou': 'Contato Direto',
                 'tipo': 'Interessado',
+                'dados_adicionais': {
+                    'procurando': 'Casa',
+                    'orcamento': 500000,
+                    'orcamento_minimo': 350000,
+                    'orcamento_maximo': 650000,
+                    'quantidade_quartos': 3,
+                    'quantidade_suites': 1,
+                    'quantidade_banheiros': 2,
+                    'quantidade_vagas_garagem': 2,
+                    'quantidade_andares': 1,
+                    'quantidade_salas': 1
+                },
                 'criado_em': '2026-03-19T10:30:00',
                 'alterado_em': None,
             }
@@ -224,12 +238,6 @@ class CriarClienteInteressadoRequest(BaseModel):
     )
 
     procurando: str = Field(
-        ...,
-        description=['Tipo de imóvel que o cliente está procurando.'],
-        examples=['Casa']
-    )
-
-    tipo_imovel: str = Field(
         ...,
         description=['Tipo de imóvel que o cliente está procurando.'],
         examples=['Casa']
@@ -285,7 +293,7 @@ class CriarClienteInteressadoRequest(BaseModel):
     'json_schema_extra': {
         'examples': {
             'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
-            'tipo_imovel': 'Casa',
+            'procurando': 'Casa',
             'orcamento': 500000,
             'orcamento_minimo': 350000,
             'orcamento_maximo': 650000,
@@ -628,4 +636,10 @@ class ClienteLocatarioResponse(BaseModel):
     }
 
 
-DadosAdicionaisCliente = Union[CriarClienteInteressadoRequest | CriarClienteLocatarioRequest | CriarClienteProprietarioRequest]
+CriarDadosAdicionaisCliente = Union[CriarClienteInteressadoRequest | CriarClienteLocatarioRequest | CriarClienteProprietarioRequest]
+
+
+DadosAdicionais = Union[ClienteInteressadoResponse | ClienteLocatarioResponse | ClienteProprietarioResponse]
+
+
+EditarDadosAdicionais = Union[EditarClienteInteressadoRequest | EditarClienteLocatarioRequest | EditarClienteProprietarioRequest]
