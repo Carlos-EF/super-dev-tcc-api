@@ -50,16 +50,18 @@ class RepositorioCliente:
         return True
     
 
-    def listar(self) -> list[ModeloCliente]:
+    def listar(self) -> list[ClienteResponse]:
         clientes = self.sessao.query(ModeloCliente).options(
             joinedload(ModeloCliente.interessado), 
             joinedload(ModeloCliente.locatario), 
             joinedload(ModeloCliente.proprietario)).all()
 
-        return [
+        clientes = [
             self.montar_resposta_clientes(clientes)
             for clientes in clientes
             ]
+        
+        return clientes
     
 
     def inativar(self, id: UUID) -> bool:
@@ -259,11 +261,18 @@ class RepositorioCliente:
         return True
     
 
-    def listar_clientes_locatarios(self) -> list[ModeloClienteLocatario]:
-        clientes_locatarios = self.sessao.query(ModeloClienteLocatario).all()
-
-        return clientes_locatarios
-    
+    def listar_clientes_locatarios(self) -> list[ClienteResponse]:
+        clientes_locatarios = self.sessao.query(
+            ModeloCliente
+            ).options(
+            joinedload(ModeloCliente.locatario)
+            ).filter(
+                ModeloCliente.tipo == 'Locatário'
+                ).all()
+        
+        return [
+            self.montar_resposta_clientes(cliente) 
+            for cliente in clientes_locatarios]
 
     def apagar_cliente_locatario(self, id: UUID) -> bool:
         cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
@@ -310,7 +319,7 @@ class RepositorioCliente:
             self.obter_cliente_proprietario_por_id(id)
 
 
-    def montar_resposta_clientes(self, cliente: ModeloCliente) -> dict:
+    def montar_resposta_clientes(self, cliente: ModeloCliente) -> ClienteResponse:
         dados_adicionais = self.obter_dados_por_tipo(cliente)
 
         return ClienteResponse(
@@ -324,3 +333,14 @@ class RepositorioCliente:
             como_encontrou=cliente.como_encontrou,
             dados_adicionais=dados_adicionais
         )
+    
+
+    def obter_dados_por_tipo(self, cliente: ModeloCliente):
+        if cliente.tipo == 'Interessado':
+            return cliente.interessado
+        elif cliente.tipo == 'Locatário':
+            return cliente.locatario
+        elif cliente.tipo == 'Proprietário':
+            return cliente.proprietario
+        
+
