@@ -124,6 +124,8 @@ class AlterarClienteRequest(BaseModel):
         examples=['Interessado']
     )
 
+    dados_adicionais: EditarDadosAdicionais
+
     model_config= {
         'json_schema_extra': {
             'examples': {
@@ -131,6 +133,18 @@ class AlterarClienteRequest(BaseModel):
                 'celular': '47912345679',
                 'email': 'fagner99@gmail.com',
                 'tipo': 'Interessado',
+                'dados_adicionais': {
+                    'tipo_imovel': 'Casa',
+                    'orcamento': 500000,
+                    'orcamento_minimo': 350000,
+                    'orcamento_maximo': 650000,
+                    'quantidade_quartos': 3,
+                    'quantidade_suites': 1,
+                    'quantidade_banheiros': 2,
+                    'quantidade_vagas_garagem': 2,
+                    'quantidade_andares': 1,
+                    'quantidade_salas': 1
+                }
             }
         }
     }

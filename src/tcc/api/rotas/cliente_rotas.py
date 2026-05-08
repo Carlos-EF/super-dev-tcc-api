@@ -93,7 +93,8 @@ def editar_cliente(
         nome=dados.nome,
         celular=dados.celular,
         email=dados.email,
-        tipo=dados.tipo
+        tipo=dados.tipo,
+        dados_adicionais=dados.dados_adicionais
     )
     if not editou:
         raise HTTPException(

@@ -28,6 +28,7 @@ class RepositorioCliente:
             tipo: str,
             celular: int,
             email: str,
+            dados_adicionais
             ) -> bool:
         cliente = self.sessao.query(ModeloCliente).filter(ModeloCliente.id == id).first()
         if not cliente:
@@ -35,10 +36,10 @@ class RepositorioCliente:
         
         tipo_original = cliente.tipo
         if tipo_original != tipo:
-            self.criar_cliente_por_tipo(cliente, tipo)
+            self.criar_cliente_por_tipo(cliente, tipo, dados_adicionais)
             self.apagar_cliente_por_tipo(cliente, tipo_original)
         else:
-            self.editar_cliente_por_tipo(cliente, tipo)
+            self.editar_cliente_por_tipo(cliente, tipo, dados_adicionais)
 
         cliente.nome = nome
         cliente.tipo = tipo
@@ -189,7 +190,6 @@ class RepositorioCliente:
         cliente_interessado_para_alterar.quantidade_suites = dados.quantidade_suites
         cliente_interessado_para_alterar.quantidade_vagas_garagem = dados.quantidade_vagas_garagem
 
-        self.sessao.commit()
         return True
     
 
@@ -225,7 +225,6 @@ class RepositorioCliente:
         
         cliente_proprietario_para_alterar.imovel_proprietario = dados.imovel_proprietario
         
-        self.sessao.commit()
         return True
     
 
@@ -277,7 +276,6 @@ class RepositorioCliente:
         
         cliente_locatario_para_alterar.imovel_locatario = dados.imovel_locatario
 
-        self.sessao.commit()
         return True
     
 
@@ -325,13 +323,13 @@ class RepositorioCliente:
             self.criar_cliente_proprietario(cliente, dados_adicionais)
 
 
-    def editar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str):
+    def editar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str, dados_adicionais: Union[ModeloClienteInteressado | ModeloClienteLocatario | ModeloClienteProprietario]):
         if tipo == 'Interessado':
-            self.editar_cliente_interessado(cliente.id)
+            self.editar_cliente_interessado(cliente.id, dados_adicionais)
         elif tipo == 'Locatário':
-            self.editar_cliente_locatario(cliente.id)
+            self.editar_cliente_locatario(cliente.id, dados_adicionais)
         elif tipo == 'Proprietário':
-            self.editar_cliente_proprietario(cliente.id)
+            self.editar_cliente_proprietario(cliente.id, dados_adicionais)
 
 
     def obter_cliente_por_tipo(self, tipo: str, id: UUID):
