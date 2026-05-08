@@ -28,6 +28,7 @@ class RepositorioCliente:
             tipo: str,
             celular: int,
             email: str,
+            dados_adicionais
             ) -> bool:
         cliente = self.sessao.query(ModeloCliente).filter(ModeloCliente.id == id).first()
         if not cliente:
@@ -35,10 +36,10 @@ class RepositorioCliente:
         
         tipo_original = cliente.tipo
         if tipo_original != tipo:
-            self.criar_cliente_por_tipo(cliente, tipo)
+            self.criar_cliente_por_tipo(cliente, tipo, dados_adicionais)
             self.apagar_cliente_por_tipo(cliente, tipo_original)
         else:
-            self.editar_cliente_por_tipo(cliente, tipo)
+            self.editar_cliente_por_tipo(cliente, tipo, dados_adicionais)
 
         cliente.nome = nome
         cliente.tipo = tipo
@@ -89,23 +90,24 @@ class RepositorioCliente:
         if not cliente_para_apagar:
             return False
         
-        self.apagar_cliente_por_tipo(cliente_para_apagar)
+        self.apagar_cliente_por_tipo(cliente_para_apagar, cliente_para_apagar.tipo)
         
         self.sessao.delete(cliente_para_apagar)
         self.sessao.commit()
         return True
     
 
-    def obter_por_id(self, id: UUID) -> ModeloCliente | None:
-        cliente = self.sessao.query(ModeloCliente).filter(ModeloCliente.id == id).first()
+    def obter_por_id(self, id: UUID) -> ClienteResponse | False:
+        cliente = self.sessao.query(ModeloCliente).filter(
+            ModeloCliente.id == id).options(
+                joinedload(ModeloCliente.interessado),
+                joinedload(ModeloCliente.locatario),
+                joinedload(ModeloCliente.proprietario)
+            ).first()
         if not cliente:
             return False
-        
-        dados_adicionais = self.obter_cliente_por_tipo(cliente.tipo, cliente.id)
-        if not dados_adicionais:
-            return False
-        
-        return cliente, dados_adicionais
+             
+        return self.montar_resposta_clientes(cliente)
     
 
     def obter_cliente_locatario_por_id(self, id: UUID) -> ModeloClienteLocatario | None:
@@ -175,7 +177,7 @@ class RepositorioCliente:
             id: UUID,
             dados: ModeloClienteInteressado
     ) -> bool:
-        cliente_interessado_para_alterar = self.sessao.query(ModeloClienteInteressado).filter(ModeloClienteInteressado.id_cliente == id).first()
+        cliente_interessado_para_alterar = self.obter_cliente_interessado_por_id(id)
         if not cliente_interessado_para_alterar:
             return False
         
@@ -189,12 +191,11 @@ class RepositorioCliente:
         cliente_interessado_para_alterar.quantidade_suites = dados.quantidade_suites
         cliente_interessado_para_alterar.quantidade_vagas_garagem = dados.quantidade_vagas_garagem
 
-        self.sessao.commit()
         return True
     
 
     def apagar_cliente_interessado(self, id: UUID) -> bool:
-        cliente_interessado = self.sessao.query(ModeloClienteInteressado).filter(ModeloClienteInteressado.id_cliente == id).first()
+        cliente_interessado = self.obter_cliente_interessado_por_id(id)
         if not cliente_interessado:
             return False
         
@@ -219,13 +220,12 @@ class RepositorioCliente:
             id: UUID,
             dados: ModeloClienteProprietario
     ) -> bool:
-        cliente_proprietario_para_alterar = self.sessao.query(ModeloClienteProprietario).filter(ModeloClienteProprietario.id_cliente == id).first()
+        cliente_proprietario_para_alterar = self.obter_cliente_proprietario_por_id(id)
         if not cliente_proprietario_para_alterar:
             return False
         
         cliente_proprietario_para_alterar.imovel_proprietario = dados.imovel_proprietario
         
-        self.sessao.commit()
         return True
     
 
@@ -246,7 +246,7 @@ class RepositorioCliente:
     
 
     def apagar_cliente_proprietario(self, id: UUID) -> bool:
-        cliente_proprietario = self.sessao.query(ModeloClienteProprietario).filter(ModeloClienteProprietario.id_cliente == id).first()
+        cliente_proprietario = self.obter_cliente_proprietario_por_id(id)
         if not cliente_proprietario:
             return False
         
@@ -271,13 +271,12 @@ class RepositorioCliente:
             id: UUID,
             dados: ModeloClienteLocatario
     ) -> bool:
-        cliente_locatario_para_alterar = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
+        cliente_locatario_para_alterar = self.obter_cliente_locatario_por_id(id)
         if not cliente_locatario_para_alterar:
             return False
         
         cliente_locatario_para_alterar.imovel_locatario = dados.imovel_locatario
 
-        self.sessao.commit()
         return True
     
 
@@ -299,7 +298,7 @@ class RepositorioCliente:
 
 
     def apagar_cliente_locatario(self, id: UUID) -> bool:
-        cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
+        cliente_locatario = self.obter_cliente_locatario_por_id(id)
         if not cliente_locatario:
             return False
         
@@ -325,13 +324,13 @@ class RepositorioCliente:
             self.criar_cliente_proprietario(cliente, dados_adicionais)
 
 
-    def editar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str):
+    def editar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str, dados_adicionais: Union[ModeloClienteInteressado | ModeloClienteLocatario | ModeloClienteProprietario]):
         if tipo == 'Interessado':
-            self.editar_cliente_interessado(cliente.id)
+            self.editar_cliente_interessado(cliente.id, dados_adicionais)
         elif tipo == 'Locatário':
-            self.editar_cliente_locatario(cliente.id)
+            self.editar_cliente_locatario(cliente.id, dados_adicionais)
         elif tipo == 'Proprietário':
-            self.editar_cliente_proprietario(cliente.id)
+            self.editar_cliente_proprietario(cliente.id, dados_adicionais)
 
 
     def obter_cliente_por_tipo(self, tipo: str, id: UUID):
