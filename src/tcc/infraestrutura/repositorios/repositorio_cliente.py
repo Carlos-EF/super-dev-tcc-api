@@ -97,16 +97,17 @@ class RepositorioCliente:
         return True
     
 
-    def obter_por_id(self, id: UUID) -> ModeloCliente | None:
-        cliente = self.sessao.query(ModeloCliente).filter(ModeloCliente.id == id).first()
+    def obter_por_id(self, id: UUID) -> ModeloCliente | False:
+        cliente = self.sessao.query(ModeloCliente).filter(
+            ModeloCliente.id == id).options(
+                joinedload(ModeloCliente.interessado),
+                joinedload(ModeloCliente.locatario),
+                joinedload(ModeloCliente.proprietario)
+            ).first()
         if not cliente:
             return False
-        
-        dados_adicionais = self.obter_cliente_por_tipo(cliente.tipo, cliente.id)
-        if not dados_adicionais:
-            return False
-        
-        return cliente, dados_adicionais
+             
+        return self.montar_resposta_clientes(cliente)
     
 
     def obter_cliente_locatario_por_id(self, id: UUID) -> ModeloClienteLocatario | None:
@@ -176,7 +177,7 @@ class RepositorioCliente:
             id: UUID,
             dados: ModeloClienteInteressado
     ) -> bool:
-        cliente_interessado_para_alterar = self.sessao.query(ModeloClienteInteressado).filter(ModeloClienteInteressado.id_cliente == id).first()
+        cliente_interessado_para_alterar = self.obter_cliente_interessado_por_id(id)
         if not cliente_interessado_para_alterar:
             return False
         
