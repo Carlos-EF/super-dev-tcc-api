@@ -90,14 +90,14 @@ class RepositorioCliente:
         if not cliente_para_apagar:
             return False
         
-        self.apagar_cliente_por_tipo(cliente_para_apagar)
+        self.apagar_cliente_por_tipo(cliente_para_apagar, cliente_para_apagar.tipo)
         
         self.sessao.delete(cliente_para_apagar)
         self.sessao.commit()
         return True
     
 
-    def obter_por_id(self, id: UUID) -> ModeloCliente | False:
+    def obter_por_id(self, id: UUID) -> ClienteResponse | False:
         cliente = self.sessao.query(ModeloCliente).filter(
             ModeloCliente.id == id).options(
                 joinedload(ModeloCliente.interessado),
