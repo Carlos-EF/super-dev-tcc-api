@@ -195,7 +195,7 @@ class RepositorioCliente:
     
 
     def apagar_cliente_interessado(self, id: UUID) -> bool:
-        cliente_interessado = self.sessao.query(ModeloClienteInteressado).filter(ModeloClienteInteressado.id_cliente == id).first()
+        cliente_interessado = self.obter_cliente_interessado_por_id(id)
         if not cliente_interessado:
             return False
         
@@ -220,7 +220,7 @@ class RepositorioCliente:
             id: UUID,
             dados: ModeloClienteProprietario
     ) -> bool:
-        cliente_proprietario_para_alterar = self.sessao.query(ModeloClienteProprietario).filter(ModeloClienteProprietario.id_cliente == id).first()
+        cliente_proprietario_para_alterar = self.obter_cliente_proprietario_por_id(id)
         if not cliente_proprietario_para_alterar:
             return False
         
@@ -246,7 +246,7 @@ class RepositorioCliente:
     
 
     def apagar_cliente_proprietario(self, id: UUID) -> bool:
-        cliente_proprietario = self.sessao.query(ModeloClienteProprietario).filter(ModeloClienteProprietario.id_cliente == id).first()
+        cliente_proprietario = self.obter_cliente_proprietario_por_id(id)
         if not cliente_proprietario:
             return False
         
@@ -271,7 +271,7 @@ class RepositorioCliente:
             id: UUID,
             dados: ModeloClienteLocatario
     ) -> bool:
-        cliente_locatario_para_alterar = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
+        cliente_locatario_para_alterar = self.obter_cliente_locatario_por_id(id)
         if not cliente_locatario_para_alterar:
             return False
         
@@ -298,7 +298,7 @@ class RepositorioCliente:
 
 
     def apagar_cliente_locatario(self, id: UUID) -> bool:
-        cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
+        cliente_locatario = self.obter_cliente_locatario_por_id(id)
         if not cliente_locatario:
             return False
         
