@@ -9,7 +9,6 @@ from tcc.dominio.enums.status import Status
 
 class CriarClienteRequest(BaseModel):
     status: str = Field(
-        ...,
         default=Status.ATIVO,
         description='Status do cliente dentro do sistema.',
         examples=['ATIVO']
@@ -47,14 +46,12 @@ class CriarClienteRequest(BaseModel):
     )
 
     como_encontrou: ComoEncontrou = Field(
-        ...,
         default=ComoEncontrou.CONTATO_DIRETO,
         description='Como o cliente entrou em contato.',
         examples=['Contato Direto']
     )
 
     tipo: TipoPessoa = Field(
-        ...,
         max_length=12,
         default=TipoPessoa.INTERESSADO,
         description='Tipo do cliente.',
@@ -117,7 +114,6 @@ class AlterarClienteRequest(BaseModel):
     )
 
     tipo: str = Field(
-        ...,
         max_length=12,
         default=TipoPessoa.INTERESSADO,
         description='Tipo do cliente.',
@@ -158,7 +154,7 @@ class ClienteResponse(BaseModel):
     )
 
     status: str = Field(
-        ...,
+        default=Status.ATIVO,
         description='Status do cliente dentro do sistema.',
         examples=['ATIVO']
     )
@@ -189,13 +185,13 @@ class ClienteResponse(BaseModel):
     )
 
     como_encontrou: str = Field(
-        ...,
+        default=ComoEncontrou.CONTATO_DIRETO,
         description='Como o cliente entrou em contato.',
         examples=['Contato Direto']
     )
 
     tipo: str = Field(
-        ...,
+        default=TipoPessoa.INTERESSADO,
         description='Tipo do cliente.',
         examples=['Interessado']
     )
