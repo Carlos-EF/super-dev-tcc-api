@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from tcc.api.configuracoes import configuracoes
 from tcc.api.rotas.corretor_rotas import router as corretor_router
+from tcc.api.rotas.cliente_rotas import router as cliente_router
 
 
 logging.basicConfig(
@@ -48,6 +49,10 @@ def criar_aplicacao() -> FastAPI:
     logger.info('Registrando rotas')
     # Corretor
     app.include_router(corretor_router)
+    logger.info('Rota "/corretor" registrada com sucesso.')
+    # Cliente
+    app.include_router(cliente_router)
+    logger.info('Rota "/cliente" registrada com sucesso.')
 
 
     @app.get(
