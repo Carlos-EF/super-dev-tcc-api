@@ -1,4 +1,4 @@
-from uuid import UUID
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from tcc.infraestrutura.banco_dados.modelos.modelo_base import ModeloBase

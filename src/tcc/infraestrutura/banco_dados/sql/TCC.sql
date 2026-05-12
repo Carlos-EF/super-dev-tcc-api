@@ -1,3 +1,5 @@
+DROP TABLE clientes, corretores, interessados, locatarios, proprietarios;
+
 CREATE TABLE clientes (
     id UUID PRIMARY KEY NOT NULL,
 
@@ -13,7 +15,11 @@ CREATE TABLE clientes (
 
     como_encontrou VARCHAR(14),
 
-    status VARCHAR(7) NOT NULL
+    status VARCHAR(7) NOT NULL,
+
+    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    alterado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -98,5 +104,9 @@ CREATE TABLE corretores (
 
     rg VARCHAR(9),
 
-    cpf VARCHAR(14)
+    cpf VARCHAR(14),
+
+    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    alterado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
