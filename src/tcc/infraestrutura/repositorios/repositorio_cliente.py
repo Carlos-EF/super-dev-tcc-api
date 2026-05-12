@@ -1,7 +1,7 @@
 from typing import Union
 from uuid import UUID, uuid7
 from sqlalchemy.orm import Session, joinedload
-from src.tcc.api.schemas.cliente_schemas import ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest
+from tcc.api.schemas.cliente_schemas import ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado, ModeloClienteLocatario, ModeloClienteProprietario
 
 

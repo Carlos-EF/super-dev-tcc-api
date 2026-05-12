@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Union
 from uuid import UUID
 from pydantic import BaseModel, Field
-from src.tcc.dominio.enums.tipo_pessoa import TipoPessoa
+from tcc.dominio.enums.tipo_pessoa import TipoPessoa
 from tcc.dominio.enums.como_encontrou import ComoEncontrou
 from tcc.dominio.enums.status import Status
 
