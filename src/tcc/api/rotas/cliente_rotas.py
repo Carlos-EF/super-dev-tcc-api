@@ -143,6 +143,51 @@ def editar_cliente(
         )
     
 
+@router.put(
+        '{id}/interessado',
+        status_code=status.HTTP_204_NO_CONTENT,
+        summary='Edição dos dados do cliente na tabela de interessado',
+        responses= {
+            204: {
+                'description': 'Cliente do tipo interessado encontrado e editado com sucesso.'
+            },
+            404: {
+                'description': 'Cliente não encontrado na tabela de interessados.'
+            }
+        }
+)
+
+
+@router.put(
+        '{id}/locatario',
+        status_code=status.HTTP_204_NO_CONTENT,
+        summary='Edição dos dados do cliente na tabela de locatário',
+        responses= {
+            204: {
+                'description': 'Cliente do tipo locatário encontrado e editado com sucesso.'
+            },
+            404: {
+                'description': 'Cliente não encontrado na tabela de locatários.'
+            }
+        }
+)
+
+
+@router.put(
+        '{id}/proprietario',
+        status_code=status.HTTP_204_NO_CONTENT,
+        summary='Edição dos dados do cliente na tabela de proprietário',
+        responses= {
+            204: {
+                'description': 'Cliente do tipo proprietário encontrado e editado com sucesso.'
+            },
+            404: {
+                'description': 'Cliente não encontrado na tabela de proprietários.'
+            }
+        }
+)
+    
+
 @router.get(
     "/{id}",
     response_model=ClienteResponse,
