@@ -1,5 +1,6 @@
 from typing import Union
-from uuid import UUID, uuid7
+from uuid import UUID
+from uuid6 import uuid7
 from sqlalchemy.orm import Session, joinedload
 from tcc.api.schemas.cliente_schemas import ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado, ModeloClienteLocatario, ModeloClienteProprietario
@@ -12,7 +13,7 @@ class RepositorioCliente:
 
     def criar(self, cliente: ModeloCliente, dados_adicionais):
         self.sessao.add(cliente)
-        self.sessao.flush(cliente)
+        self.sessao.flush()
 
         self.criar_cliente_por_tipo(cliente, cliente.tipo, dados_adicionais)
 
@@ -162,7 +163,7 @@ class RepositorioCliente:
             quantidade_quartos = dados.quantidade_quartos,
             quantidade_suites = dados.quantidade_suites,
             quantidade_banheiros = dados.quantidade_banheiros,
-            quantidade_vagas_garagem = dados.quantidade_vagas_garagem,
+            quantidade_vagas = dados.quantidade_vagas,
             quantidade_andares = dados.quantidade_andares,
             quantidade_salas = dados.quantidade_salas,
         )
@@ -189,7 +190,7 @@ class RepositorioCliente:
         cliente_interessado_para_alterar.quantidade_quartos = dados.quantidade_quartos
         cliente_interessado_para_alterar.quantidade_salas = dados.quantidade_salas
         cliente_interessado_para_alterar.quantidade_suites = dados.quantidade_suites
-        cliente_interessado_para_alterar.quantidade_vagas_garagem = dados.quantidade_vagas_garagem
+        cliente_interessado_para_alterar.quantidade_vagas = dados.quantidade_vagas
 
         return True
     

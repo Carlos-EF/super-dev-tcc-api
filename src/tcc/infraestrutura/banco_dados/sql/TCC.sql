@@ -1,15 +1,14 @@
-DROP TABLE clientes, corretores, interessados, locatarios, proprietarios;
 
 CREATE TABLE clientes (
     id UUID PRIMARY KEY NOT NULL,
 
     nome VARCHAR(100) NOT NULL,
 
-    codigo INTEGER NOT NULL,
+    codigo VARCHAR(10) NOT NULL,
 
     tipo VARCHAR(12) NOT NULL,
 
-    celular VARCHAR(14) NOT NULL,
+    celular VARCHAR(15) NOT NULL,
 
     email VARCHAR(40) NOT NULL,
 
@@ -42,11 +41,15 @@ CREATE TABLE interessados (
 
     quantidade_banheiros INTEGER,
 
-    quantidade_vagas_garagem INTEGER,
+    quantidade_vagas INTEGER,
 
     quantidade_andares INTEGER,
 
     quantidade_salas INTEGER,
+
+	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    alterado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_interessado_cliente
         FOREIGN KEY (id_cliente)
@@ -62,6 +65,10 @@ CREATE TABLE proprietarios (
 
     imovel_proprietario TEXT,
 
+	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    alterado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
     CONSTRAINT fk_proprietario_cliente
         FOREIGN KEY (id_cliente)
         REFERENCES clientes(id)
@@ -75,6 +82,10 @@ CREATE TABLE locatarios (
     id_cliente UUID NOT NULL UNIQUE,
 
     imovel_locatario TEXT,
+
+	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    alterado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_locatario_cliente
         FOREIGN KEY (id_cliente)

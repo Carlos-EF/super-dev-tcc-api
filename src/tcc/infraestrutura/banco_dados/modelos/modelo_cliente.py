@@ -19,7 +19,7 @@ class ModeloCliente(ModeloBase):
     )
 
     codigo = Column(
-        Integer,
+        String(10),
         nullable=False
     )
 
@@ -29,7 +29,7 @@ class ModeloCliente(ModeloBase):
     )
 
     celular = Column(
-        String(14),
+        String(15),
         nullable=False
     )
 
@@ -105,7 +105,7 @@ class ModeloClienteInteressado(ModeloBase):
         nullable=True
     )
 
-    quantidade_vagas_garagem = Column(
+    quantidade_vagas = Column(
         Integer,
         nullable=True
     )

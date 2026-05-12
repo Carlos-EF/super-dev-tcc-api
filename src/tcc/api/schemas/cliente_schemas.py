@@ -33,9 +33,9 @@ class CriarClienteRequest(BaseModel):
 
     celular: str = Field(
         ...,
-        max_length=11,
+        max_length=15,
         description='Número de celular do cliente.',
-        examples=['47912345679']
+        examples=['(47) 91234-5679']
     )
 
     email: str = Field(
@@ -80,7 +80,7 @@ class CriarClienteRequest(BaseModel):
                         'quantidade_quartos': 3,
                         'quantidade_suites': 1,
                         'quantidade_banheiros': 2,
-                        'quantidade_vagas_garagem': 2,
+                        'quantidade_vagas': 2,
                         'quantidade_andares': 1,
                         'quantidade_salas': 1
                     }
@@ -124,7 +124,7 @@ class AlterarClienteRequest(BaseModel):
 
     model_config= {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'nome': 'Fagner Silva dos Santos',
                 'celular': '47912345679',
                 'email': 'fagner99@gmail.com',
@@ -137,11 +137,11 @@ class AlterarClienteRequest(BaseModel):
                     'quantidade_quartos': 3,
                     'quantidade_suites': 1,
                     'quantidade_banheiros': 2,
-                    'quantidade_vagas_garagem': 2,
+                    'quantidade_vagas': 2,
                     'quantidade_andares': 1,
                     'quantidade_salas': 1
                 }
-            }
+            }]
         }
     }
 
@@ -149,7 +149,7 @@ class AlterarClienteRequest(BaseModel):
 class ClienteResponse(BaseModel):
     id: UUID = Field(
         ...,
-        description=['Identificador (UUID v7) único do cliente.'],
+        description='Identificador (UUID v7) único do cliente.',
         examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
     )
 
@@ -212,7 +212,7 @@ class ClienteResponse(BaseModel):
 
     model_config= {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'id': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
                 'status': 'ATIVO',
                 'nome': 'Fagner Silva dos Santos',
@@ -229,79 +229,73 @@ class ClienteResponse(BaseModel):
                     'quantidade_quartos': 3,
                     'quantidade_suites': 1,
                     'quantidade_banheiros': 2,
-                    'quantidade_vagas_garagem': 2,
+                    'quantidade_vagas': 2,
                     'quantidade_andares': 1,
                     'quantidade_salas': 1
                 },
                 'criado_em': '2026-03-19T10:30:00',
                 'alterado_em': None,
-            }
+            }]
         }
     }
 
 
 class CriarClienteInteressadoRequest(BaseModel):
-    id_cliente: UUID = Field(
-        ...,
-        description=['Identificador (UUID v7) único do cliente.'],
-        examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
-    )
-
     procurando: str = Field(
         ...,
-        description=['Tipo de imóvel que o cliente está procurando.'],
+        description='Tipo de imóvel que o cliente está procurando.',
         examples=['Casa']
     )
 
     orcamento: int = Field(
         ...,
-        description=['Orçamento do cliente.'],
+        description='Orçamento do cliente.',
         examples=[500000]
     )
 
     orcamento_minimo: int = Field(
-        description=['Orçamento mínimo do cliente'],
+        description='Orçamento mínimo do cliente',
         examples=[350000]
     )
 
     orcamento_maximo: int = Field(
-        description=['Orçamento máximo do cliente'],
+        description='Orçamento máximo do cliente',
         examples=[650000]
     )
 
     quantidade_quartos: int = Field(
-        description=['Quantidade desejada de quartos do cliente.'],
+        description='Quantidade desejada de quartos do cliente.',
         examples=[3]
     )
 
     quantidade_suites: int = Field(
-        description=['Quantidade desejada de suítes do cliente.'],
+        description='Quantidade desejada de suítes do cliente.',
         examples=[1]
     )
 
     quantidade_banheiros: int = Field(
-        description=['Quantidade desejada de banheiros do cliente.'],
+        description='Quantidade desejada de banheiros do cliente.',
         examples=[2]
     )
 
-    quantidade_vagas_garagem: int = Field(
-        description=['Quantidade desejada de vagas de garagem do cliente.'],
+    quantidade_vagas: int = Field(
+        description='Quantidade desejada de vagas de garagem do cliente.',
         examples=[2]
     )
 
     quantidade_andares: int = Field(
-        description=['Quantidade desejada de andares do cliente.'],
+        description='Quantidade desejada de andares do cliente.',
         examples=[1]
     )
 
     quantidade_salas: int = Field(
-        description=['Quantidade desejada de salas do cliente.'],
+        description='Quantidade desejada de salas do cliente.',
         examples=[1]
     )
 
     model_config = {
     'json_schema_extra': {
-        'examples': {
+        'examples': [{
             'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
             'procurando': 'Casa',
             'orcamento': 500000,
@@ -313,7 +307,7 @@ class CriarClienteInteressadoRequest(BaseModel):
             'quantidade_vagas': 2,
             'quantidade_andares': 1,
             'quantidade_salas': 1
-        }
+        }]
     }
 }
     
@@ -321,59 +315,59 @@ class CriarClienteInteressadoRequest(BaseModel):
 class EditarClienteInteressadoRequest(BaseModel):
     tipo_imovel: str = Field(
         ...,
-        description=['Tipo de imóvel que o cliente está procurando.'],
+        description='Tipo de imóvel que o cliente está procurando.',
         examples=['Casa']
     )
 
     orcamento: int = Field(
         ...,
-        description=['Orçamento do cliente.'],
+        description='Orçamento do cliente.',
         examples=[500000]
     )
 
     orcamento_minimo: int = Field(
-        description=['Orçamento mínimo do cliente'],
+        description='Orçamento mínimo do cliente',
         examples=[350000]
     )
 
     orcamento_maximo: int = Field(
-        description=['Orçamento máximo do cliente'],
+        description='Orçamento máximo do cliente',
         examples=[650000]
     )
 
     quantidade_quartos: int = Field(
-        description=['Quantidade desejada de quartos do cliente.'],
+        description='Quantidade desejada de quartos do cliente.',
         examples=[3]
     )
 
     quantidade_suites: int = Field(
-        description=['Quantidade desejada de suítes do cliente.'],
+        description='Quantidade desejada de suítes do cliente.',
         examples=[1]
     )
 
     quantidade_banheiros: int = Field(
-        description=['Quantidade desejada de banheiros do cliente.'],
+        description='Quantidade desejada de banheiros do cliente.',
         examples=[2]
     )
 
-    quantidade_vagas_garagem: int = Field(
-        description=['Quantidade desejada de vagas de garagem do cliente.'],
+    quantidade_vagas: int = Field(
+        description='Quantidade desejada de vagas de garagem do cliente.',
         examples=[2]
     )
 
     quantidade_andares: int = Field(
-        description=['Quantidade desejada de andares do cliente.'],
+        description='Quantidade desejada de andares do cliente.',
         examples=[1]
     )
 
     quantidade_salas: int = Field(
-        description=['Quantidade desejada de salas do cliente.'],
+        description='Quantidade desejada de salas do cliente.',
         examples=[1]
     )
 
     model_config = {
     'json_schema_extra': {
-        'examples': {
+        'examples': [{
             'tipo_imovel': 'Casa',
             'orcamento': 500000,
             'orcamento_minimo': 350000,
@@ -384,7 +378,7 @@ class EditarClienteInteressadoRequest(BaseModel):
             'quantidade_vagas': 2,
             'quantidade_andares': 1,
             'quantidade_salas': 1
-        }
+        }]
     }
 }
     
@@ -392,83 +386,83 @@ class EditarClienteInteressadoRequest(BaseModel):
 class ClienteInteressadoResponse(BaseModel):
     id: UUID = Field(
     ...,
-    description=['Identificador (UUID v7) único do cliente na tabela de intessado.'],
+    description='Identificador (UUID v7) único do cliente na tabela de intessado.',
     examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
     )
     
     id_cliente: UUID = Field(
         ...,
-        description=['Identificador (UUID v7) único do cliente.'],
+        description='Identificador (UUID v7) único do cliente.',
         examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
     )
 
     tipo_imovel: str = Field(
         ...,
-        description=['Tipo de imóvel que o cliente está procurando.'],
+        description='Tipo de imóvel que o cliente está procurando.',
         examples=['Casa']
     )
 
     orcamento: int = Field(
         ...,
-        description=['Orçamento do cliente.'],
+        description='Orçamento do cliente.',
         examples=[500000]
     )
 
     orcamento_minimo: int = Field(
-        description=['Orçamento mínimo do cliente'],
+        description='Orçamento mínimo do cliente',
         examples=[350000]
     )
 
     orcamento_maximo: int = Field(
-        description=['Orçamento máximo do cliente'],
+        description='Orçamento máximo do cliente',
         examples=[650000]
     )
 
     quantidade_quartos: int = Field(
-        description=['Quantidade desejada de quartos do cliente.'],
+        description='Quantidade desejada de quartos do cliente.',
         examples=[3]
     )
 
     quantidade_suites: int = Field(
-        description=['Quantidade desejada de suítes do cliente.'],
+        description='Quantidade desejada de suítes do cliente.',
         examples=[1]
     )
 
     quantidade_banheiros: int = Field(
-        description=['Quantidade desejada de banheiros do cliente.'],
+        description='Quantidade desejada de banheiros do cliente.',
         examples=[2]
     )
 
-    quantidade_vagas_garagem: int = Field(
-        description=['Quantidade desejada de vagas de garagem do cliente.'],
+    quantidade_vagas: int = Field(
+        description='Quantidade desejada de vagas de garagem do cliente.',
         examples=[2]
     )
 
     quantidade_andares: int = Field(
-        description=['Quantidade desejada de andares do cliente.'],
+        description='Quantidade desejada de andares do cliente.',
         examples=[1]
     )
 
     quantidade_salas: int = Field(
-        description=['Quantidade desejada de salas do cliente.'],
+        description='Quantidade desejada de salas do cliente.',
         examples=[1]
     )
 
     criado_em: datetime = Field(
         ...,
-        description=['Data de criação do cliente na tabela de interessado.'],
+        description='Data de criação do cliente na tabela de interessado.',
         examples=['2026-04-23T08:24:00']
     )
 
     alterado_em: datetime | None = Field(
         ...,
-        description=['Data de edição do cliente na tabela de interessado.'],
+        description='Data de edição do cliente na tabela de interessado.',
         examples=['']
     )
 
     model_config = {
     'json_schema_extra': {
-        'examples': {
+        'examples': [{
             'id': '019db9eb-db4c-7246-9025-0e0b7da207d7',
             'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
             'tipo_imovel': 'Casa',
@@ -483,44 +477,38 @@ class ClienteInteressadoResponse(BaseModel):
             'quantidade_salas': 1,
             'criado_em': '2026-04-23T08:24:00',
             'alterado_em': None
-        }
+        }]
     }
 }
     
 
 class CriarClienteProprietarioRequest(BaseModel):
-    id_cliente: UUID = Field(
-        ...,
-        description=['Identificador (UUID v7) único do cliente.'],
-        examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
-    )
-
     imovel_associado: str | None = Field(
-        description=['Link do imóvel cadastrado do proprietário.'],
+        description='Link do imóvel cadastrado do proprietário.',
         examples=['']
     )
 
     model_config = {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
                 'imovel_associado': None
-            }
+            }]
         }
     }   
 
 
 class EditarClienteProprietarioRequest(BaseModel):
     imovel_associado: str | None = Field(
-        description=['Link do imóvel cadastrado do proprietário.'],
+        description='Link do imóvel cadastrado do proprietário.',
         examples=['']
     )
 
     model_config = {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'imovel_associado': None
-            }
+            }]
         }
     }
 
@@ -528,18 +516,18 @@ class EditarClienteProprietarioRequest(BaseModel):
 class ClienteProprietarioResponse(BaseModel):
     id: UUID = Field(
         ...,
-        description=['Identificador (UUIDv7) único do cliente na tabela de proprietários.'],
+        description='Identificador (UUIDv7) único do cliente na tabela de proprietários.',
         examples=['019dbf01-46bf-7d93-89fc-41235daeda65']
     )
 
     id_cliente: UUID = Field(
         ...,
-        description=['Identificador (UUID v7) único do cliente.'],
+        description='Identificador (UUID v7) único do cliente.',
         examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
     )
 
     imovel_associado: str | None = Field(
-        description=['Link do imóvel cadastrado do proprietário.'],
+        description='Link do imóvel cadastrado do proprietário.',
         examples=['']
     )
 
@@ -556,50 +544,44 @@ class ClienteProprietarioResponse(BaseModel):
 
     model_config = {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'id': '019dbf01-46bf-7d93-89fc-41235daeda65',
                 'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
                 'imovel_associado': None,
                 'criado_em': '2026-04-24T08:25:14',
                 'alterado_em': None,
-            }
+            }]
         }
     }
 
 
 class CriarClienteLocatarioRequest(BaseModel):
-    id_cliente: UUID = Field(
-        ...,
-        description=['Identificador (UUID v7) único do cliente.'],
-        examples=['019dc49d-4b0f-72e7-a6b5-4a6669038742']
-    )
-
     imovel_associado: str | None = Field(
-        description=['Imóvel associado ao cliente.'],
+        description='Imóvel associado ao cliente.',
         examples=['']
     )
 
     model_config = {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'id_cliente': '019dc49d-4b0f-72e7-a6b5-4a6669038742',
                 'imovel_associado': None
-            }
+            }]
         }
     }
 
 
 class EditarClienteLocatarioRequest(BaseModel):
     imovel_associado: str | None = Field(
-        description=['Imovél associado ao cliente'],
+        description='Imovél associado ao cliente',
         examples=['']
     )
 
     model_config = {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'imovel_associado': None
-            }
+            }]
         }
     }
 
@@ -607,41 +589,41 @@ class EditarClienteLocatarioRequest(BaseModel):
 class ClienteLocatarioResponse(BaseModel):
     id: UUID = Field(
         ...,
-        description=['Identificador (UUIDv7) único do cliente na tabela de Locatários.'],
+        description='Identificador (UUIDv7) único do cliente na tabela de Locatários.',
         examples=['019dc4a4-4c49-776d-9243-175708f3b652']
     )
 
     id_cliente: UUID = Field(
         ...,
-        description=['Identificador (UUIDv7) único do cliente.'],
+        description='Identificador (UUIDv7) único do cliente.',
         examples=['019dc49d-4b0f-72e7-a6b5-4a6669038742']
     )
 
     imovel_associado: str | None = Field(
-        description=['Imovél associado ao cliente.'],
+        description='Imovél associado ao cliente.',
         examples=['']
     )
 
     criado_em: datetime = Field(
         ...,
-        description=['Data da criação do registro'],
+        description='Data da criação do registro',
         examples=['2026-04-25T09:38:00']
     )
 
     alterado_em: datetime | None = Field(
-        description=['Data da última modificação dos dados do cliente.'],
+        description='Data da última modificação dos dados do cliente.',
         examples=['']
     )
 
     model_config = {
         'json_schema_extra': {
-            'examples': {
+            'examples': [{
                 'id': '019dc4a4-4c49-776d-9243-175708f3b652',
                 'id_cliente': '019dc49d-4b0f-72e7-a6b5-4a6669038742',
                 'imovel_associado': None,
                 'criado_em': '2026-04-25T09:38:00',
                 'alterado_em': None
-            }
+            }]
         }
     }
 

@@ -14,7 +14,7 @@ router = APIRouter(
     prefix='/clientes',
     tags=['Clientes'],
 )
-router.post(
+@router.post(
     '',
     response_model=ClienteResponse,
     status_code=status.HTTP_201_CREATED,
