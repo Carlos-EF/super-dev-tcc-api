@@ -299,3 +299,49 @@ def apagar_cliente(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Cliente não encontrado.'
         )
+    
+
+@router.delete(
+    '{id}/interessado',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Apaga registro na tabela de interessado',
+    description='Apaga o registro do cliente na tabela de interessados.',
+    responses= {
+        204: {
+            'description': 'Registro do cliente encontrado e deletado com sucesso.'
+        },
+        404: {
+            'description': 'Registro não encontrado'
+        }
+    }
+)
+
+@router.delete(
+    '{id}/locatario',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Apaga registro na tabela de locatário',
+    description='Apaga o registro do cliente na tabela de locatários.',
+    responses= {
+        204: {
+            'description': 'Registro do cliente encontrado e deletado com sucesso.'
+        },
+        404: {
+            'description': 'Registro não encontrado'
+        }
+    }
+)
+
+@router.delete(
+    '{id}/proprietario',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Apaga registro na tabela de proprietário',
+    description='Apaga o registro do cliente na tabela de proprietários.',
+    responses= {
+        204: {
+            'description': 'Registro do cliente encontrado e deletado com sucesso.'
+        },
+        404: {
+            'description': 'Registro não encontrado'
+        }
+    }
+)
