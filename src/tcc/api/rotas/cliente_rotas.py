@@ -7,7 +7,7 @@ from uuid6 import uuid7
 from tcc.infraestrutura.conexao import obter_sessao
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente
 from tcc.infraestrutura.repositorios.repositorio_cliente import RepositorioCliente
-from tcc.api.schemas.cliente_schemas import AlterarClienteRequest, ClienteResponse, CriarClienteRequest
+from tcc.api.schemas.cliente_schemas import AlterarClienteRequest, ClienteInteressadoResponse, ClienteLocatarioResponse, ClienteProprietarioResponse, ClienteResponse, CriarClienteRequest
 
 
 router = APIRouter(
@@ -45,6 +45,46 @@ def criar_cliente(
 
     cliente = repositorio.criar(cliente, dados.dados_adicionais)
     return cliente
+
+
+@router.post(
+        '/interessado',
+        response_model=ClienteInteressadoResponse,
+        status_code=status.HTTP_201_CREATED,
+        summary='Criar o registro na tabela de interessado.',
+        responses={
+            201: {
+                'description': 'Cliente do tipo interessado criado com sucesso.',
+                'model': ClienteInteressadoResponse
+            }
+        }
+)
+
+@router.post(
+        '/locatario',
+        response_model=ClienteLocatarioResponse,
+        status_code=status.HTTP_201_CREATED,
+        summary='Criar o registro na tabela de locatário.',
+        responses={
+            201: {
+                'description': 'Cliente do tipo locatário criado com sucesso.',
+                'model': ClienteLocatarioResponse
+            }
+        }
+)
+
+@router.post(
+        '/proprietario',
+        response_model=ClienteProprietarioResponse,
+        status_code=status.HTTP_201_CREATED,
+        summary='Criar o registro na tabela de proprietário.',
+        responses={
+            201: {
+                'description': 'Cliente do tipo proprietário criado com sucesso.',
+                'model': ClienteProprietarioResponse
+            }
+        }
+)
 
 
 @router.get(
