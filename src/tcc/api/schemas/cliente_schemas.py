@@ -58,8 +58,6 @@ class CriarClienteRequest(BaseModel):
         examples=['Interessado']
     )
 
-    dados_adicionais: CriarDadosAdicionaisCliente
-
     model_config= {
         'json_schema_extra': {
             'examples': [
@@ -71,19 +69,6 @@ class CriarClienteRequest(BaseModel):
                     'email': 'fagner99@gmail.com',
                     'como_encontrou': 'Contato Direto',
                     'tipo': 'Interessado',
-                    'dados_adicionais': {
-                        'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
-                        'procurando': 'Casa',
-                        'orcamento': 500000,
-                        'orcamento_minimo': 350000,
-                        'orcamento_maximo': 650000,
-                        'quantidade_quartos': 3,
-                        'quantidade_suites': 1,
-                        'quantidade_banheiros': 2,
-                        'quantidade_vagas': 2,
-                        'quantidade_andares': 1,
-                        'quantidade_salas': 1
-                    }
                 }
             ]
         }
@@ -120,8 +105,6 @@ class AlterarClienteRequest(BaseModel):
         examples=['Interessado']
     )
 
-    dados_adicionais: EditarDadosAdicionais
-
     model_config= {
         'json_schema_extra': {
             'examples': [{
@@ -129,18 +112,6 @@ class AlterarClienteRequest(BaseModel):
                 'celular': '47912345679',
                 'email': 'fagner99@gmail.com',
                 'tipo': 'Interessado',
-                'dados_adicionais': {
-                    'tipo_imovel': 'Casa',
-                    'orcamento': 500000,
-                    'orcamento_minimo': 350000,
-                    'orcamento_maximo': 650000,
-                    'quantidade_quartos': 3,
-                    'quantidade_suites': 1,
-                    'quantidade_banheiros': 2,
-                    'quantidade_vagas': 2,
-                    'quantidade_andares': 1,
-                    'quantidade_salas': 1
-                }
             }]
         }
     }
@@ -241,6 +212,12 @@ class ClienteResponse(BaseModel):
 
 
 class CriarClienteInteressadoRequest(BaseModel):
+    id_cliente: UUID = Field(
+        ...,
+        description='Identificador (UUID v7) único do cliente.',
+        examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
+    )
+
     procurando: str = Field(
         ...,
         description='Tipo de imóvel que o cliente está procurando.',
@@ -483,6 +460,12 @@ class ClienteInteressadoResponse(BaseModel):
     
 
 class CriarClienteProprietarioRequest(BaseModel):
+    id_cliente: UUID = Field(
+        ...,
+        description='Identificador (UUID v7) único do cliente.',
+        examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
+    )
+
     imovel_associado: str | None = Field(
         description='Link do imóvel cadastrado do proprietário.',
         examples=['']
@@ -556,6 +539,12 @@ class ClienteProprietarioResponse(BaseModel):
 
 
 class CriarClienteLocatarioRequest(BaseModel):
+    id_cliente: UUID = Field(
+        ...,
+        description='Identificador (UUID v7) único do cliente.',
+        examples=['019dc49d-4b0f-72e7-a6b5-4a6669038742']
+    )
+
     imovel_associado: str | None = Field(
         description='Imóvel associado ao cliente.',
         examples=['']
@@ -628,10 +617,19 @@ class ClienteLocatarioResponse(BaseModel):
     }
 
 
-CriarDadosAdicionaisCliente = Union[CriarClienteInteressadoRequest | CriarClienteLocatarioRequest | CriarClienteProprietarioRequest]
+CriarDadosAdicionaisCliente = Union[
+    CriarClienteInteressadoRequest | 
+    CriarClienteLocatarioRequest | 
+    CriarClienteProprietarioRequest]
 
 
-DadosAdicionais = Union[ClienteInteressadoResponse | ClienteLocatarioResponse | ClienteProprietarioResponse]
+DadosAdicionais = Union[
+    ClienteInteressadoResponse | 
+    ClienteLocatarioResponse | 
+    ClienteProprietarioResponse]
 
 
-EditarDadosAdicionais = Union[EditarClienteInteressadoRequest | EditarClienteLocatarioRequest | EditarClienteProprietarioRequest]
+EditarDadosAdicionais = Union[
+    EditarClienteInteressadoRequest | 
+    EditarClienteLocatarioRequest | 
+    EditarClienteProprietarioRequest]
