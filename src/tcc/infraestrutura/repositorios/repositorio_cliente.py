@@ -2,7 +2,7 @@ from typing import Union
 from uuid import UUID
 from uuid6 import uuid7
 from sqlalchemy.orm import Session, joinedload
-from tcc.api.schemas.cliente_schemas import ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest
+from tcc.api.schemas.cliente_schemas import ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest, CriarDadosAdicionaisCliente, DadosAdicionais
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado, ModeloClienteLocatario, ModeloClienteProprietario
 
 
@@ -11,7 +11,7 @@ class RepositorioCliente:
         self.sessao = sessao
 
 
-    def criar(self, cliente: ModeloCliente, dados_adicionais):
+    def criar(self, cliente: ModeloCliente, dados_adicionais: CriarDadosAdicionaisCliente):
         self.sessao.add(cliente)
         self.sessao.flush()
 
@@ -316,7 +316,7 @@ class RepositorioCliente:
             self.apagar_cliente_proprietario(cliente.id)
 
     
-    def criar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str, dados_adicionais):
+    def criar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str, dados_adicionais: CriarDadosAdicionaisCliente):
         if tipo == 'Interessado':
             self.criar_cliente_interessado(cliente, dados_adicionais)
         elif tipo == 'Locatário':

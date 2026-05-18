@@ -7,7 +7,7 @@ from uuid6 import uuid7
 from tcc.infraestrutura.conexao import obter_sessao
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente
 from tcc.infraestrutura.repositorios.repositorio_cliente import RepositorioCliente
-from tcc.api.schemas.cliente_schemas import AlterarClienteRequest, ClienteInteressadoResponse, ClienteLocatarioResponse, ClienteProprietarioResponse, ClienteResponse, CriarClienteRequest
+from tcc.api.schemas.cliente_schemas import AlterarClienteRequest, ClienteResponse, CriarClienteRequest, CriarDadosAdicionaisCliente
 
 
 router = APIRouter(
@@ -28,6 +28,7 @@ router = APIRouter(
 )
 def criar_cliente(
         dados: CriarClienteRequest,
+        dados_adicionais: CriarDadosAdicionaisCliente,
         session: Session = Depends(obter_sessao)
 ) -> ClienteResponse:
     """Cadastrar um novo cliente."""
@@ -43,48 +44,8 @@ def criar_cliente(
     )
     repositorio = RepositorioCliente(sessao=session)
 
-    cliente = repositorio.criar(cliente, dados.dados_adicionais)
+    cliente = repositorio.criar(cliente, dados_adicionais)
     return cliente
-
-
-@router.post(
-        '/interessado',
-        response_model=ClienteInteressadoResponse,
-        status_code=status.HTTP_201_CREATED,
-        summary='Criar o registro na tabela de interessado.',
-        responses={
-            201: {
-                'description': 'Cliente do tipo interessado criado com sucesso.',
-                'model': ClienteInteressadoResponse
-            }
-        }
-)
-
-@router.post(
-        '/locatario',
-        response_model=ClienteLocatarioResponse,
-        status_code=status.HTTP_201_CREATED,
-        summary='Criar o registro na tabela de locatário.',
-        responses={
-            201: {
-                'description': 'Cliente do tipo locatário criado com sucesso.',
-                'model': ClienteLocatarioResponse
-            }
-        }
-)
-
-@router.post(
-        '/proprietario',
-        response_model=ClienteProprietarioResponse,
-        status_code=status.HTTP_201_CREATED,
-        summary='Criar o registro na tabela de proprietário.',
-        responses={
-            201: {
-                'description': 'Cliente do tipo proprietário criado com sucesso.',
-                'model': ClienteProprietarioResponse
-            }
-        }
-)
 
 
 @router.get(
@@ -141,52 +102,7 @@ def editar_cliente(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Cliente não encontrado.'
         )
-    
-
-@router.put(
-        '{id}/interessado',
-        status_code=status.HTTP_204_NO_CONTENT,
-        summary='Edição dos dados do cliente na tabela de interessado',
-        responses= {
-            204: {
-                'description': 'Cliente do tipo interessado encontrado e editado com sucesso.'
-            },
-            404: {
-                'description': 'Cliente não encontrado na tabela de interessados.'
-            }
-        }
-)
-
-
-@router.put(
-        '{id}/locatario',
-        status_code=status.HTTP_204_NO_CONTENT,
-        summary='Edição dos dados do cliente na tabela de locatário',
-        responses= {
-            204: {
-                'description': 'Cliente do tipo locatário encontrado e editado com sucesso.'
-            },
-            404: {
-                'description': 'Cliente não encontrado na tabela de locatários.'
-            }
-        }
-)
-
-
-@router.put(
-        '{id}/proprietario',
-        status_code=status.HTTP_204_NO_CONTENT,
-        summary='Edição dos dados do cliente na tabela de proprietário',
-        responses= {
-            204: {
-                'description': 'Cliente do tipo proprietário encontrado e editado com sucesso.'
-            },
-            404: {
-                'description': 'Cliente não encontrado na tabela de proprietários.'
-            }
-        }
-)
-    
+       
 
 @router.get(
     "/{id}",
@@ -299,49 +215,3 @@ def apagar_cliente(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Cliente não encontrado.'
         )
-    
-
-@router.delete(
-    '{id}/interessado',
-    status_code=status.HTTP_204_NO_CONTENT,
-    summary='Apaga registro na tabela de interessado',
-    description='Apaga o registro do cliente na tabela de interessados.',
-    responses= {
-        204: {
-            'description': 'Registro do cliente encontrado e deletado com sucesso.'
-        },
-        404: {
-            'description': 'Registro não encontrado'
-        }
-    }
-)
-
-@router.delete(
-    '{id}/locatario',
-    status_code=status.HTTP_204_NO_CONTENT,
-    summary='Apaga registro na tabela de locatário',
-    description='Apaga o registro do cliente na tabela de locatários.',
-    responses= {
-        204: {
-            'description': 'Registro do cliente encontrado e deletado com sucesso.'
-        },
-        404: {
-            'description': 'Registro não encontrado'
-        }
-    }
-)
-
-@router.delete(
-    '{id}/proprietario',
-    status_code=status.HTTP_204_NO_CONTENT,
-    summary='Apaga registro na tabela de proprietário',
-    description='Apaga o registro do cliente na tabela de proprietários.',
-    responses= {
-        204: {
-            'description': 'Registro do cliente encontrado e deletado com sucesso.'
-        },
-        404: {
-            'description': 'Registro não encontrado'
-        }
-    }
-)
