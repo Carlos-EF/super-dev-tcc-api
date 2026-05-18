@@ -1,8 +1,9 @@
+from datetime import datetime
 from typing import Union
 from uuid import UUID
 from uuid6 import uuid7
 from sqlalchemy.orm import Session, joinedload
-from tcc.api.schemas.cliente_schemas import ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest, CriarDadosAdicionaisCliente, DadosAdicionais
+from tcc.api.schemas.cliente_schemas import ClienteInteressadoResponse, ClienteLocatarioResponse, ClienteProprietarioResponse, ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest, CriarDadosAdicionaisCliente, DadosAdicionais
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado, ModeloClienteLocatario, ModeloClienteProprietario
 
 
@@ -19,7 +20,7 @@ class RepositorioCliente:
 
         self.sessao.commit()
 
-        return cliente
+        return self.montar_resposta_clientes(cliente)
     
 
     def editar (
@@ -58,12 +59,7 @@ class RepositorioCliente:
             joinedload(ModeloCliente.locatario), 
             joinedload(ModeloCliente.proprietario)).all()
 
-        clientes = [
-            self.montar_resposta_clientes(clientes)
-            for clientes in clientes
-            ]
-        
-        return clientes
+        return [self.montar_resposta_clientes(cliente) for cliente in clientes]
     
 
     def inativar(self, id: UUID) -> bool:
@@ -166,6 +162,7 @@ class RepositorioCliente:
             quantidade_vagas = dados.quantidade_vagas,
             quantidade_andares = dados.quantidade_andares,
             quantidade_salas = dados.quantidade_salas,
+            criado_em = datetime.now()
         )
 
         self.sessao.add(cliente_interessado)
@@ -191,6 +188,7 @@ class RepositorioCliente:
         cliente_interessado_para_alterar.quantidade_salas = dados.quantidade_salas
         cliente_interessado_para_alterar.quantidade_suites = dados.quantidade_suites
         cliente_interessado_para_alterar.quantidade_vagas = dados.quantidade_vagas
+        cliente_interessado_para_alterar.alterado_em = datetime.now()
 
         return True
     
@@ -209,6 +207,7 @@ class RepositorioCliente:
             id = uuid7(),
             id_cliente = cliente.id,
             imovel_associado = dados.imovel_associado,
+            criado_em = datetime.now()
         )
 
         self.sessao.add(cliente_proprietario)
@@ -225,8 +224,9 @@ class RepositorioCliente:
         if not cliente_proprietario_para_alterar:
             return False
         
-        cliente_proprietario_para_alterar.imovel_proprietario = dados.imovel_proprietario
-        
+        cliente_proprietario_para_alterar.imovel_associado = dados.imovel_associado
+        cliente_proprietario_para_alterar.alterado_em = datetime.now()
+
         return True
     
 
@@ -259,7 +259,8 @@ class RepositorioCliente:
         cliente_locatario = ModeloClienteLocatario(
             id = uuid7(),
             id_cliente = cliente.id,
-            imovel_associado = dados.imovel_associado
+            imovel_associado = dados.imovel_associado,
+            criado_em = datetime.now()
         )
 
         self.sessao.add(cliente_locatario)
@@ -276,8 +277,8 @@ class RepositorioCliente:
         if not cliente_locatario_para_alterar:
             return False
         
-        cliente_locatario_para_alterar.imovel_locatario = dados.imovel_locatario
-
+        cliente_locatario_para_alterar.imovel_associado = dados.imovel_associado
+        cliente_locatario_para_alterar.alterado_em = datetime.now()
         return True
     
 
@@ -355,16 +356,50 @@ class RepositorioCliente:
             email=cliente.email,
             tipo=cliente.tipo,
             como_encontrou=cliente.como_encontrou,
-            dados_adicionais=dados_adicionais
+            criado_em=cliente.criado_em,
+            dados_adicionais=dados_adicionais,
         )
     
 
     def obter_dados_por_tipo(self, cliente: ModeloCliente):
         if cliente.tipo == 'Interessado':
-            return cliente.interessado
-        elif cliente.tipo == 'Locatário':
-            return cliente.locatario
-        elif cliente.tipo == 'Proprietário':
-            return cliente.proprietario
+            interessado = cliente.interessado
+            
+            return ClienteInteressadoResponse(
+                id_cliente=interessado.id_cliente,
+                id=interessado.id,
+                procurando=interessado.procurando,
+                orcamento=interessado.orcamento,
+                orcamento_minimo=interessado.orcamento_minimo,
+                orcamento_maximo=interessado.orcamento_maximo,
+                quantidade_quartos=interessado.quantidade_quartos,
+                quantidade_suites=interessado.quantidade_suites,
+                quantidade_banheiros=interessado.quantidade_banheiros,
+                quantidade_vagas=interessado.quantidade_vagas,
+                quantidade_andares=interessado.quantidade_andares,
+                quantidade_salas=interessado.quantidade_salas,
+                criado_em=interessado.criado_em,
+                alterado_em=interessado.alterado_em
+            )
         
+        elif cliente.tipo == 'Locatário':
+            locatario = cliente.locatario
+
+            return ClienteLocatarioResponse(
+                id=locatario.id,
+                id_cliente=locatario.id_cliente,
+                imovel_associado=locatario.imovel_associado,
+                criado_em=locatario.criado_em,
+                alterado_em=locatario.alterado_em
+            )
+        elif cliente.tipo == 'Proprietário':
+            proprietario = cliente.proprietario
+
+            return ClienteProprietarioResponse(
+                id=proprietario.id,
+                id_cliente=proprietario.id_cliente,
+                imovel_associado=proprietario.imovel_associado,
+                criado_em=proprietario.criado_em,
+                alterado_em=proprietario.alterado_em
+            )
 

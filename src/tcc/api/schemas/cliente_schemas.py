@@ -212,12 +212,6 @@ class ClienteResponse(BaseModel):
 
 
 class CriarClienteInteressadoRequest(BaseModel):
-    id_cliente: UUID = Field(
-        ...,
-        description='Identificador (UUID v7) único do cliente.',
-        examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
-    )
-
     procurando: str = Field(
         ...,
         description='Tipo de imóvel que o cliente está procurando.',
@@ -373,7 +367,7 @@ class ClienteInteressadoResponse(BaseModel):
         examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
     )
 
-    tipo_imovel: str = Field(
+    procurando: str = Field(
         ...,
         description='Tipo de imóvel que o cliente está procurando.',
         examples=['Casa']
@@ -460,12 +454,6 @@ class ClienteInteressadoResponse(BaseModel):
     
 
 class CriarClienteProprietarioRequest(BaseModel):
-    id_cliente: UUID = Field(
-        ...,
-        description='Identificador (UUID v7) único do cliente.',
-        examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
-    )
-
     imovel_associado: str | None = Field(
         description='Link do imóvel cadastrado do proprietário.',
         examples=['']
@@ -539,12 +527,6 @@ class ClienteProprietarioResponse(BaseModel):
 
 
 class CriarClienteLocatarioRequest(BaseModel):
-    id_cliente: UUID = Field(
-        ...,
-        description='Identificador (UUID v7) único do cliente.',
-        examples=['019dc49d-4b0f-72e7-a6b5-4a6669038742']
-    )
-
     imovel_associado: str | None = Field(
         description='Imóvel associado ao cliente.',
         examples=['']
