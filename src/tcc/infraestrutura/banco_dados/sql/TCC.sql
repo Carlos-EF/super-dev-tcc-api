@@ -1,4 +1,5 @@
 
+
 CREATE TABLE clientes (
     id UUID PRIMARY KEY NOT NULL,
 
@@ -18,7 +19,7 @@ CREATE TABLE clientes (
 
     criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    alterado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -49,7 +50,7 @@ CREATE TABLE interessados (
 
 	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    alterado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_interessado_cliente
         FOREIGN KEY (id_cliente)
@@ -63,7 +64,7 @@ CREATE TABLE proprietarios (
 
     id_cliente UUID NOT NULL UNIQUE,
 
-    imovel_proprietario TEXT,
+    imovel_associado TEXT,
 
 	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -81,11 +82,11 @@ CREATE TABLE locatarios (
 
     id_cliente UUID NOT NULL UNIQUE,
 
-    imovel_locatario TEXT,
+    imovel_associado TEXT,
 
 	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    alterado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_locatario_cliente
         FOREIGN KEY (id_cliente)
@@ -119,5 +120,7 @@ CREATE TABLE corretores (
 
     criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    alterado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+SELECT * from clientes;

@@ -1,5 +1,5 @@
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String
 from tcc.infraestrutura.banco_dados.modelos.modelo_base import ModeloBase
 
 

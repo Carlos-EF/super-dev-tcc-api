@@ -1,5 +1,5 @@
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from tcc.infraestrutura.banco_dados.modelos.modelo_base import ModeloBase
 
@@ -120,6 +120,16 @@ class ModeloClienteInteressado(ModeloBase):
         nullable=True
     )
 
+    criado_em = Column(
+        Date,
+        nullable=False
+    )
+
+    alterado_em = Column(
+        Date,
+        nullable=True
+    )
+
     cliente = relationship('ModeloCliente', back_populates='interessado')
 
 
@@ -138,10 +148,20 @@ class ModeloClienteProprietario(ModeloBase):
         nullable=False
     )
 
-    imovel_proprietario = Column(
+    imovel_associado = Column(
         String,
         nullable=True
     )
+
+    criado_em = Column(
+        Date,
+        nullable=False
+    )
+
+    alterado_em = Column(
+        Date,
+        nullable=True
+    )   
 
     cliente = relationship('ModeloCliente', back_populates='proprietario')
 
@@ -161,8 +181,18 @@ class ModeloClienteLocatario(ModeloBase):
         nullable=False
     )
 
-    imovel_locatario = Column(
+    imovel_associado = Column(
         String,
+        nullable=True
+    )
+
+    criado_em = Column(
+        Date,
+        nullable=False
+    )
+
+    alterado_em = Column(
+        Date,
         nullable=True
     )
 
