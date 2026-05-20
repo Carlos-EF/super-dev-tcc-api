@@ -57,7 +57,7 @@ class RepositorioCliente:
         clientes = self.sessao.query(ModeloCliente).options(
             joinedload(ModeloCliente.interessado), 
             joinedload(ModeloCliente.locatario), 
-            joinedload(ModeloCliente.proprietario)).all()
+            joinedload(ModeloCliente.proprietario)).order_by(ModeloCliente.tipo).all()
 
         return [self.montar_resposta_clientes(cliente) for cliente in clientes]
     

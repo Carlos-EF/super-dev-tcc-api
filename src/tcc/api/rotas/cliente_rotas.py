@@ -135,7 +135,7 @@ def buscar_cliente(
 
 
 @router.put(
-    '{id}/inativar',
+    '/{id}/inativar',
     status_code=status.HTTP_204_NO_CONTENT,
     summary='Inativar o cliente.',
     responses= {
@@ -162,7 +162,7 @@ def inativar_cliente(
 
 
 @router.put(
-    '{id}/ativar',
+    '/{id}/ativar',
     status_code=status.HTTP_204_NO_CONTENT,
     summary='Ativar o cliente.',
     responses= {
@@ -189,7 +189,7 @@ def ativar_cliente(
     
 
 @router.delete(
-    '{id}',
+    '/{id}',
     status_code=status.HTTP_204_NO_CONTENT,
     summary='Deletar um cliente.',
     description='Apaga um cliente quando encontrado',
