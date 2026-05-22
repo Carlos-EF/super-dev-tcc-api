@@ -68,7 +68,7 @@ CREATE TABLE proprietarios (
 
 	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    alterado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_proprietario_cliente
         FOREIGN KEY (id_cliente)

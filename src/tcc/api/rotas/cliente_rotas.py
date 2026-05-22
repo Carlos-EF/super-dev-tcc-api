@@ -7,7 +7,7 @@ from uuid6 import uuid7
 from tcc.infraestrutura.conexao import obter_sessao
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente
 from tcc.infraestrutura.repositorios.repositorio_cliente import RepositorioCliente
-from tcc.api.schemas.cliente_schemas import AlterarClienteRequest, ClienteResponse, CriarClienteRequest, CriarDadosAdicionaisCliente
+from tcc.api.schemas.cliente_schemas import AlterarClienteRequest, ClienteResponse, CriarClienteRequest, CriarDadosAdicionaisCliente, EditarDadosAdicionais
 
 
 router = APIRouter(
@@ -84,18 +84,19 @@ def listar_clientes(
 )
 def editar_cliente(
     id: UUID,
-    dados: AlterarClienteRequest,
+    cliente: AlterarClienteRequest,
+    dados_adicionais: EditarDadosAdicionais,
     session: Session = Depends(obter_sessao)
 ):
     """Editar dados de um cliente já cadastrado buscando por seu ID."""
     repositorio = RepositorioCliente(sessao=session)
     editou = repositorio.editar(
         id,
-        nome=dados.nome,
-        celular=dados.celular,
-        email=dados.email,
-        tipo=dados.tipo,
-        dados_adicionais=dados.dados_adicionais
+        nome=cliente.nome,
+        celular=cliente.celular,
+        email=cliente.email,
+        tipo=cliente.tipo,
+        dados_adicionais=dados_adicionais
     )
     if not editou:
         raise HTTPException(
