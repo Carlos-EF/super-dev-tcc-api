@@ -103,12 +103,20 @@ class RepositorioCliente:
             ).first()
         if not cliente:
             return False
+        
+        dados_adicionais = self.obter_cliente_por_tipo(cliente.tipo, cliente.id)
              
-        return self.montar_resposta_clientes(cliente)
+        cliente_resposta = self.montar_resposta_clientes(cliente)
+
+        cliente_resposta.dados_adicionais = dados_adicionais
+
+        return cliente_resposta
     
 
     def obter_cliente_locatario_por_id(self, id: UUID) -> ModeloClienteLocatario | None:
-        cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(ModeloClienteLocatario.id_cliente == id).first()
+        cliente_locatario = self.sessao.query(ModeloClienteLocatario).filter(
+            ModeloClienteLocatario.id_cliente == id
+            ).first()
         if not cliente_locatario:
             return False
         
@@ -117,7 +125,9 @@ class RepositorioCliente:
     
 
     def obter_cliente_proprietario_por_id(self, id: UUID) -> ModeloClienteProprietario | None:
-        cliente_proprietario = self.sessao.query(ModeloClienteProprietario).filter(ModeloClienteProprietario.id_cliente == id).first()
+        cliente_proprietario = self.sessao.query(ModeloClienteProprietario).filter(
+            ModeloClienteProprietario.id_cliente == id
+            ).first()
         if not cliente_proprietario:
             return False
         
@@ -125,7 +135,9 @@ class RepositorioCliente:
     
 
     def obter_cliente_interessado_por_id(self, id: UUID) -> ModeloClienteInteressado | None:
-        cliente_interessado = self.sessao.query(ModeloClienteInteressado).filter(ModeloClienteInteressado.id_cliente == id).first()
+        cliente_interessado = self.sessao.query(ModeloClienteInteressado).filter(
+            ModeloClienteInteressado.id_cliente == id
+            ).first()
         if not cliente_interessado:
             return False
         
@@ -337,11 +349,42 @@ class RepositorioCliente:
 
     def obter_cliente_por_tipo(self, tipo: str, id: UUID):
         if tipo == 'Interessado':
-            self.obter_cliente_interessado_por_id(id)
+            interessado = self.obter_cliente_interessado_por_id(id)
+
+            return ClienteInteressadoResponse(
+                id_cliente=interessado.id_cliente,
+                id=interessado.id,
+                procurando=interessado.procurando,
+                orcamento=interessado.orcamento,
+                orcamento_minimo=interessado.orcamento_minimo,
+                orcamento_maximo=interessado.orcamento_maximo,
+                quantidade_quartos=interessado.quantidade_quartos,
+                quantidade_suites=interessado.quantidade_suites,
+                quantidade_banheiros=interessado.quantidade_banheiros,
+                quantidade_vagas=interessado.quantidade_vagas,
+                quantidade_andares=interessado.quantidade_andares,
+                quantidade_salas=interessado.quantidade_salas,
+                criado_em=interessado.criado_em,
+                alterado_em=interessado.alterado_em
+            )
         elif tipo == 'Locatário':
-            self.obter_cliente_locatario_por_id(id)
+            locatario = self.obter_cliente_locatario_por_id(id)
+            return ClienteLocatarioResponse(
+                id=locatario.id,
+                id_cliente=locatario.id_cliente,
+                imovel_associado=locatario.imovel_associado,
+                criado_em=locatario.criado_em,
+                alterado_em=locatario.alterado_em
+            )
         elif tipo == 'Proprietário':
-            self.obter_cliente_proprietario_por_id(id)
+            proprietario = self.obter_cliente_proprietario_por_id(id)
+            return ClienteProprietarioResponse(
+                id=proprietario.id,
+                id_cliente=proprietario.id_cliente,
+                imovel_associado=proprietario.imovel_associado,
+                criado_em=proprietario.criado_em,
+                alterado_em=proprietario.alterado_em
+            )
 
 
     def montar_resposta_clientes(self, cliente: ModeloCliente) -> ClienteResponse:

@@ -86,9 +86,9 @@ class AlterarClienteRequest(BaseModel):
 
     celular: str = Field(
         ...,
-        max_length=11,
+        max_length=15,
         description='Número de celular do cliente.',
-        examples=['47912345679']
+        examples=['(47) 91234-5679']
     )
 
     email: str = Field(
@@ -224,42 +224,42 @@ class CriarClienteInteressadoRequest(BaseModel):
         examples=[500000]
     )
 
-    orcamento_minimo: int = Field(
+    orcamento_minimo: int | None = Field(
         description='Orçamento mínimo do cliente',
         examples=[350000]
     )
 
-    orcamento_maximo: int = Field(
+    orcamento_maximo: int | None = Field(
         description='Orçamento máximo do cliente',
         examples=[650000]
     )
 
-    quantidade_quartos: int = Field(
+    quantidade_quartos: int | None = Field(
         description='Quantidade desejada de quartos do cliente.',
         examples=[3]
     )
 
-    quantidade_suites: int = Field(
+    quantidade_suites: int | None = Field(
         description='Quantidade desejada de suítes do cliente.',
         examples=[1]
     )
 
-    quantidade_banheiros: int = Field(
+    quantidade_banheiros: int | None = Field(
         description='Quantidade desejada de banheiros do cliente.',
         examples=[2]
     )
 
-    quantidade_vagas: int = Field(
+    quantidade_vagas: int | None = Field(
         description='Quantidade desejada de vagas de garagem do cliente.',
         examples=[2]
     )
 
-    quantidade_andares: int = Field(
+    quantidade_andares: int | None = Field(
         description='Quantidade desejada de andares do cliente.',
         examples=[1]
     )
 
-    quantidade_salas: int = Field(
+    quantidade_salas: int | None = Field(
         description='Quantidade desejada de salas do cliente.',
         examples=[1]
     )
@@ -284,54 +284,54 @@ class CriarClienteInteressadoRequest(BaseModel):
     
 
 class EditarClienteInteressadoRequest(BaseModel):
-    tipo_imovel: str = Field(
+    procurando: str = Field(
         ...,
         description='Tipo de imóvel que o cliente está procurando.',
         examples=['Casa']
     )
 
-    orcamento: int = Field(
+    orcamento: int | None = Field(
         ...,
         description='Orçamento do cliente.',
         examples=[500000]
     )
 
-    orcamento_minimo: int = Field(
+    orcamento_minimo: int | None = Field(
         description='Orçamento mínimo do cliente',
         examples=[350000]
     )
 
-    orcamento_maximo: int = Field(
+    orcamento_maximo: int | None = Field(
         description='Orçamento máximo do cliente',
         examples=[650000]
     )
 
-    quantidade_quartos: int = Field(
+    quantidade_quartos: int | None = Field(
         description='Quantidade desejada de quartos do cliente.',
         examples=[3]
     )
 
-    quantidade_suites: int = Field(
+    quantidade_suites: int | None = Field(
         description='Quantidade desejada de suítes do cliente.',
         examples=[1]
     )
 
-    quantidade_banheiros: int = Field(
+    quantidade_banheiros: int | None = Field(
         description='Quantidade desejada de banheiros do cliente.',
         examples=[2]
     )
 
-    quantidade_vagas: int = Field(
+    quantidade_vagas: int | None = Field(
         description='Quantidade desejada de vagas de garagem do cliente.',
         examples=[2]
     )
 
-    quantidade_andares: int = Field(
+    quantidade_andares: int | None = Field(
         description='Quantidade desejada de andares do cliente.',
         examples=[1]
     )
 
-    quantidade_salas: int = Field(
+    quantidade_salas: int | None = Field(
         description='Quantidade desejada de salas do cliente.',
         examples=[1]
     )
@@ -379,42 +379,42 @@ class ClienteInteressadoResponse(BaseModel):
         examples=[500000]
     )
 
-    orcamento_minimo: int = Field(
+    orcamento_minimo: int | None = Field(
         description='Orçamento mínimo do cliente',
         examples=[350000]
     )
 
-    orcamento_maximo: int = Field(
+    orcamento_maximo: int | None = Field(
         description='Orçamento máximo do cliente',
         examples=[650000]
     )
 
-    quantidade_quartos: int = Field(
+    quantidade_quartos: int | None = Field(
         description='Quantidade desejada de quartos do cliente.',
         examples=[3]
     )
 
-    quantidade_suites: int = Field(
+    quantidade_suites: int | None = Field(
         description='Quantidade desejada de suítes do cliente.',
         examples=[1]
     )
 
-    quantidade_banheiros: int = Field(
+    quantidade_banheiros: int | None = Field(
         description='Quantidade desejada de banheiros do cliente.',
         examples=[2]
     )
 
-    quantidade_vagas: int = Field(
+    quantidade_vagas: int | None = Field(
         description='Quantidade desejada de vagas de garagem do cliente.',
         examples=[2]
     )
 
-    quantidade_andares: int = Field(
+    quantidade_andares: int | None = Field(
         description='Quantidade desejada de andares do cliente.',
         examples=[1]
     )
 
-    quantidade_salas: int = Field(
+    quantidade_salas: int | None = Field(
         description='Quantidade desejada de salas do cliente.',
         examples=[1]
     )
