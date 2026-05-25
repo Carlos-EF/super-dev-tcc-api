@@ -121,3 +121,28 @@ class ModeloImovel(ModeloBase):
         Date,
         nullable=True
     )
+
+
+class ModeloImagemImovel(ModeloBase):
+    __tablename__ = 'imagens_imoveis'
+
+    id = Column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        nullable=False
+    )
+
+    id_imovel = Column(
+        UUID(as_uuid=True),
+        nullable=False
+    )
+
+    imagem = Column(
+        String(255),
+        nullable=False
+    )
+
+    imagem_principal = Column(
+        Boolean,
+        nullable=True
+    )
