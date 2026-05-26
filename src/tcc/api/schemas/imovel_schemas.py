@@ -580,3 +580,26 @@ class CriarImagemImovelRequest(BaseModel):
             }]
         }
     }
+
+
+class EditarImagemImovelRequest(BaseModel):
+    caminho: str | None = Field(
+        None,
+        description='Caminho do arquivo da imagem do imóvel.',
+        examples=['/imagens/019e63e4-88f2-7dc6-91a9-cf71871401fb.jpg']
+    )
+
+    principal: bool | None = Field(
+        None,
+        description='Indica se a imagem é a principal do imóvel.',
+        examples=[True]
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples':[{
+                'caminho': '/imagens/019e63e4-88f2-7dc6-91a9-cf71871401fb.jpg',
+                'principal': True
+            }]
+        }
+    }
