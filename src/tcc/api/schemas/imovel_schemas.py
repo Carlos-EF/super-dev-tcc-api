@@ -550,3 +550,33 @@ class ImagensImoveisResponse(BaseModel):
             }]
         }
     }
+
+
+class CriarImagemImovelRequest(BaseModel):
+    id_imovel: UUID = Field(
+        ...,
+        description='Indentificador único (UUID v7) do imóvel associado à imagem',
+        examples=['019d45ea-997b-7451-9905-cb38b791fe93']
+    )
+
+    caminho: str = Field(
+        ...,
+        description='Caminho do arquivo da imagem do imóvel.',
+        examples=['/imagens/019e63e4-88f2-7dc6-91a9-cf71871401fb.jpg']
+    )
+
+    principal: bool = Field(
+        ...,
+        description='Indica se a imagem é a principal do imóvel.',
+        examples=[True]
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples':[{
+                'id_imovel': '019d45ea-997b-7451-9905-cb38b791fe93',
+                'caminho': '/imagens/019e63e4-88f2-7dc6-91a9-cf71871401fb.jpg',
+                'principal': True
+            }]
+        }
+    }
