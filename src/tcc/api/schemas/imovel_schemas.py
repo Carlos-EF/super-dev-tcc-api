@@ -499,3 +499,54 @@ class editarImovelRequest(BaseModel):
             }]
         }
     }
+
+
+class ImagensImoveisResponse(BaseModel):
+    id: UUID = Field(
+        ...,
+        description='Indentificador único (UUID v7) da imagem do imóvel',
+        examples=['019e63e5-172a-71c1-887d-8b7c607fba54']
+    )
+
+    id_imovel: UUID = Field(
+        ...,
+        description='Indentificador único (UUID v7) do imóvel associado à imagem',
+        examples=['019d45ea-997b-7451-9905-cb38b791fe93']
+    )
+
+    principal: bool = Field(
+        ...,
+        description='Indica se a imagem é a principal do imóvel.',
+        examples=[True]
+    )
+
+    caminho: str = Field(
+        ...,
+        description='Caminho do arquivo da imagem do imóvel.',
+        examples=['/imagens/019e63e4-88f2-7dc6-91a9-cf71871401fb.jpg']
+    )
+
+    criado_em: datetime = Field(
+        ...,
+        description='Data e hora da criação do registro da imagem do imóvel.',
+        examples=['2026-03-26T08:35:00']
+    )
+
+    alterado_em: datetime | None = Field(
+        None,
+        description='Data e hora da última alteração do registro da imagem do imóvel.',
+        examples=['2026-04-01T14:20:00']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples':[{
+                'id': '019e63e5-172a-71c1-887d-8b7c607fba54',
+                'id_imovel': '019d45ea-997b-7451-9905-cb38b791fe93',
+                'caminho': '/imagens/019e63e4-88f2-7dc6-91a9-cf71871401fb.jpg',
+                'principal': True,
+                'criado_em': '2026-03-26T08:35:00',
+                'alterado_em': '2026-04-01T14:20:00'
+            }]
+        }
+    }
