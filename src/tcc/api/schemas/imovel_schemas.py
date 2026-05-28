@@ -347,15 +347,7 @@ class ImovelResponse(BaseModel):
     }
 
 
-class editarImovelRequest(BaseModel):
-    codigo: str | None = Field(
-        None,
-        min_length=1,
-        max_length=10,
-        description='Código único do imóvel.',
-        examples=['IMV12345']
-    )
-
+class EditarImovelRequest(BaseModel):
     tipo: str | None = Field(
         None,
         min_length=1,
