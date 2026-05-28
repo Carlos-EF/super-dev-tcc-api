@@ -347,7 +347,7 @@ class ImovelResponse(BaseModel):
     }
 
 
-class editarImovelRequest(BaseModel):
+class EditarImovelRequest(BaseModel):
     codigo: str | None = Field(
         None,
         min_length=1,
