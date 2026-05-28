@@ -76,3 +76,17 @@ class RepositorioImovel:
         self.sessao.commit()
 
         return True
+    
+
+    def obter_imovel_por_id(
+            self,
+            id: UUID
+    ) -> bool | ModeloImovel:
+        imovel = self.sessao.query(
+            ModeloImovel).filter(
+            ModeloImovel.id == id).first()
+        
+        if not imovel:
+            return False
+        
+        return imovel
