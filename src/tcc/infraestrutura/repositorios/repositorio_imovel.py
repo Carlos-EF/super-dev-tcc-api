@@ -59,3 +59,20 @@ class RepositorioImovel:
         self.sessao.commit()
 
         return imovel
+    
+
+    def apagar_imovel(
+            self,
+            id: UUID
+    ) -> bool:
+        imovel = self.sessao.query(
+            ModeloImovel).filter(
+            ModeloImovel.id == id).first()
+        
+        if not imovel:
+            return False
+        
+        self.sessao.delete(imovel)
+        self.sessao.commit()
+
+        return True
