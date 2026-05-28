@@ -90,3 +90,11 @@ class RepositorioImovel:
             return False
         
         return imovel
+    
+
+    def listar_imoveis(
+            self
+    ) -> list[ModeloImovel]:
+        imoveis = self.sessao.query(ModeloImovel).all()
+
+        return imoveis
