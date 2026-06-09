@@ -186,6 +186,7 @@ class CondominioResponse(BaseModel):
 
     estado: str = Field(
         ...,
+        max_length=20,
         description='Estado onde se localiza o condomínio',
         examples=['Santa Catarina']
     )
