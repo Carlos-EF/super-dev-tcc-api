@@ -67,3 +67,17 @@ class RepositorioCondominio:
         self.sessao.commit()
 
         return True
+    
+
+    def obter_todos(
+            self
+    ) -> bool | list[ModeloCondominio]:
+        condominios = self.sessao.query(
+            ModeloCondominio
+            ).all()
+        
+        if not condominios:
+            return False
+        
+        return condominios
+        
