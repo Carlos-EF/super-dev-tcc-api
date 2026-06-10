@@ -29,12 +29,41 @@ class RepositorioCondominio:
             id: UUID,
             condominio: ModeloCondominio
     ) -> bool | ModeloCondominio:
-        condominio = self.sessao.query(
+        condominio_para_editar = self.sessao.query(
             ModeloCondominio).filter(
                 ModeloCondominio.id == id
             ).first()
         
-        if not condominio:
+        if not condominio_para_editar:
             return False
         
-        return condominio
+        condominio_para_editar.nome = condominio.nome
+        condominio_para_editar.cep = condominio.cep
+        condominio_para_editar.logradouro = condominio.logradouro
+        condominio_para_editar.bairro = condominio.bairro
+        condominio_para_editar.estado = condominio.estado
+        condominio_para_editar.cidade = condominio.cidade
+
+        self.sessao.commit()
+        
+        return condominio_para_editar
+    
+
+    def apagar(
+            self,
+            id: UUID
+    ) -> bool:
+        condominio_para_apagar = self.sessao.query(
+            ModeloCondominio
+        ).filter(
+            ModeloCondominio.id == id
+        ).first()
+
+        if not condominio_para_apagar:
+            return False
+        
+        self.sessao.delete(condominio_para_apagar)
+
+        self.sessao.commit()
+
+        return True
