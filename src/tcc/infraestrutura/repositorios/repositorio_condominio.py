@@ -80,4 +80,19 @@ class RepositorioCondominio:
             return False
         
         return condominios
-        
+    
+
+    def obter_por_id(
+            self,
+            id: UUID
+    ) -> bool | ModeloCondominio:
+        condominio = self.sessao.query(
+            ModeloCondominio
+        ).filter(
+            ModeloCondominio.id == id
+        ).first()
+
+        if not condominio:
+            return False
+
+        return condominio
