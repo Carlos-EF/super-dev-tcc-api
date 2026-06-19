@@ -123,4 +123,22 @@ CREATE TABLE corretores (
     alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE condominios (
+    id UUID PRIMARY KEY NOT NULL,
+
+    nome VARCHAR(100) NOT NULL,
+
+    cep VARCHAR(9) NOT NULL,
+
+    logradouro VARCHAR(60) NOT NULL,
+
+    numero INTEGER NOT NULL,
+
+    bairro VARCHAR(50) NOT NULL,
+
+    estado VARCHAR(20) NOT NULL,
+
+    cidade VARCHAR(40) NOT NULL
+);
+
 SELECT * from clientes;
