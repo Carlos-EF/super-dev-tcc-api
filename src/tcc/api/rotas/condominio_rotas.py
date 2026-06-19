@@ -126,21 +126,51 @@ def alterar_condominio(
     """Alterar um condomínio existente filtrando por ID."""
     repositorio = RepositorioCondominio(sessao=session)
 
-    condominio_existente = repositorio.obter_por_id(id)
+    condominio_para_editar = repositorio.obter_por_id(id)
 
-    if not condominio_existente:
+    if not condominio_para_editar:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, 
             detail='Condomínio não encontrado.')
 
-    condominio_existente.nome = condominio.nome
-    condominio_existente.cep = condominio.cep
-    condominio_existente.logradouro = condominio.logradouro
-    condominio_existente.numero = condominio.numero
-    condominio_existente.bairro = condominio.bairro
-    condominio_existente.estado = condominio.estado
-    condominio_existente.cidade = condominio.cidade
+    condominio_para_editar.nome = condominio.nome
+    condominio_para_editar.cep = condominio.cep
+    condominio_para_editar.logradouro = condominio.logradouro
+    condominio_para_editar.numero = condominio.numero
+    condominio_para_editar.bairro = condominio.bairro
+    condominio_para_editar.estado = condominio.estado
+    condominio_para_editar.cidade = condominio.cidade
 
-    condominio_alterado = repositorio.editar(condominio_existente)
+    condominio_alterado = repositorio.editar(condominio_para_editar)
 
     return condominio_alterado
+
+
+@router.delete(
+    '/{id}',
+    summary='Excluir um condomínio existente',
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses= {
+        204: {
+            'description': 'Condomínio excluído com sucesso',
+        },
+        404: {
+            'description': 'Condomínio não encontrado',
+        },
+    },
+)
+def excluir_condominio(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Excluir um condomínio existente filtrando por ID."""
+    repositorio = RepositorioCondominio(sessao=session)
+
+    condominio_para_apagar = repositorio.obter_por_id(id)
+
+    if not condominio_para_apagar:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, 
+            detail='Condomínio não encontrado.')
+
+    repositorio.apagar(condominio_para_apagar)
