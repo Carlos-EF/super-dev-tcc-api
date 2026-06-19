@@ -66,3 +66,38 @@ def obter_condominio_por_id(
             detail='Condomínio não encontrado.')
 
     return condominio
+
+
+@router.post(
+    '',
+    summary='Criar um novo condomínio',
+    response_model=CondominioResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses= {
+        201: {
+            'description': 'Condomínio criado com sucesso',
+            'model': CondominioResponse
+        },
+    },
+)
+def criar_condominio(
+    condominio: CriarCondominioRequest,
+    session: Session = Depends(obter_sessao)
+):
+    """Criar um novo condomínio."""
+    repositorio = RepositorioCondominio(sessao=session)
+
+    novo_condominio = ModeloCondominio(
+        id=uuid7(),
+        nome=condominio.nome,
+        cep=condominio.cep,
+        logradouro=condominio.logradouro,
+        numero=condominio.numero,
+        bairro=condominio.bairro,
+        estado=condominio.estado,
+        cidade=condominio.cidade
+    )
+
+    condominio_criado = repositorio.criar(novo_condominio)
+
+    return condominio_criado
