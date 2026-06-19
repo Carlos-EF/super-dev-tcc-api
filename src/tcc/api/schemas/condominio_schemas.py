@@ -71,7 +71,7 @@ class CriarCondominioRequest(BaseModel):
     }
 
 
-class EditarCondominioRequest(BaseModel):
+class AlterarCondominioRequest(BaseModel):
     nome: str = Field(
         ...,
         min_length=3,

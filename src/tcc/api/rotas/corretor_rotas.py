@@ -32,7 +32,9 @@ def listar_corretores(
 ):
     """Listagem de todos os corretores cadastrados."""
     repositorio = RepositorioCorretor(sessao=session)
+
     corretores = repositorio.listar()
+    
     return corretores
 
 
