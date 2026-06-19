@@ -33,5 +33,36 @@ def listar_condominios(
     repositorio = RepositorioCondominio(sessao=session)
 
     condominios = repositorio.obter_todos()
-    
+
     return condominios
+
+@router.get(
+    '/{id}',
+    summary='Obter condomínio filtrando por ID',
+    response_model=CondominioResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Condomínio encontrado',
+            'model': CondominioResponse
+        },
+        404: {
+            'description': 'Condomínio não encontrado',
+        },
+    },
+)
+def obter_condominio_por_id(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Obter um condomínio específico filtrando por ID."""
+    repositorio = RepositorioCondominio(sessao=session)
+
+    condominio = repositorio.obter_por_id(id)
+
+    if not condominio:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, 
+            detail='Condomínio não encontrado.')
+
+    return condominio
