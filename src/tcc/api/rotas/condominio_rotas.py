@@ -101,3 +101,46 @@ def criar_condominio(
     condominio_criado = repositorio.criar(novo_condominio)
 
     return condominio_criado
+
+
+@router.put(
+    '/{id}',
+    summary='Alterar um condomínio existente',
+    response_model=CondominioResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Condomínio alterado com sucesso',
+            'model': CondominioResponse
+        },
+        404: {
+            'description': 'Condomínio não encontrado',
+        },
+    },
+)
+def alterar_condominio(
+    condominio: AlterarCondominioRequest,
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Alterar um condomínio existente filtrando por ID."""
+    repositorio = RepositorioCondominio(sessao=session)
+
+    condominio_existente = repositorio.obter_por_id(id)
+
+    if not condominio_existente:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, 
+            detail='Condomínio não encontrado.')
+
+    condominio_existente.nome = condominio.nome
+    condominio_existente.cep = condominio.cep
+    condominio_existente.logradouro = condominio.logradouro
+    condominio_existente.numero = condominio.numero
+    condominio_existente.bairro = condominio.bairro
+    condominio_existente.estado = condominio.estado
+    condominio_existente.cidade = condominio.cidade
+
+    condominio_alterado = repositorio.editar(condominio_existente)
+
+    return condominio_alterado
