@@ -1,5 +1,3 @@
-
-
 CREATE TABLE clientes (
     id UUID PRIMARY KEY NOT NULL,
 
@@ -140,5 +138,8 @@ CREATE TABLE condominios (
 
     cidade VARCHAR(40) NOT NULL
 );
+
+ALTER TABLE condominios 
+ADD COLUMN criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 SELECT * from clientes;
