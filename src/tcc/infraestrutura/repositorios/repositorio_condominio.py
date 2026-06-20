@@ -71,13 +71,10 @@ class RepositorioCondominio:
 
     def obter_todos(
             self
-    ) -> bool | list[ModeloCondominio]:
+    ) -> list[ModeloCondominio]:
         condominios = self.sessao.query(
             ModeloCondominio
             ).all()
-        
-        if not condominios:
-            return False
         
         return condominios
     
