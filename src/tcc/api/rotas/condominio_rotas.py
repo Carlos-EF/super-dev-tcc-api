@@ -141,7 +141,7 @@ def alterar_condominio(
     condominio_para_editar.estado = condominio.estado
     condominio_para_editar.cidade = condominio.cidade
 
-    condominio_alterado = repositorio.editar(condominio_para_editar)
+    condominio_alterado = repositorio.editar(condominio_para_editar.id, condominio_para_editar)
 
     return condominio_alterado
 
@@ -173,4 +173,4 @@ def excluir_condominio(
             status_code=HTTPStatus.NOT_FOUND, 
             detail='Condomínio não encontrado.')
 
-    repositorio.apagar(condominio_para_apagar)
+    repositorio.apagar(condominio_para_apagar.id)
