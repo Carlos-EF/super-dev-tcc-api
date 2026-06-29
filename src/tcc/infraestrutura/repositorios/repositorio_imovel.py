@@ -80,13 +80,13 @@ class RepositorioImovel:
     def obter_imovel_por_id(
             self,
             id: UUID
-    ) -> bool | ModeloImovel:
+    ) -> ModeloImovel | None:
         imovel = self.sessao.query(
             ModeloImovel).filter(
             ModeloImovel.id == id).first()
         
         if not imovel:
-            return False
+            return None
         
         return imovel
     
