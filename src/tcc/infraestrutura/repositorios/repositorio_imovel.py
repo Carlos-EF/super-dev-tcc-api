@@ -2,7 +2,6 @@ from datetime import datetime
 from tcc.api.schemas.imovel_schemas import CriarImovelRequest, EditarImovelRequest
 from sqlalchemy.orm import Session
 from uuid import UUID
-from uuid6 import uuid7
 from tcc.infraestrutura.banco_dados.modelos.modelo_imovel import ModeloImovel
 
 
@@ -13,7 +12,7 @@ class RepositorioImovel:
 
     def criar_imovel(
             self,
-            imovel: ModeloImovel
+            imovel: CriarImovelRequest
     ) -> ModeloImovel:
         self.sessao.add(imovel)
 
@@ -81,13 +80,13 @@ class RepositorioImovel:
     def obter_imovel_por_id(
             self,
             id: UUID
-    ) -> bool | ModeloImovel:
+    ) -> ModeloImovel | None:
         imovel = self.sessao.query(
             ModeloImovel).filter(
             ModeloImovel.id == id).first()
         
         if not imovel:
-            return False
+            return None
         
         return imovel
     

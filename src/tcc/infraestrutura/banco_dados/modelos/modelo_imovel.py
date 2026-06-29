@@ -48,7 +48,7 @@ class ModeloImovel(ModeloBase):
     )
 
     estado = Column(
-        String(2),
+        String(16),
         nullable=False
     )
 
@@ -58,7 +58,7 @@ class ModeloImovel(ModeloBase):
     )
 
     numero = Column(
-        String(10),
+        Integer,
         nullable=False
     )
 
@@ -67,9 +67,19 @@ class ModeloImovel(ModeloBase):
         nullable=False
     )
 
+    condominio = Column(
+        String(50),
+        nullable=True
+    )
+
     valor = Column(
         Numeric(precision=10, scale=2),
         nullable=False
+    )
+
+    valor_condominio = Column(
+        Numeric(precision=10, scale=2),
+        nullable=True
     )
 
     valor_iptu = Column(
