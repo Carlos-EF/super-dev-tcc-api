@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from src.tcc.api.schemas.imovel_schemas import ImovelResponse
+from src.tcc.api.schemas.imovel_schemas import CriarImovelRequest, ImovelResponse
 from src.tcc.infraestrutura.repositorios.repositorio_imovel import RepositorioImovel
 from tcc.infraestrutura.conexao import obter_sessao
 from sqlalchemy.orm import Session
@@ -90,3 +90,28 @@ def apagar_imovel(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Imóvel não encontrado'
         )
+    
+
+@router.post(
+    '',
+    status_code=status.HTTP_201_CREATED,
+    response_model=ImovelResponse,
+    summary='Criar um imóvel.',
+    responses= {
+        204: {
+            'description': 'Imóvel criado com sucesso!',
+            'model': ImovelResponse
+        }
+    }
+)
+def criar_imovel(
+    imovel: CriarImovelRequest,
+    session: Session = Depends(obter_sessao)
+):
+    """Criar um imóvel novo."""
+
+    repositorio = RepositorioImovel(sessao=session)
+
+    imovel_criado = repositorio.criar_imovel(imovel)
+
+    return imovel_criado
