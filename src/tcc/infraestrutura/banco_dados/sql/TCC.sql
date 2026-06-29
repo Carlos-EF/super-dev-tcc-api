@@ -139,6 +139,63 @@ CREATE TABLE condominios (
     cidade VARCHAR(40) NOT NULL
 );
 
+CREATE TABLE imoveis (
+    id UUID PRIMARY KEY NOT NULL,
+
+    codigo VARCHAR(10) NOT NULL,
+
+    status VARCHAR(7) NOT NULL,
+
+    tipo VARCHAR(12) NOT NULL,
+
+    finalidade VARCHAR(10) NOT NULL,
+
+    logradouro VARCHAR(100) NOT NULL,
+
+    bairro VARCHAR(50) NOT NULL,
+
+    cidade VARCHAR(50) NOT NULL,
+
+    estado VARCHAR(16) NOT NULL,
+
+    cep VARCHAR(9) NOT NULL,
+
+    numero INTEGER NOT NULL,
+
+    eh_condominio BOOLEAN NOT NULL,
+
+    condominio UUID,
+
+    valor NUMERIC(10, 2) NOT NULL,
+
+    valor_condominio NUMERIC(10, 2),
+
+    valor_iptu NUMERIC(10, 2),
+
+    quantidade_quartos INTEGER,
+
+    quantidade_suites INTEGER,
+    
+    quantidade_banheiros INTEGER,
+
+    quantidade_vagas INTEGER,
+
+    quantidade_andares INTEGER,
+
+    quantidade_salas INTEGER,
+
+    eh_mobiliado BOOLEAN NOT NULL,
+
+    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_condominio_imoveis
+        FOREIGN KEY (condominio)
+        REFERENCES condominios(id)
+        ON DELETE CASCADE
+)
+
 ALTER TABLE condominios 
 ADD COLUMN criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
