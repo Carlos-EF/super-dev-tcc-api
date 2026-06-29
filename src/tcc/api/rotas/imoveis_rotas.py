@@ -1,5 +1,6 @@
+from uuid import UUID
 from fastapi import APIRouter, Depends, status, HTTPException
-from src.tcc.api.schemas.imovel_schemas import CriarImovelRequest, ImovelResponse
+from src.tcc.api.schemas.imovel_schemas import CriarImovelRequest, EditarImovelRequest, ImovelResponse
 from src.tcc.infraestrutura.repositorios.repositorio_imovel import RepositorioImovel
 from tcc.infraestrutura.conexao import obter_sessao
 from sqlalchemy.orm import Session
@@ -46,7 +47,7 @@ def listar_imoveis(
     },
 )
 def obter_imovel_por_id(
-    id: str,
+    id: UUID,
     session: Session = Depends(obter_sessao)
 ):
     """Buscar um imóvel filtrando pelo seu ID (UUIDv7)."""
@@ -77,7 +78,7 @@ def obter_imovel_por_id(
     },
 )
 def apagar_imovel(
-    id: str,
+    id: UUID,
     session: Session = Depends(obter_sessao)
 ):
     """Buscar um imóvel filtrando pelo seu ID (UUIDv7) e o apaga."""
@@ -115,3 +116,34 @@ def criar_imovel(
     imovel_criado = repositorio.criar_imovel(imovel)
 
     return imovel_criado
+
+
+@router.put(
+    '/{id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Editar dados de um imóvel',
+    responses= {
+        204: {
+            'description': 'Imóvel encontrado e alterado com sucesso.'
+        },
+        404: {
+            'description': 'Imóvel não encontrado.'
+        },
+    },
+)
+def editar_imovel(
+    id: UUID,
+    dados: EditarImovelRequest,
+    session: Session = Depends(obter_sessao)
+):
+    """Editar dados de um imóvel já cadastrado filtrando por seu ID."""
+    repositorio = RepositorioImovel(sessao=session)
+    editou = repositorio.editar_imovel(
+        id,
+        dados
+        )
+    if not editou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Imóvel não encontrado.'
+        )
