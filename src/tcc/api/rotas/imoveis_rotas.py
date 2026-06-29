@@ -35,13 +35,13 @@ def listar_imoveis(
 
 @router.get(
     '{id}',
-    response_model=list[ImovelResponse],
+    response_model=ImovelResponse,
     status_code=status.HTTP_200_OK,
-    summary='Listar todos os imóveis cadastrados.',
+    summary='Listar o imóvel cadastrado.',
     responses= {
         200: {
-            'description': 'Lista dos imóveis cadastrados',
-            'model': list[ImovelResponse]
+            'description': 'Imóvel encontrado.',
+            'model': ImovelResponse
         },
     },
 )
@@ -61,3 +61,32 @@ def obter_imovel_por_id(
         )
 
     return imovel
+
+
+@router.delete(
+    '{id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Apagar um imóvel cadastrado.',
+    responses= {
+        204: {
+            'description': 'Imóvel encontrado e apagago com sucesso!',
+        },
+        404: {
+            'description': 'Imóvel não encontrado.',
+        }
+    },
+)
+def apagar_imovel(
+    id: str,
+    session: Session = Depends(obter_sessao)
+):
+    """Buscar um imóvel filtrando pelo seu ID (UUIDv7) e o apaga."""
+    repositorio = RepositorioImovel(sessao=session)
+
+    imovel_para_apagar = repositorio.apagar_imovel(id)
+
+    if not imovel_para_apagar:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Imóvel não encontrado'
+        )
