@@ -6,6 +6,7 @@ from tcc.api.rotas.corretor_rotas import router as corretor_router
 from tcc.api.rotas.cliente_rotas import router as cliente_router
 from tcc.api.rotas.consulta_cep import router as consulta_cep_router
 from tcc.api.rotas.condominio_rotas import router as condominio_router
+from tcc.api.rotas.imoveis_rotas import router as imovel_router
 
 
 logging.basicConfig(
@@ -61,6 +62,9 @@ def criar_aplicacao() -> FastAPI:
     # API para consulta de CEPs
     app.include_router(consulta_cep_router)
     logger.info('Rota "/cep" registrada com sucesso.')
+    # Imóveis
+    app.include_router(imovel_router)
+    logger.info('Rota "/imovel" registrada com sucesso')
 
 
     @app.get(

@@ -2,6 +2,7 @@ from datetime import datetime
 from tcc.api.schemas.imovel_schemas import CriarImovelRequest, EditarImovelRequest
 from sqlalchemy.orm import Session
 from uuid import UUID
+from uuid6 import uuid7
 from tcc.infraestrutura.banco_dados.modelos.modelo_imovel import ModeloImovel
 
 
@@ -14,13 +15,42 @@ class RepositorioImovel:
             self,
             imovel: CriarImovelRequest
     ) -> ModeloImovel:
-        self.sessao.add(imovel)
+        imovel_para_criar = ModeloImovel(
+            id=uuid7(),
+            codigo= imovel.codigo,
+            proprietario= imovel.prorietario,
+            corretor= imovel.corretor,
+            tipo= imovel.tipo,
+            status= 'ATIVO',
+            finalidade= imovel.finalidade,
+            logradouro= imovel.logradouro,
+            bairro= imovel.bairro,
+            cidade= imovel.cidade,
+            estado= imovel.estado,
+            cep= imovel.cep,
+            numero= imovel.numero,
+            em_condominio= imovel.em_condominio,
+            condominio= imovel.condominio,
+            valor= imovel.valor,
+            valor_condominio= imovel.valor_condominio,
+            valor_iptu= imovel.valor_iptu,
+            quantidade_quartos= imovel.quantidade_quartos,
+            quantidade_suites= imovel.quantidade_suites,
+            quantidade_banheiros= imovel.quantidade_banheiros,
+            quantidade_vagas= imovel.quantidade_vagas,
+            quantidade_andares= imovel.quantidade_andares,
+            quantidade_salas= imovel.quantidade_salas,
+            eh_mobiliado= imovel.eh_mobiliado,
+            criado_em= datetime.now(),
+        )
+
+        self.sessao.add(imovel_para_criar)
 
         self.sessao.flush()
 
         self.sessao.commit()
 
-        return imovel
+        return imovel_para_criar
     
 
     def editar_imovel(

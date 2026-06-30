@@ -162,7 +162,7 @@ CREATE TABLE imoveis (
 
     numero INTEGER NOT NULL,
 
-    eh_condominio BOOLEAN NOT NULL,
+    em_condominio BOOLEAN NOT NULL,
 
     condominio UUID,
 
@@ -193,7 +193,6 @@ CREATE TABLE imoveis (
     CONSTRAINT fk_condominio_imoveis
         FOREIGN KEY (condominio)
         REFERENCES condominios(id)
-        ON DELETE CASCADE
 )
 
 ALTER TABLE condominios 
