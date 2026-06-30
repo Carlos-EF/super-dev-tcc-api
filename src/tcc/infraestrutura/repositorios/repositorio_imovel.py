@@ -18,7 +18,7 @@ class RepositorioImovel:
         imovel_para_criar = ModeloImovel(
             id=uuid7(),
             codigo= imovel.codigo,
-            proprietario= imovel.prorietario,
+            proprietario= imovel.proprietario,
             corretor= imovel.corretor,
             tipo= imovel.tipo,
             status= 'ATIVO',

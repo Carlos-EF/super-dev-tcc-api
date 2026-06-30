@@ -13,7 +13,7 @@ class CriarImovelRequest(BaseModel):
         examples=['IMV12345']
     )
 
-    propietario: UUID = Field(
+    proprietario: UUID = Field(
         description=['UUIDv7 do proprietário responsável pelo imóvel'],
         examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
     )
