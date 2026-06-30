@@ -12,6 +12,16 @@ class ModeloImovel(ModeloBase):
         nullable=False
     )
 
+    corretor = Column(
+        UUID(as_uuid=True),
+        nullable=False
+    )
+
+    proprietario = Column(
+        UUID(as_uuid=True),
+        nullable=False
+    )
+
     codigo = Column(
         String(10),
         nullable=False
@@ -48,7 +58,7 @@ class ModeloImovel(ModeloBase):
     )
 
     estado = Column(
-        String(16),
+        String(19),
         nullable=False
     )
 
@@ -62,13 +72,13 @@ class ModeloImovel(ModeloBase):
         nullable=False
     )
 
-    eh_condominio = Column(
+    em_condominio = Column(
         Boolean,
         nullable=False
     )
 
     condominio = Column(
-        String(50),
+        UUID(as_uuid=True),
         nullable=True
     )
 

@@ -1,7 +1,7 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends, status, HTTPException
-from src.tcc.api.schemas.imovel_schemas import CriarImovelRequest, EditarImovelRequest, ImovelResponse
-from src.tcc.infraestrutura.repositorios.repositorio_imovel import RepositorioImovel
+from tcc.api.schemas.imovel_schemas import CriarImovelRequest, EditarImovelRequest, ImovelResponse
+from tcc.infraestrutura.repositorios.repositorio_imovel import RepositorioImovel
 from tcc.infraestrutura.conexao import obter_sessao
 from sqlalchemy.orm import Session
 from http import HTTPStatus
@@ -96,12 +96,10 @@ def apagar_imovel(
 @router.post(
     '',
     status_code=status.HTTP_201_CREATED,
-    response_model=ImovelResponse,
     summary='Criar um imóvel.',
     responses= {
         204: {
             'description': 'Imóvel criado com sucesso!',
-            'model': ImovelResponse
         }
     }
 )
