@@ -35,7 +35,7 @@ def listar_imoveis(
 
 
 @router.get(
-    '{id}',
+    '/{id}',
     response_model=ImovelResponse,
     status_code=status.HTTP_200_OK,
     summary='Listar o imóvel cadastrado.',
