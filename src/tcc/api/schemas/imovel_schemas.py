@@ -199,6 +199,18 @@ class ImovelResponse(BaseModel):
         examples=['019d45ea-997b-7451-9905-cb38b791fe93']
     )
 
+    proprietario: UUID = Field(
+        ...,
+        description='Indentificador único (UUID v7) do proprietário do imóvel',
+        examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
+    )
+
+    corretor: UUID = Field(
+        ...,
+        description='Indentificador único (UUID v7) do corretor do imóvel',
+        examples=['019d45ea-997b-7451-9905-cb38b791fe93']
+    )
+
     codigo: str = Field(
         ...,
         min_length=1,
@@ -278,6 +290,12 @@ class ImovelResponse(BaseModel):
         examples=[True]
     )
 
+    condominio: UUID | None = Field(
+        None,
+        description='Indentificador único (UUID v7) do condomínio do imóvel',
+        examples=[None]
+    )
+
     valor: float = Field(
         ...,
         description='Valor de venda do imóvel.',
@@ -287,6 +305,12 @@ class ImovelResponse(BaseModel):
     valor_iptu: float | None = Field(
         None,
         description='Valor do iptu do imóvel.',
+        examples=[1000.00, 1500.00]
+    )
+
+    valor_condominio: float | None = Field(
+        None,
+        description='Valor do condomínio do imóvel.',
         examples=[1000.00, 1500.00]
     )
     
@@ -348,6 +372,8 @@ class ImovelResponse(BaseModel):
         'json_schema_extra': {
             'examples':[{
                 'id': '019d45ea-997b-7451-9905-cb38b791fe93',
+                'proprietario': '019db9eb-db4c-7246-9025-0e0b7da207d7',
+                'corretor': '019d45ea-997b-7451-9905-cb38b791fe93',
                 'codigo': 'IMV12345',
                 'status': 'ATIVO',
                 'tipo': 'Apartamento',
@@ -359,8 +385,10 @@ class ImovelResponse(BaseModel):
                 'cep': '01001-000',
                 'numero': 123,
                 'em_condominio': True,
+                'condominio': None,
                 'valor': 350000.00,
                 'valor_iptu': 1000.00,
+                'valor_condominio': None,
                 'quantidade_quartos': 2,
                 'quantidade_suites': 1,
                 'quantidade_banheiros': 2,

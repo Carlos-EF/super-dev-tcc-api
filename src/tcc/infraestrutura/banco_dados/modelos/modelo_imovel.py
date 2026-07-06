@@ -52,6 +52,11 @@ class ModeloImovel(ModeloBase):
         nullable=False
     )
 
+    complemento = Column(
+        String(50),
+        nullable=True
+    )
+
     cidade = Column(
         String(50),
         nullable=False
