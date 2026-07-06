@@ -88,6 +88,13 @@ class CriarImovelRequest(BaseModel):
         examples=[123]
     )
 
+    complemento: str | None = Field(
+        None,
+        max_length=50,
+        description='Complemento do endereço do imóvel.',
+        examples=['Apto 101', 'Bloco B']
+    )
+
     em_condominio: bool = Field(
         ...,
         description='Indica se o imóvel é parte de um condomínio.',
@@ -175,6 +182,7 @@ class CriarImovelRequest(BaseModel):
                 'estado': 'São Paulo',
                 'cep': '01001-000',
                 'numero': 123,
+                'complemento': None,
                 'em_condominio': True,
                 'condominio': None,
                 'valor': 350000.00,
@@ -282,6 +290,13 @@ class ImovelResponse(BaseModel):
         ...,
         description='Número do imóvel.',
         examples=[123]
+    )
+
+    complemento: str | None = Field(
+        None,
+        max_length=50,
+        description='Complemento do endereço do imóvel.',
+        examples=['Apto 101', 'Bloco B']
     )
 
     em_condominio: bool = Field(
@@ -463,10 +478,23 @@ class EditarImovelRequest(BaseModel):
         examples=[123]
     )
 
+    complemento: str | None = Field(
+        None,
+        max_length=50,
+        description='Complemento do endereço do imóvel.',
+        examples=['Apto 101', 'Bloco B']
+    )
+
     em_condominio: bool | None = Field(
         None,
         description='Indica se o imóvel é parte de um condomínio.',
         examples=[True]
+    )
+
+    condominio: UUID | None = Field(
+        None,
+        description='Indentificador único (UUID v7) do condomínio do imóvel',
+        examples=[None]
     )
 
     valor: float | None = Field(
@@ -478,6 +506,12 @@ class EditarImovelRequest(BaseModel):
     valor_iptu: float | None = Field(
         None,
         description='Valor do iptu do imóvel.',
+        examples=[1000.00, 1500.00]
+    )
+
+    valor_condominio: float | None = Field(
+        None,
+        description='Valor do condomínio do imóvel.',
         examples=[1000.00, 1500.00]
     )
 
@@ -534,9 +568,12 @@ class EditarImovelRequest(BaseModel):
                 'estado': 'São Paulo',
                 'cep': '01001-000',
                 'numero': 123,
+                'complemento': None,
                 'em_condominio': True,
+                'condominio': None,
                 'valor': 350000.00,
                 'valor_iptu': 1000.00,
+                'valor_condominio': 1000.00,
                 'quantidade_quartos': 2,
                 'quantidade_suites': 1,
                 'quantidade_banheiros': 2,
