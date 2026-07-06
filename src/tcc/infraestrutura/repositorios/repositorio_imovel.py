@@ -73,8 +73,11 @@ class RepositorioImovel:
         imovel.estado = dados.estado
         imovel.cep = dados.cep
         imovel.numero = dados.numero
-        imovel.eh_condominio = dados.eh_condominio
+        imovel.complemento = dados.complemento
+        imovel.em_condominio = dados.em_condominio
+        imovel.condominio = dados.condominio
         imovel.valor = dados.valor
+        imovel.valor_condominio = dados.valor_condominio
         imovel.valor_iptu = dados.valor_iptu
         imovel.quantidade_quartos = dados.quantidade_quartos
         imovel.quantidade_suites = dados.quantidade_suites

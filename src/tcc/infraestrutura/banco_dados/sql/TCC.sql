@@ -143,6 +143,10 @@ CREATE TABLE imoveis (
     id UUID PRIMARY KEY NOT NULL,
 
     codigo VARCHAR(10) NOT NULL,
+	
+    proprietario UUID NOT NULL,
+	
+    corretor UUID NOT NULL,
 
     status VARCHAR(7) NOT NULL,
 
@@ -153,6 +157,8 @@ CREATE TABLE imoveis (
     logradouro VARCHAR(100) NOT NULL,
 
     bairro VARCHAR(50) NOT NULL,
+
+	complemento VARCHAR(50),
 
     cidade VARCHAR(50) NOT NULL,
 
@@ -192,10 +198,22 @@ CREATE TABLE imoveis (
 
     CONSTRAINT fk_condominio_imoveis
         FOREIGN KEY (condominio)
-        REFERENCES condominios(id)
+        REFERENCES condominios(id),
+		
+    CONSTRAINT fk_proprietario_imoveis
+        FOREIGN KEY (proprietario)
+        REFERENCES clientes(id),
+		
+    CONSTRAINT fk_corretor_imoveis
+        FOREIGN KEY (corretor)
+        REFERENCES corretores(id)
 )
 
 ALTER TABLE condominios 
-ADD COLUMN criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ADD COLUMN criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;	
 
-SELECT * from clientes;
+SELECT * FROM clientes;
+
+SELECT * FROM imoveis;
+
+DROP TABLE imoveis;
