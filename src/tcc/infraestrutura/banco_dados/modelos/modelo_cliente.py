@@ -166,7 +166,6 @@ class ModeloClienteProprietario(ModeloBase):
 
     cliente = relationship('ModeloCliente', back_populates='proprietario')
 
-    imovel = relationship('ModeloImovel', back_populates='proprietario', uselist=False)
 
 
 class ModeloClienteLocatario(ModeloBase):
@@ -201,5 +200,3 @@ class ModeloClienteLocatario(ModeloBase):
     )
 
     cliente = relationship('ModeloCliente', back_populates='locatario')
-
-    imovel = relationship('ModeloImovel', back_populates='locatario', uselist=False)

@@ -151,12 +151,6 @@ class ModeloImovel(ModeloBase):
         nullable=True
     )
 
-    corretor = relationship("ModeloCorretor", back_populates="imoveis")
-
-    proprietario = relationship("ModeloCliente", back_populates="imovel", uselist=False)
-
-    imagens = relationship("ModeloImagemImovel", back_populates="imovel")
-
 
 class ModeloImagemImovel(ModeloBase):
     __tablename__ = 'imagens_imoveis'
@@ -182,5 +176,3 @@ class ModeloImagemImovel(ModeloBase):
         Boolean,
         nullable=True
     )
-
-    imovel = relationship("ModeloImovel", back_populates="imagens")
