@@ -1,5 +1,6 @@
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, Date, String, Integer, Numeric, Boolean
+from sqlalchemy import Column, Date, String, Integer, Numeric, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 from tcc.infraestrutura.banco_dados.modelos.modelo_base import ModeloBase
 
 
@@ -14,11 +15,13 @@ class ModeloImovel(ModeloBase):
 
     corretor = Column(
         UUID(as_uuid=True),
+        ForeignKey('corretores.id', ondelete='CASCADE'),
         nullable=False
     )
 
     proprietario = Column(
         UUID(as_uuid=True),
+        ForeignKey('proprietarios.id', ondelete='CASCADE'),
         nullable=False
     )
 
@@ -84,6 +87,7 @@ class ModeloImovel(ModeloBase):
 
     condominio = Column(
         UUID(as_uuid=True),
+        ForeignKey('condominios.id', ondelete='CASCADE'),
         nullable=True
     )
 
@@ -147,6 +151,12 @@ class ModeloImovel(ModeloBase):
         nullable=True
     )
 
+    corretor = relationship("ModeloCorretor", back_populates="imoveis")
+
+    proprietario = relationship("ModeloCliente", back_populates="imovel", uselist=False)
+
+    imagens = relationship("ModeloImagemImovel", back_populates="imovel")
+
 
 class ModeloImagemImovel(ModeloBase):
     __tablename__ = 'imagens_imoveis'
@@ -159,6 +169,7 @@ class ModeloImagemImovel(ModeloBase):
 
     id_imovel = Column(
         UUID(as_uuid=True),
+        ForeignKey('imoveis.id', ondelete='CASCADE'),
         nullable=False
     )
 
@@ -171,3 +182,5 @@ class ModeloImagemImovel(ModeloBase):
         Boolean,
         nullable=True
     )
+
+    imovel = relationship("ModeloImovel", back_populates="imagens")
