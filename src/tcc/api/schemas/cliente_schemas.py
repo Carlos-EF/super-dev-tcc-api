@@ -454,25 +454,25 @@ class ClienteInteressadoResponse(BaseModel):
     
 
 class CriarClienteProprietarioRequest(BaseModel):
-    imovel_associado: str | None = Field(
-        description='Link do imóvel cadastrado do proprietário.',
-        examples=['']
+    imovel_associado: UUID | None = Field(
+        description='ID do imóvel cadastrado do proprietário.',
+        examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
     )
 
     model_config = {
         'json_schema_extra': {
             'examples': [{
                 'id_cliente': '019d0604-25a5-74c4-a2cb-eeaedaa5bbc1',
-                'imovel_associado': None
+                'imovel_associado': '019db9eb-db4c-7246-9025-0e0b7da207d7'
             }]
         }
     }   
 
 
 class EditarClienteProprietarioRequest(BaseModel):
-    imovel_associado: str | None = Field(
-        description='Link do imóvel cadastrado do proprietário.',
-        examples=['']
+    imovel_associado: UUID | None = Field(
+        description='ID do imóvel cadastrado do proprietário.',
+        examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
     )
 
     model_config = {
@@ -497,9 +497,9 @@ class ClienteProprietarioResponse(BaseModel):
         examples=['019d0604-25a5-74c4-a2cb-eeaedaa5bbc1']
     )
 
-    imovel_associado: str | None = Field(
-        description='Link do imóvel cadastrado do proprietário.',
-        examples=['']
+    imovel_associado: UUID | None = Field(
+        description='ID do imóvel cadastrado do proprietário.',
+        examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
     )
 
     criado_em: datetime = Field(
@@ -527,9 +527,9 @@ class ClienteProprietarioResponse(BaseModel):
 
 
 class CriarClienteLocatarioRequest(BaseModel):
-    imovel_associado: str | None = Field(
+    imovel_associado: UUID | None = Field(
         description='Imóvel associado ao cliente.',
-        examples=['']
+        examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
     )
 
     model_config = {
@@ -543,9 +543,9 @@ class CriarClienteLocatarioRequest(BaseModel):
 
 
 class EditarClienteLocatarioRequest(BaseModel):
-    imovel_associado: str | None = Field(
+    imovel_associado: UUID | None = Field(
         description='Imovél associado ao cliente',
-        examples=['']
+        examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
     )
 
     model_config = {
@@ -570,9 +570,9 @@ class ClienteLocatarioResponse(BaseModel):
         examples=['019dc49d-4b0f-72e7-a6b5-4a6669038742']
     )
 
-    imovel_associado: str | None = Field(
+    imovel_associado: UUID | None = Field(
         description='Imovél associado ao cliente.',
-        examples=['']
+        examples=['019db9eb-db4c-7246-9025-0e0b7da207d7']
     )
 
     criado_em: datetime = Field(
