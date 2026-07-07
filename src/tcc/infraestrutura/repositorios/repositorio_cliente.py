@@ -3,7 +3,7 @@ from typing import Union
 from uuid import UUID
 from uuid6 import uuid7
 from sqlalchemy.orm import Session, joinedload
-from tcc.api.schemas.cliente_schemas import ClienteInteressadoResponse, ClienteLocatarioResponse, ClienteProprietarioResponse, ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest, CriarDadosAdicionaisCliente, DadosAdicionais
+from tcc.api.schemas.cliente_schemas import ClienteInteressadoResponse, ClienteLocatarioResponse, ClienteProprietarioResponse, ClienteResponse, CriarClienteInteressadoRequest, CriarClienteLocatarioRequest, CriarClienteProprietarioRequest, CriarDadosAdicionaisCliente, DadosAdicionais, EditarClienteLocatarioRequest, EditarClienteProprietarioRequest, EditarDadosAdicionais
 from tcc.infraestrutura.banco_dados.modelos.modelo_cliente import ModeloCliente, ModeloClienteInteressado, ModeloClienteLocatario, ModeloClienteProprietario
 
 
@@ -230,7 +230,7 @@ class RepositorioCliente:
     def editar_cliente_proprietario(
             self,
             id: UUID,
-            dados: ModeloClienteProprietario
+            dados: EditarClienteProprietarioRequest
     ) -> bool:
         cliente_proprietario_para_alterar = self.obter_cliente_proprietario_por_id(id)
         if not cliente_proprietario_para_alterar:
@@ -283,7 +283,7 @@ class RepositorioCliente:
     def editar_cliente_locatario(
             self,
             id: UUID,
-            dados: ModeloClienteLocatario
+            dados: EditarClienteLocatarioRequest
     ) -> bool:
         cliente_locatario_para_alterar = self.obter_cliente_locatario_por_id(id)
         if not cliente_locatario_para_alterar:
@@ -338,7 +338,7 @@ class RepositorioCliente:
             self.criar_cliente_proprietario(cliente, dados_adicionais)
 
 
-    def editar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str, dados_adicionais: Union[ModeloClienteInteressado | ModeloClienteLocatario | ModeloClienteProprietario]):
+    def editar_cliente_por_tipo(self, cliente: ModeloCliente, tipo: str, dados_adicionais: EditarDadosAdicionais):
         if tipo == 'Interessado':
             self.editar_cliente_interessado(cliente.id, dados_adicionais)
         elif tipo == 'Locatário':

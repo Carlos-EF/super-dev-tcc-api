@@ -149,7 +149,8 @@ class ModeloClienteProprietario(ModeloBase):
     )
 
     imovel_associado = Column(
-        String,
+        UUID(as_uuid=True),
+        ForeignKey('imoveis.id', ondelete='CASCADE'),
         nullable=True
     )
 
@@ -164,6 +165,7 @@ class ModeloClienteProprietario(ModeloBase):
     )   
 
     cliente = relationship('ModeloCliente', back_populates='proprietario')
+
 
 
 class ModeloClienteLocatario(ModeloBase):
@@ -182,7 +184,8 @@ class ModeloClienteLocatario(ModeloBase):
     )
 
     imovel_associado = Column(
-        String,
+        UUID(as_uuid=True),
+        ForeignKey('imoveis.id', ondelete='CASCADE'),
         nullable=True
     )
 

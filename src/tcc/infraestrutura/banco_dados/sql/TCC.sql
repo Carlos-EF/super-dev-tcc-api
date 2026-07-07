@@ -62,7 +62,7 @@ CREATE TABLE proprietarios (
 
     id_cliente UUID NOT NULL UNIQUE,
 
-    imovel_associado TEXT,
+    imovel_associado UUID,
 
 	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -71,6 +71,11 @@ CREATE TABLE proprietarios (
     CONSTRAINT fk_proprietario_cliente
         FOREIGN KEY (id_cliente)
         REFERENCES clientes(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_proprietario_imovel
+        FOREIGN KEY (imovel_associado)
+        REFERENCES imoveis(id)
         ON DELETE CASCADE
 );
 
@@ -80,7 +85,7 @@ CREATE TABLE locatarios (
 
     id_cliente UUID NOT NULL UNIQUE,
 
-    imovel_associado TEXT,
+    imovel_associado UUID,
 
 	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -89,6 +94,11 @@ CREATE TABLE locatarios (
     CONSTRAINT fk_locatario_cliente
         FOREIGN KEY (id_cliente)
         REFERENCES clientes(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_locatario_imovel
+        FOREIGN KEY (imovel_associado)
+        REFERENCES imoveis(id)
         ON DELETE CASCADE
 );
 
