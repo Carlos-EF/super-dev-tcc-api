@@ -97,9 +97,7 @@ class RepositorioImovel:
             self,
             id: UUID
     ) -> bool:
-        imovel = self.sessao.query(
-            ModeloImovel).filter(
-            ModeloImovel.id == id).first()
+        imovel = self.obter_imovel_por_id(id)
         
         if not imovel:
             return False
@@ -130,3 +128,37 @@ class RepositorioImovel:
         imoveis = self.sessao.query(ModeloImovel).all()
 
         return imoveis
+
+
+    def ativar_imovel(
+            self,
+            id: UUID
+    ) -> bool:
+        imovel = self.obter_imovel_por_id(id)
+        
+        if not imovel:
+            return False
+        
+        imovel.status = 'ATIVO'
+        imovel.alterado_em = datetime.now()
+
+        self.sessao.commit()
+
+        return True
+    
+
+    def inativar_imovel(
+            self,
+            id: UUID
+    ) -> bool:
+        imovel = self.obter_imovel_por_id(id)
+        
+        if not imovel:
+            return False
+        
+        imovel.status = 'INATIVO'
+        imovel.alterado_em = datetime.now()
+
+        self.sessao.commit()
+
+        return True

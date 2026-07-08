@@ -65,7 +65,7 @@ def obter_imovel_por_id(
 
 
 @router.delete(
-    '{id}',
+    '/{id}',
     status_code=status.HTTP_204_NO_CONTENT,
     summary='Apagar um imóvel cadastrado.',
     responses= {
@@ -141,6 +141,64 @@ def editar_imovel(
         dados
         )
     if not editou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Imóvel não encontrado.'
+        )
+    
+
+@router.put(
+    '/{id}/ativar',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Ativar um imóvel.',
+    responses= {
+        204: {
+            'description': 'Imóvel encontrado e ativado com sucesso.'
+        },
+        404: {
+            'description': 'Imóvel não encontrado.'
+        },
+    },
+)
+def ativar_imovel(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Ativar um imóvel já cadastrado filtrando por seu ID."""
+    repositorio = RepositorioImovel(sessao=session)
+
+    ativou = repositorio.ativar_imovel(id)
+    
+    if not ativou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Imóvel não encontrado.'
+        )
+
+
+@router.put(
+    '/{id}/inativar',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Inativar um imóvel.',
+    responses= {
+        204: {
+            'description': 'Imóvel encontrado e inativado com sucesso.'
+        },
+        404: {
+            'description': 'Imóvel não encontrado.'
+        },
+    },
+)
+def inativar_imovel(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Inativar um imóvel já cadastrado filtrando por seu ID."""
+    repositorio = RepositorioImovel(sessao=session)
+
+    inativou = repositorio.inativar_imovel(id)
+
+    if not inativou:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Imóvel não encontrado.'
