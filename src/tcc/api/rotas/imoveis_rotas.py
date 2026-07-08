@@ -174,3 +174,32 @@ def ativar_imovel(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Imóvel não encontrado.'
         )
+
+
+@router.put(
+    '/{id}/inativar',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Inativar um imóvel.',
+    responses= {
+        204: {
+            'description': 'Imóvel encontrado e inativado com sucesso.'
+        },
+        404: {
+            'description': 'Imóvel não encontrado.'
+        },
+    },
+)
+def inativar_imovel(
+    id: UUID,
+    session: Session = Depends(obter_sessao)
+):
+    """Inativar um imóvel já cadastrado filtrando por seu ID."""
+    repositorio = RepositorioImovel(sessao=session)
+
+    inativou = repositorio.inativar_imovel(id)
+
+    if not inativou:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Imóvel não encontrado.'
+        )
