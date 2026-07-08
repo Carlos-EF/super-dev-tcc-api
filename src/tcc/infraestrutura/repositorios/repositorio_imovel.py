@@ -97,9 +97,7 @@ class RepositorioImovel:
             self,
             id: UUID
     ) -> bool:
-        imovel = self.sessao.query(
-            ModeloImovel).filter(
-            ModeloImovel.id == id).first()
+        imovel = self.obter_imovel_por_id(self, id)
         
         if not imovel:
             return False
