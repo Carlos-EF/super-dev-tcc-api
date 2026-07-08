@@ -167,7 +167,7 @@ class ClienteResponse(BaseModel):
         examples=['Interessado']
     )
 
-    dados_adicionais: DadosAdicionais
+    dados_adicionais: DadosAdicionais | None
 
     criado_em: datetime = Field(
         ...,

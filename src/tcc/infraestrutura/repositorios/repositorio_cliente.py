@@ -350,6 +350,8 @@ class RepositorioCliente:
     def obter_cliente_por_tipo(self, tipo: str, id: UUID):
         if tipo == 'Interessado':
             interessado = self.obter_cliente_interessado_por_id(id)
+            if not interessado:
+                return None
 
             return ClienteInteressadoResponse(
                 id_cliente=interessado.id_cliente,
@@ -369,6 +371,9 @@ class RepositorioCliente:
             )
         elif tipo == 'Locatário':
             locatario = self.obter_cliente_locatario_por_id(id)
+            if not locatario:
+                return None
+            
             return ClienteLocatarioResponse(
                 id=locatario.id,
                 id_cliente=locatario.id_cliente,
@@ -378,6 +383,9 @@ class RepositorioCliente:
             )
         elif tipo == 'Proprietário':
             proprietario = self.obter_cliente_proprietario_por_id(id)
+            if not proprietario:
+                return None
+            
             return ClienteProprietarioResponse(
                 id=proprietario.id,
                 id_cliente=proprietario.id_cliente,
@@ -427,6 +435,9 @@ class RepositorioCliente:
         
         elif cliente.tipo == 'Locatário':
             locatario = cliente.locatario
+            
+            if not locatario:
+                return None
 
             return ClienteLocatarioResponse(
                 id=locatario.id,
@@ -437,6 +448,9 @@ class RepositorioCliente:
             )
         elif cliente.tipo == 'Proprietário':
             proprietario = cliente.proprietario
+
+            if not proprietario:
+                return None
 
             return ClienteProprietarioResponse(
                 id=proprietario.id,

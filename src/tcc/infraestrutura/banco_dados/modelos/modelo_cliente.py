@@ -48,11 +48,20 @@ class ModeloCliente(ModeloBase):
         nullable=False
     )
 
-    interessado = relationship('ModeloClienteInteressado', back_populates='cliente', uselist=False)
+    interessado = relationship(
+        'ModeloClienteInteressado', 
+        back_populates='cliente', 
+        uselist=False)
 
-    proprietario = relationship('ModeloClienteProprietario', back_populates='cliente', uselist=False)
+    proprietario = relationship(
+        'ModeloClienteProprietario', 
+        back_populates='cliente', 
+        uselist=False)
 
-    locatario = relationship('ModeloClienteLocatario', back_populates='cliente', uselist=False)
+    locatario = relationship(
+        'ModeloClienteLocatario', 
+        back_populates='cliente', 
+        uselist=False)
 
 
 class ModeloClienteInteressado(ModeloBase):

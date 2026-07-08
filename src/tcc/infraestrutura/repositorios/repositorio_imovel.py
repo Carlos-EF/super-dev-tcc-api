@@ -97,7 +97,7 @@ class RepositorioImovel:
             self,
             id: UUID
     ) -> bool:
-        imovel = self.obter_imovel_por_id(self, id)
+        imovel = self.obter_imovel_por_id(id)
         
         if not imovel:
             return False
@@ -134,7 +134,7 @@ class RepositorioImovel:
             self,
             id: UUID
     ) -> bool:
-        imovel = self.obter_imovel_por_id(self, id)
+        imovel = self.obter_imovel_por_id(id)
         
         if not imovel:
             return False
@@ -151,7 +151,7 @@ class RepositorioImovel:
             self,
             id: UUID
     ) -> bool:
-        imovel = self.obter_imovel_por_id(self, id)
+        imovel = self.obter_imovel_por_id(id)
         
         if not imovel:
             return False

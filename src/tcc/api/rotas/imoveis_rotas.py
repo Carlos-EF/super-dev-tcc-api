@@ -65,7 +65,7 @@ def obter_imovel_por_id(
 
 
 @router.delete(
-    '{id}',
+    '/{id}',
     status_code=status.HTTP_204_NO_CONTENT,
     summary='Apagar um imóvel cadastrado.',
     responses= {
