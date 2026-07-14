@@ -95,11 +95,13 @@ def apagar_imovel(
 
 @router.post(
     '',
+    response_model=ImovelResponse,
     status_code=status.HTTP_201_CREATED,
     summary='Criar um imóvel.',
     responses= {
         204: {
             'description': 'Imóvel criado com sucesso!',
+            'response_model': ImovelResponse
         }
     }
 )
@@ -118,11 +120,12 @@ def criar_imovel(
 
 @router.put(
     '/{id}',
+    response_model=ImovelResponse,
     status_code=status.HTTP_204_NO_CONTENT,
     summary='Editar dados de um imóvel',
     responses= {
         204: {
-            'description': 'Imóvel encontrado e alterado com sucesso.'
+            'description': 'Imóvel encontrado e alterado com sucesso.',
         },
         404: {
             'description': 'Imóvel não encontrado.'
@@ -145,6 +148,8 @@ def editar_imovel(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Imóvel não encontrado.'
         )
+    
+    return editou
     
 
 @router.put(

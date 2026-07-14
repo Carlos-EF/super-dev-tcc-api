@@ -534,7 +534,7 @@ class CriarClienteLocatarioRequest(BaseModel):
 
     model_config = {
         'json_schema_extra': {
-            'examples': [{
+            'examples': [{  
                 'id_cliente': '019dc49d-4b0f-72e7-a6b5-4a6669038742',
                 'imovel_associado': None
             }]
