@@ -57,7 +57,7 @@ class RepositorioImovel:
             self,
             id: UUID,
             dados: EditarImovelRequest
-    ) -> bool:
+    ) -> bool | ModeloImovel:
         imovel = self.sessao.query(
             ModeloImovel).filter(
             ModeloImovel.id == id).first()

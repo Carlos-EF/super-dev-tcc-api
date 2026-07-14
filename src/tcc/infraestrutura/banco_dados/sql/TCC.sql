@@ -146,7 +146,9 @@ CREATE TABLE condominios (
 
     estado VARCHAR(20) NOT NULL,
 
-    cidade VARCHAR(40) NOT NULL
+    cidade VARCHAR(40) NOT NULL,
+
+	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE imoveis (
@@ -208,22 +210,16 @@ CREATE TABLE imoveis (
 
     CONSTRAINT fk_condominio_imoveis
         FOREIGN KEY (condominio)
-        REFERENCES condominios(id),
+        REFERENCES condominios(id)
+        ON DELETE CASCADE,
 		
     CONSTRAINT fk_proprietario_imoveis
         FOREIGN KEY (proprietario)
-        REFERENCES clientes(id),
+        REFERENCES clientes(id)
+        ON DELETE CASCADE,
 		
     CONSTRAINT fk_corretor_imoveis
         FOREIGN KEY (corretor)
         REFERENCES corretores(id)
+        ON DELETE CASCADE
 )
-
-ALTER TABLE condominios 
-ADD COLUMN criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;	
-
-SELECT * FROM clientes;
-
-SELECT * FROM imoveis;
-
-DROP TABLE imoveis;
