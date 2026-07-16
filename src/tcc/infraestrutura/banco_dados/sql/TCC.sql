@@ -76,7 +76,7 @@ CREATE TABLE proprietarios (
     CONSTRAINT fk_proprietario_imovel
         FOREIGN KEY (imovel_associado)
         REFERENCES imoveis(id)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
 );
 
 
@@ -99,7 +99,7 @@ CREATE TABLE locatarios (
     CONSTRAINT fk_locatario_imovel
         FOREIGN KEY (imovel_associado)
         REFERENCES imoveis(id)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
 );
 
 
@@ -156,9 +156,9 @@ CREATE TABLE imoveis (
 
     codigo VARCHAR(10) NOT NULL,
 	
-    proprietario UUID NOT NULL,
+    proprietario UUID,
 	
-    corretor UUID NOT NULL,
+    corretor UUID,
 
     status VARCHAR(7) NOT NULL,
 
@@ -211,15 +211,15 @@ CREATE TABLE imoveis (
     CONSTRAINT fk_condominio_imoveis
         FOREIGN KEY (condominio)
         REFERENCES condominios(id)
-        ON DELETE CASCADE,
+        ON DELETE SET NULL,
 		
     CONSTRAINT fk_proprietario_imoveis
         FOREIGN KEY (proprietario)
         REFERENCES clientes(id)
-        ON DELETE CASCADE,
+        ON DELETE SET NULL,
 		
     CONSTRAINT fk_corretor_imoveis
         FOREIGN KEY (corretor)
         REFERENCES corretores(id)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
 )
