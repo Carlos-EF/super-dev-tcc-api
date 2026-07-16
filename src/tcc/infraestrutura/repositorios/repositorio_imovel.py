@@ -31,6 +31,7 @@ class RepositorioImovel:
             numero= imovel.numero,
             em_condominio= imovel.em_condominio,
             condominio= imovel.condominio,
+            complemento=imovel.complemento,
             valor= imovel.valor,
             valor_condominio= imovel.valor_condominio,
             valor_iptu= imovel.valor_iptu,
