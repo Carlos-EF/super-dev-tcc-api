@@ -120,7 +120,6 @@ def criar_imovel(
 
 @router.put(
     '/{id}',
-    response_model=ImovelResponse,
     status_code=status.HTTP_204_NO_CONTENT,
     summary='Editar dados de um imóvel',
     responses= {

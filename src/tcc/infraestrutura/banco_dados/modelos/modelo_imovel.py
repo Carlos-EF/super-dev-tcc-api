@@ -1,6 +1,5 @@
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column, Date, String, Integer, Numeric, Boolean, ForeignKey
-from sqlalchemy.orm import relationship
 from tcc.infraestrutura.banco_dados.modelos.modelo_base import ModeloBase
 
 
@@ -15,14 +14,14 @@ class ModeloImovel(ModeloBase):
 
     corretor = Column(
         UUID(as_uuid=True),
-        ForeignKey('corretores.id', ondelete='CASCADE'),
-        nullable=False
+        ForeignKey('corretores.id', ondelete='SET NULL'),
+        nullable=True
     )
 
     proprietario = Column(
         UUID(as_uuid=True),
-        ForeignKey('proprietarios.id', ondelete='CASCADE'),
-        nullable=False
+        ForeignKey('proprietarios.id', ondelete='SET NULL'),
+        nullable=True
     )
 
     codigo = Column(
@@ -87,7 +86,7 @@ class ModeloImovel(ModeloBase):
 
     condominio = Column(
         UUID(as_uuid=True),
-        ForeignKey('condominios.id', ondelete='CASCADE'),
+        ForeignKey('condominios.id', ondelete='SET NULL'),
         nullable=True
     )
 
