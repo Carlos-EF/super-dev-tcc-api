@@ -602,19 +602,7 @@ class EditarImovelRequest(BaseModel):
     }
 
 
-class CriarImagensImovelResquest(BaseModel):
-    id: UUID = Field(
-        ...,
-        description=['Identificador (UUIDv7) na tabela de imagens.'],
-        examples=['019f752d-1dc5-7888-aa71-6c11e280cb3c']
-    )
-
-    id_imovel: UUID = Field(
-        ...,
-        description=['Identificador (UUIDv7) da tabela principal de imóveis.'],
-        examples=['019f752e-2191-7757-97b7-b9b2871a29ee']
-    )
-
+class CriarImagensImovelRequest(BaseModel):
     imagem: str | None = Field(
         None,
         description=['URL ou título do arquivo da imagem.'],
@@ -630,7 +618,6 @@ class CriarImagensImovelResquest(BaseModel):
     model_config = {
         'json_schema_extra': {
             'examples': [{
-                'id': '019f752d-1dc5-7888-aa71-6c11e280cb3c',
                 'id_imovel': '019f752e-2191-7757-97b7-b9b2871a29ee',
                 'imagem': None,
                 'imagem_principal': None
@@ -639,7 +626,7 @@ class CriarImagensImovelResquest(BaseModel):
     }
 
 
-class EditarImagensImovelResquest(BaseModel):
+class EditarImagensImovelRequest(BaseModel):
     imagem: str | None = Field(
         None,
         description=['URL ou título do arquivo da imagem.'],

@@ -168,7 +168,7 @@ class ModeloImagemImovel(ModeloBase):
 
     imagem = Column(
         String(255),
-        nullable=False
+        nullable=True
     )
 
     imagem_principal = Column(
