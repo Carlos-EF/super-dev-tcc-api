@@ -600,3 +600,40 @@ class EditarImovelRequest(BaseModel):
             }]
         }
     }
+
+
+class CriarImagensImovelResquest(BaseModel):
+    id: UUID = Field(
+        ...,
+        description=['Identificador (UUIDv7) na tabela de imagens.'],
+        examples=['019f752d-1dc5-7888-aa71-6c11e280cb3c']
+    )
+
+    id_imovel: UUID = Field(
+        ...,
+        description=['Identificador (UUIDv7) da tabela principal de imóveis.'],
+        examples=['019f752e-2191-7757-97b7-b9b2871a29ee']
+    )
+
+    imagem: str | None = Field(
+        None,
+        description=['URL ou título do arquivo da imagem.'],
+        examples=[None]
+    )
+
+    imagem_principal: bool | None = Field(
+        None,
+        description=['Diz se a imagem é a principal ou não.'],
+        examples=[True]
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': [{
+                'id': '019f752d-1dc5-7888-aa71-6c11e280cb3c',
+                'id_imovel': '019f752e-2191-7757-97b7-b9b2871a29ee',
+                'imagem': None,
+                'imagem_principal': None
+            }]
+        }
+    }
