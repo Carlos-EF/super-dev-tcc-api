@@ -1,9 +1,9 @@
 from datetime import datetime
-from tcc.api.schemas.imovel_schemas import CriarImovelRequest, EditarImovelRequest
+from tcc.api.schemas.imovel_schemas import CriarImagensImovelRequest, CriarImovelRequest, EditarImovelRequest, ImagensImovelResponse
 from sqlalchemy.orm import Session
 from uuid import UUID
 from uuid6 import uuid7
-from tcc.infraestrutura.banco_dados.modelos.modelo_imovel import ModeloImovel
+from tcc.infraestrutura.banco_dados.modelos.modelo_imovel import ModeloImagemImovel, ModeloImovel
 
 
 class RepositorioImovel:
@@ -163,3 +163,38 @@ class RepositorioImovel:
         self.sessao.commit()
 
         return True
+    
+
+    def cadastrar_imagens_imovel(
+            self,
+            id_imovel: UUID,
+            imagens: list[CriarImagensImovelRequest]
+    )-> list[ModeloImagemImovel] | None:
+        
+        if not imagens:
+            return None
+        
+        imagens_principais = sum(
+        1 for imagem in imagens if imagem.imagem_principal
+        )
+
+        if imagens_principais > 1:
+            raise ValueError('O imóvel possui mais de uma imagem como principal (front-end).')
+        
+        imagens_cadastradas = []
+
+        for imagem in imagens:
+            imagem_modelo = ModeloImagemImovel(
+                id= uuid7(),
+                id_imovel=id_imovel,
+                imagem= imagem.imagem,
+                imagem_principal=imagem.imagem_principal
+            )
+
+            self.sessao.add(imagem_modelo)
+
+            imagens_cadastradas.append(imagem_modelo)
+        
+        self.sessao.commit()
+
+        return imagens_cadastradas
