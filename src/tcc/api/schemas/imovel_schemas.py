@@ -637,3 +637,26 @@ class CriarImagensImovelResquest(BaseModel):
             }]
         }
     }
+
+
+class EditarImagensImovelResquest(BaseModel):
+    imagem: str | None = Field(
+        None,
+        description=['URL ou título do arquivo da imagem.'],
+        examples=[None]
+    )
+
+    imagem_principal: bool | None = Field(
+        None,
+        description=['Diz se a imagem é a principal ou não.'],
+        examples=[True]
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': [{
+                'imagem': None,
+                'imagem_principal': None
+            }]
+        }
+    }
