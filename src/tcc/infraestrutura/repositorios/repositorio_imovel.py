@@ -13,7 +13,8 @@ class RepositorioImovel:
 
     def criar_imovel(
             self,
-            imovel: CriarImovelRequest
+            imovel: CriarImovelRequest,
+            imagens: list[CriarImagensImovelRequest]
     ) -> ModeloImovel:
         imovel_para_criar = ModeloImovel(
             id=uuid7(),
@@ -48,6 +49,8 @@ class RepositorioImovel:
         self.sessao.add(imovel_para_criar)
 
         self.sessao.flush()
+
+        self.cadastrar_imagens_imovel(imovel_para_criar.id, imagens)
 
         self.sessao.commit()
 
