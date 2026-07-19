@@ -213,11 +213,11 @@ def inativar_imovel(
     '/imagens',
     status_code=status.HTTP_200_OK,
     summary='Listar as imagens cadastradas',
-    response_model=ImagensImovelResponse,
+    response_model=ImagensImovelResponse | list[ImagensImovelResponse] | None,
     responses= {
         200: {
             'description': 'Lista de todas as imagens cadastradas.',
-            'response_model': ImagensImovelResponse
+            'response_model': ImagensImovelResponse | list[ImagensImovelResponse] | None
         }
     }
 )
@@ -229,3 +229,27 @@ def listar_imagens(
     imagens = repositorio.listar_imagens_imovel()
 
     return imagens
+
+
+@router.post(
+    '/imagens',
+    status_code=status.HTTP_201_CREATED,
+    summary='Cadastrar imagens.',
+    response_model=ImagensImovelResponse | list[ImagensImovelResponse] | None,
+    responses= {
+        200: {
+            'description': 'Imagens cadastradas com sucesso.',
+            'response_model': ImagensImovelResponse | list[ImagensImovelResponse] | None
+        }
+    }
+)
+def cadastrar_imagens(
+    id: UUID,
+    imagens: ImagensImovelResponse | list[ImagensImovelResponse] | None,
+    session: Session = Depends(obter_sessao)
+):
+    repositorio = RepositorioImovel(sessao=session)
+
+    imagens_para_cadastrar = repositorio.cadastrar_imagens_imovel(id, imagens)
+
+    return imagens_para_cadastrar
