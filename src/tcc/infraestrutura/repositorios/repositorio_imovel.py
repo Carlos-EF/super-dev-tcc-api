@@ -50,8 +50,6 @@ class RepositorioImovel:
 
         self.sessao.flush()
 
-        self.cadastrar_imagens_imovel(imovel_para_criar.id, imagens)
-
         self.sessao.commit()
 
         return imovel_para_criar
@@ -201,3 +199,9 @@ class RepositorioImovel:
         self.sessao.commit()
 
         return imagens_cadastradas
+    
+
+    def listar_imagens_imovel(self) -> list[ModeloImagemImovel]:
+        imagens = self.sessao.query(ModeloImagemImovel).all()
+
+        return imagens
