@@ -170,7 +170,7 @@ class RepositorioImovel:
             self,
             id_imovel: UUID,
             imagens: list[CriarImagensImovelRequest]
-    )-> list[ModeloImagemImovel] | None:
+    )-> ModeloImagemImovel | list[ModeloImagemImovel] | None:
         
         if not imagens:
             return None
