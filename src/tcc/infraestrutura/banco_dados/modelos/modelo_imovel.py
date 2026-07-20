@@ -175,3 +175,13 @@ class ModeloImagemImovel(ModeloBase):
         Boolean,
         nullable=True
     )
+
+    criado_em = Column(
+        Date,
+        nullable=False
+    )
+
+    alterado_em = Column(
+        Date,
+        nullable=True
+    )

@@ -223,3 +223,22 @@ CREATE TABLE imoveis (
         REFERENCES corretores(id)
         ON DELETE SET NULL
 )
+
+CREATE TABLE imagens_imoveis (
+    id UUID PRIMARY KEY NOT NULL,
+
+    id_imovel UUID NOT NULL,
+
+    imagem VARCHAR(255),
+
+    imagem_principal BOOLEAN,
+
+    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_imovel
+        FOREIGN KEY (id_imovel)
+        REFERENCES imoveis(id)
+        ON DELETE CASCADE
+);

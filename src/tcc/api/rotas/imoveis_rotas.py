@@ -1,6 +1,6 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends, status, HTTPException
-from tcc.api.schemas.imovel_schemas import CriarImovelRequest, EditarImovelRequest, ImagensImovelResponse, ImovelResponse
+from tcc.api.schemas.imovel_schemas import CriarImagensImovelRequest, CriarImovelRequest, EditarImovelRequest, ImagensImovelResponse, ImovelResponse
 from tcc.infraestrutura.repositorios.repositorio_imovel import RepositorioImovel
 from tcc.infraestrutura.conexao import obter_sessao
 from sqlalchemy.orm import Session
@@ -32,6 +32,28 @@ def listar_imoveis(
     imoveis = repositorio.listar_imoveis()
 
     return imoveis
+
+
+@router.get(
+    '/imagens',
+    status_code=status.HTTP_200_OK,
+    summary='Listar as imagens cadastradas',
+    response_model=ImagensImovelResponse | list[ImagensImovelResponse] | None,
+    responses= {
+        200: {
+            'description': 'Lista de todas as imagens cadastradas.',
+            'response_model': ImagensImovelResponse | list[ImagensImovelResponse] | None
+        }
+    }
+)
+def listar_imagens(
+    session: Session = Depends(obter_sessao)
+):
+    repositorio = RepositorioImovel(sessao=session)
+
+    imagens = repositorio.listar_imagens_imovel()
+
+    return imagens
 
 
 @router.get(
@@ -116,6 +138,29 @@ def criar_imovel(
     imovel_criado = repositorio.criar_imovel(imovel)
 
     return imovel_criado
+
+
+@router.post(
+    '/imagens/cadastrar',
+    status_code=status.HTTP_201_CREATED,
+    summary='Cadastrar imagens.',
+    response_model=ImagensImovelResponse | list[ImagensImovelResponse] | None,
+    responses= {
+        200: {
+            'description': 'Imagens cadastradas com sucesso.',
+            'response_model': ImagensImovelResponse | list[ImagensImovelResponse] | None
+        }
+    }
+)
+def cadastrar_imagens(
+    imagens: list[CriarImagensImovelRequest] | None,
+    session: Session = Depends(obter_sessao)
+):
+    repositorio = RepositorioImovel(sessao=session)
+
+    imagens_para_cadastrar = repositorio.cadastrar_imagens_imovel(imagens)
+
+    return imagens_para_cadastrar
 
 
 @router.put(
@@ -208,48 +253,3 @@ def inativar_imovel(
             detail='Imóvel não encontrado.'
         )
     
-
-@router.get(
-    '/imagens',
-    status_code=status.HTTP_200_OK,
-    summary='Listar as imagens cadastradas',
-    response_model=ImagensImovelResponse | list[ImagensImovelResponse] | None,
-    responses= {
-        200: {
-            'description': 'Lista de todas as imagens cadastradas.',
-            'response_model': ImagensImovelResponse | list[ImagensImovelResponse] | None
-        }
-    }
-)
-def listar_imagens(
-    session: Session = Depends(obter_sessao)
-):
-    repositorio = RepositorioImovel(sessao=session)
-
-    imagens = repositorio.listar_imagens_imovel()
-
-    return imagens
-
-
-@router.post(
-    '/imagens',
-    status_code=status.HTTP_201_CREATED,
-    summary='Cadastrar imagens.',
-    response_model=ImagensImovelResponse | list[ImagensImovelResponse] | None,
-    responses= {
-        200: {
-            'description': 'Imagens cadastradas com sucesso.',
-            'response_model': ImagensImovelResponse | list[ImagensImovelResponse] | None
-        }
-    }
-)
-def cadastrar_imagens(
-    id: UUID,
-    imagens: ImagensImovelResponse | list[ImagensImovelResponse] | None,
-    session: Session = Depends(obter_sessao)
-):
-    repositorio = RepositorioImovel(sessao=session)
-
-    imagens_para_cadastrar = repositorio.cadastrar_imagens_imovel(id, imagens)
-
-    return imagens_para_cadastrar
