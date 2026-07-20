@@ -603,14 +603,21 @@ class EditarImovelRequest(BaseModel):
 
 
 class CriarImagensImovelRequest(BaseModel):
+    id_imovel: UUID = Field(
+        ...,
+        description=['Identificador (UUIDv7) da tabela principal de imóveis.'],
+        examples=['019f752e-2191-7757-97b7-b9b2871a29ee']
+    )
+
+
     imagem: str | None = Field(
         None,
         description=['URL ou título do arquivo da imagem.'],
         examples=[None]
     )
 
-    imagem_principal: bool | None = Field(
-        None,
+    imagem_principal: bool = Field(
+        ...,
         description=['Diz se a imagem é a principal ou não.'],
         examples=[True]
     )
@@ -620,7 +627,7 @@ class CriarImagensImovelRequest(BaseModel):
             'examples': [{
                 'id_imovel': '019f752e-2191-7757-97b7-b9b2871a29ee',
                 'imagem': None,
-                'imagem_principal': None
+                'imagem_principal': True
             }]
         }
     }
@@ -633,8 +640,8 @@ class EditarImagensImovelRequest(BaseModel):
         examples=[None]
     )
 
-    imagem_principal: bool | None = Field(
-        None,
+    imagem_principal: bool = Field(
+        ...,
         description=['Diz se a imagem é a principal ou não.'],
         examples=[True]
     )
@@ -643,7 +650,7 @@ class EditarImagensImovelRequest(BaseModel):
         'json_schema_extra': {
             'examples': [{
                 'imagem': None,
-                'imagem_principal': None
+                'imagem_principal': True
             }]
         }
     }
@@ -668,8 +675,8 @@ class ImagensImovelResponse(BaseModel):
         examples=[None]
     )
 
-    imagem_principal: bool | None = Field(
-        None,
+    imagem_principal: bool = Field(
+        ...,
         description=['Diz se a imagem é a principal ou não.'],
         examples=[True]
     )
