@@ -1,5 +1,5 @@
 from uuid import UUID
-from fastapi import APIRouter, Depends, status, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, status, HTTPException, UploadFile, File, Form
 from tcc.api.schemas.imovel_schemas import CriarImagensImovelRequest, CriarImovelRequest, EditarImovelRequest, ImagensImovelResponse, ImovelResponse
 from tcc.infraestrutura.repositorios.repositorio_imovel import RepositorioImovel
 from tcc.infraestrutura.conexao import obter_sessao
@@ -40,11 +40,11 @@ def listar_imoveis(
     '/imagens',
     status_code=status.HTTP_200_OK,
     summary='Listar as imagens cadastradas',
-    response_model=ImagensImovelResponse | list[ImagensImovelResponse] | None,
+    response_model= list[ImagensImovelResponse] | None,
     responses= {
         200: {
             'description': 'Lista de todas as imagens cadastradas.',
-            'response_model': ImagensImovelResponse | list[ImagensImovelResponse] | None
+            'response_model': list[ImagensImovelResponse] | None
         }
     }
 )
@@ -149,7 +149,7 @@ def criar_imovel(
     response_model=list[ImagensImovelResponse]
 )
 def fazer_upload_imagens(
-    id_imovel: UUID,
+    id_imovel: UUID = Form(...),
     imagens: list[UploadFile] = File(...),
     session: Session = Depends(obter_sessao)
 ):
@@ -167,7 +167,9 @@ def fazer_upload_imagens(
 
     for imagem in imagens:
         caminho = pasta / imagem.filename
-    
+
+        caminho_relativo = caminho.as_posix()
+
         with open(caminho, 'wb') as buffer:
             shutil.copyfileobj(
                 imagem.file,
@@ -176,7 +178,8 @@ def fazer_upload_imagens(
 
         imagens_para_salvar.append(
             CriarImagensImovelRequest(
-                imagem=str(caminho),
+                id_imovel=id_imovel,
+                imagem=caminho_relativo,
                 imagem_principal=False
             )
         )

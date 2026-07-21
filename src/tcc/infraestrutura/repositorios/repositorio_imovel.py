@@ -201,7 +201,7 @@ class RepositorioImovel:
         return imagens_cadastradas
     
 
-    def listar_imagens_imovel(self) -> ModeloImagemImovel | list[ModeloImagemImovel] | None:
+    def listar_imagens_imovel(self) -> list[ModeloImagemImovel] | None:
         imagens = self.sessao.query(ModeloImagemImovel).all()
 
         return imagens
