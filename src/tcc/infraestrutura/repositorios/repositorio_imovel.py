@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from uuid6 import uuid7
 from tcc.infraestrutura.banco_dados.modelos.modelo_imovel import ModeloImagemImovel, ModeloImovel
+from pathlib import Path
+import shutil
 
 
 class RepositorioImovel:
@@ -94,6 +96,16 @@ class RepositorioImovel:
         return imovel
     
 
+    def apagar_pasta_imagens(
+            self,
+            caminho: str
+    ):
+        pasta = Path(caminho)
+
+        if pasta.exists() and pasta.is_dir():
+            shutil.rmtree(pasta)
+
+
     def apagar_imovel(
             self,
             id: UUID
@@ -105,9 +117,9 @@ class RepositorioImovel:
         
         imagens = self.obter_imagens_imovel(id)
 
-        if imagens:
-            caminho = f"uploads/imoveis/{imovel.id}"
+        caminho = f"uploads/imoveis/{imovel.id}"
 
+        if imagens:
             self.apagar_pasta_imagens(caminho)
 
             for imagem in imagens:
