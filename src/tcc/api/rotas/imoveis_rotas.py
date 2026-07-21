@@ -115,7 +115,7 @@ def apagar_imovel(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Imóvel não encontrado'
         )
-    
+
 
 @router.post(
     '',

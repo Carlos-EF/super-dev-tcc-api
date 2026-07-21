@@ -103,11 +103,35 @@ class RepositorioImovel:
         if not imovel:
             return False
         
+        imagens = self.obter_imagens_imovel(id)
+
+        if imagens:
+            caminho = f"uploads/imoveis/{imovel.id}"
+
+            self.apagar_pasta_imagens(caminho)
+
+            for imagem in imagens:
+                self.sessao.delete(imagem)
+        
         self.sessao.delete(imovel)
         self.sessao.commit()
 
         return True
     
+
+    def obter_imagens_imovel(
+        self,
+        id: UUID
+    ) -> list[ImagensImovelResponse] | None:
+        imagens = self.sessao.query(
+            ModeloImagemImovel
+        ).filter(ModeloImagemImovel.id_imovel == id).all()
+
+        if not imagens:
+            return None
+
+        return imagens
+
 
     def obter_imovel_por_id(
             self,
