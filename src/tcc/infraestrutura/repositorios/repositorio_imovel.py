@@ -167,9 +167,9 @@ class RepositorioImovel:
 
     def cadastrar_imagens_imovel(
             self,
+            id_imovel: UUID,
             imagens: list[CriarImagensImovelRequest] | None
-    )-> ModeloImagemImovel | list[ModeloImagemImovel] | None:
-        
+    )->  list[ModeloImagemImovel] | None:  
         if not imagens:
             return None
         
@@ -185,7 +185,7 @@ class RepositorioImovel:
         for imagem in imagens:
             imagem_modelo = ModeloImagemImovel(
                 id= uuid7(),
-                id_imovel=imagem.id_imovel,
+                id_imovel=id_imovel,
                 imagem= imagem.imagem,
                 imagem_principal=imagem.imagem_principal,
                 criado_em= datetime.now()
@@ -195,6 +195,7 @@ class RepositorioImovel:
 
             imagens_cadastradas.append(imagem_modelo)
         
+        self.sessao.flush()
         self.sessao.commit()
 
         return imagens_cadastradas
