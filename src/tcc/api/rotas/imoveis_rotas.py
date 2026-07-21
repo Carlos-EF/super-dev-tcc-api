@@ -1,10 +1,12 @@
 from uuid import UUID
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, UploadFile, File
 from tcc.api.schemas.imovel_schemas import CriarImagensImovelRequest, CriarImovelRequest, EditarImovelRequest, ImagensImovelResponse, ImovelResponse
 from tcc.infraestrutura.repositorios.repositorio_imovel import RepositorioImovel
 from tcc.infraestrutura.conexao import obter_sessao
 from sqlalchemy.orm import Session
 from http import HTTPStatus
+from pathlib import Path
+import shutil
 
 
 router = APIRouter(
@@ -140,28 +142,49 @@ def criar_imovel(
     return imovel_criado
 
 
+
 @router.post(
     '/imagens/cadastrar',
-    status_code=status.HTTP_201_CREATED,
-    summary='Cadastrar imagens.',
-    response_model=ImagensImovelResponse | list[ImagensImovelResponse] | None,
-    responses= {
-        200: {
-            'description': 'Imagens cadastradas com sucesso.',
-            'response_model': ImagensImovelResponse | list[ImagensImovelResponse] | None
-        }
-    }
+    summary='Salvar imagens no disco.',
+    response_model=list[ImagensImovelResponse]
 )
-def cadastrar_imagens(
-    imagens: list[CriarImagensImovelRequest] | None,
+def fazer_upload_imagens(
+    id_imovel: UUID,
+    imagens: list[UploadFile] = File(...),
     session: Session = Depends(obter_sessao)
 ):
+    """Fazer o upload na pasta das imagens do imóvel."""
     repositorio = RepositorioImovel(sessao=session)
 
-    imagens_para_cadastrar = repositorio.cadastrar_imagens_imovel(imagens)
+    pasta = Path('uploads/imoveis') / str(id_imovel)
 
-    return imagens_para_cadastrar
+    pasta.mkdir(
+        parents=True,
+        exist_ok=True
+    )
 
+    imagens_para_salvar = []
+
+    for imagem in imagens:
+        caminho = pasta / imagem.filename
+    
+        with open(caminho, 'wb') as buffer:
+            shutil.copyfileobj(
+                imagem.file,
+                buffer
+            )
+
+        imagens_para_salvar.append(
+            CriarImagensImovelRequest(
+                imagem=str(caminho),
+                imagem_principal=False
+            )
+        )
+
+    return repositorio.cadastrar_imagens_imovel(
+        id_imovel=id_imovel,
+        imagens=imagens_para_salvar
+    )
 
 @router.put(
     '/{id}',
