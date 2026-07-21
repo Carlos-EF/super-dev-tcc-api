@@ -1,5 +1,6 @@
 import logging
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from tcc.api.configuracoes import configuracoes
 from tcc.api.rotas.corretor_rotas import router as corretor_router
@@ -48,7 +49,14 @@ def criar_aplicacao() -> FastAPI:
         allow_headers=['*']
     )
 
+    # Expondo pasta para imagens
+    app.mount(
+        '/uploads',
+        StaticFiles(directory='uploads'),
+        name='uploads'
+    )
 
+    # Resgistrando rotas
     logger.info('Registrando rotas')
     # Corretor
     app.include_router(corretor_router)

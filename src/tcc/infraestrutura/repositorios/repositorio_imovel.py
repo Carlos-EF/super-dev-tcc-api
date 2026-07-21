@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from uuid6 import uuid7
 from tcc.infraestrutura.banco_dados.modelos.modelo_imovel import ModeloImagemImovel, ModeloImovel
+from pathlib import Path
+import shutil
 
 
 class RepositorioImovel:
@@ -94,6 +96,16 @@ class RepositorioImovel:
         return imovel
     
 
+    def apagar_pasta_imagens(
+            self,
+            caminho: str
+    ):
+        pasta = Path(caminho)
+
+        if pasta.exists() and pasta.is_dir():
+            shutil.rmtree(pasta)
+
+
     def apagar_imovel(
             self,
             id: UUID
@@ -103,11 +115,35 @@ class RepositorioImovel:
         if not imovel:
             return False
         
+        imagens = self.obter_imagens_imovel(id)
+
+        caminho = f"uploads/imoveis/{imovel.id}"
+
+        if imagens:
+            self.apagar_pasta_imagens(caminho)
+
+            for imagem in imagens:
+                self.sessao.delete(imagem)
+        
         self.sessao.delete(imovel)
         self.sessao.commit()
 
         return True
     
+
+    def obter_imagens_imovel(
+        self,
+        id: UUID
+    ) -> list[ImagensImovelResponse] | None:
+        imagens = self.sessao.query(
+            ModeloImagemImovel
+        ).filter(ModeloImagemImovel.id_imovel == id).all()
+
+        if not imagens:
+            return None
+
+        return imagens
+
 
     def obter_imovel_por_id(
             self,
@@ -167,9 +203,9 @@ class RepositorioImovel:
 
     def cadastrar_imagens_imovel(
             self,
+            id_imovel: UUID,
             imagens: list[CriarImagensImovelRequest] | None
-    )-> ModeloImagemImovel | list[ModeloImagemImovel] | None:
-        
+    )->  list[ModeloImagemImovel] | None:  
         if not imagens:
             return None
         
@@ -185,7 +221,7 @@ class RepositorioImovel:
         for imagem in imagens:
             imagem_modelo = ModeloImagemImovel(
                 id= uuid7(),
-                id_imovel=imagem.id_imovel,
+                id_imovel=id_imovel,
                 imagem= imagem.imagem,
                 imagem_principal=imagem.imagem_principal,
                 criado_em= datetime.now()
@@ -195,12 +231,13 @@ class RepositorioImovel:
 
             imagens_cadastradas.append(imagem_modelo)
         
+        self.sessao.flush()
         self.sessao.commit()
 
         return imagens_cadastradas
     
 
-    def listar_imagens_imovel(self) -> ModeloImagemImovel | list[ModeloImagemImovel] | None:
+    def listar_imagens_imovel(self) -> list[ModeloImagemImovel] | None:
         imagens = self.sessao.query(ModeloImagemImovel).all()
 
         return imagens
