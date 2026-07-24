@@ -64,3 +64,21 @@ class CondominiumRepository:
         self.session.commit(condominium_to_edit)
 
         return condominium_to_edit
+
+
+    def delete(
+            self,
+            id: UUID,
+    ) -> bool:
+        condominium_to_delete = self.session.query(
+            CondominiumModel
+        ).filter(
+            CondominiumModel.id == id
+        ).first()
+
+        if not condominium_to_delete:
+            return False
+
+        self.session.delete(condominium_to_delete)
+
+        return True
