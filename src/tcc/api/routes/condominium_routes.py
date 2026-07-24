@@ -58,13 +58,43 @@ def get_by_id(
     session: Session = Depends(get_session)
 ):
     """Obter um condomínio específico filtrando por ID."""
-    repositorio = CondominiumRepository(sessao=session)
+    repository = CondominiumRepository(sessao=session)
 
-    condominio = repositorio.get_by_id(id)
+    condominium = repository.get_by_id(id)
 
-    if not condominio:
+    if not condominium:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, 
             detail='Condomínio não encontrado.')
 
-    return condominio
+    return condominium
+
+
+@router.delete(
+    '/{id}',
+    summary='Excluir um condomínio existente',
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses= {
+        204: {
+            'description': 'Condomínio excluído com sucesso',
+        },
+        404: {
+            'description': 'Condomínio não encontrado',
+        },
+    },
+)
+def delete(
+    id: UUID,
+    session: Session = Depends(get_session)
+):
+    """Excluir um condomínio existente filtrando por ID."""
+    repository = CondominiumRepository(sessao=session)
+
+    condominium_to_delete = repository.get_by_id(id)
+
+    if not condominium_to_delete:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, 
+            detail='Condomínio não encontrado.')
+
+    repository.delete(condominium_to_delete.id)
