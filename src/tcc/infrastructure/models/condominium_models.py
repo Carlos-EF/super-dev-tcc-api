@@ -14,7 +14,7 @@ class CondominiumModel(BaseModel):
     )
 
     nome = Column(
-        String(50),
+        String(60),
         nullable=False
     )
 
@@ -38,12 +38,12 @@ class CondominiumModel(BaseModel):
         nullable=False
     )
 
-    estado = Column(
-        String(20),
+    uf = Column(
+        String(2),
         nullable=False
     )
 
     cidade = Column(
-        String(40),
+        String(50),
         nullable=False
     )
