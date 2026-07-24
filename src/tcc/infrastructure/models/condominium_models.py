@@ -4,7 +4,6 @@ from tcc.infrastructure.models.base_model import BaseModel
 
 class CondominiumModel(BaseModel):
     __tablename__ = 'condominios'
-
     id = Column(
         UUID(
             as_uuid=True
