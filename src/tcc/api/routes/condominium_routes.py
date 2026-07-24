@@ -31,7 +31,7 @@ def get_all(
     session: Session = Depends(get_session)
 ):
     """Listagem de todos os condomínios cadastrados."""
-    repository = CondominiumRepository(sessao=session)
+    repository = CondominiumRepository(session=session)
 
     condominiums = repository.get_all()
 
@@ -58,7 +58,7 @@ def get_by_id(
     session: Session = Depends(get_session)
 ):
     """Obter um condomínio específico filtrando por ID."""
-    repository = CondominiumRepository(sessao=session)
+    repository = CondominiumRepository(session=session)
 
     condominium = repository.get_by_id(id)
 
@@ -88,7 +88,7 @@ def delete(
     session: Session = Depends(get_session)
 ):
     """Excluir um condomínio existente filtrando por ID."""
-    repository = CondominiumRepository(sessao=session)
+    repository = CondominiumRepository(session=session)
 
     condominium_to_delete = repository.get_by_id(id)
 
@@ -98,3 +98,37 @@ def delete(
             detail='Condomínio não encontrado.')
 
     repository.delete(condominium_to_delete.id)
+
+
+@router.put(
+    '/{id}',
+    summary='Alterar um condomínio existente',
+    response_model=CondominiumResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Condomínio alterado com sucesso',
+            'model': CondominiumResponse
+        },
+        404: {
+            'description': 'Condomínio não encontrado',
+        },
+    },
+)
+def edit(
+    id: UUID,
+    condominium: EditCondominiumRequest,
+    session: Session = Depends(get_session)
+):
+    """Alterar um condomínio existente filtrando por ID."""
+    repository = CondominiumRepository(session=session)
+
+    condominium_to_edit = repository.edit(id, condominium)
+
+    if condominium_to_edit == False:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, 
+            detail='Condomínio não encontrado.')
+
+    
+
