@@ -91,29 +91,24 @@ class CondominiumRepository:
             CondominiumModel
         ).all()
 
-        return self.create_response(condominiums) 
+        return [self.create_response(condominium) for condominium in condominiums] 
 
 
     def create_response(
             self,
-            condominiums: list[CondominiumModel]
-    ) -> list[CondominiumResponse]:
-        condominiums_response = []
-        
-        for condominium in condominiums:
-            condominium = CondominiumResponse(
-                id= condominium.id,
-                nome= condominium.nome,
-                cep= condominium.cep,
-                logradouro= condominium.logradouro,
-                numero= condominium.numero,
-                bairro= condominium.bairro,
-                uf= condominium.uf,
-                criado_em= condominium.criado_em,
-                alterado_em= condominium.alterado_em,
-            )
+            condominium: CondominiumModel
+    ) -> CondominiumResponse:
+        condominium_response = CondominiumResponse(
+            id= condominium.id,
+            nome= condominium.nome,
+            cep= condominium.cep,
+            logradouro= condominium.logradouro,
+            numero= condominium.numero,
+            bairro= condominium.bairro,
+            uf= condominium.uf,
+            criado_em= condominium.criado_em,
+            alterado_em= condominium.alterado_em,
+        )
 
-            condominiums_response.append(condominium)
-
-        return condominiums_response
+        return condominium_response
 
