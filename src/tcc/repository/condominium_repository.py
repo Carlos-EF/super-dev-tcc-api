@@ -17,7 +17,7 @@ class CondominiumRepository:
     def create(
             self,
             condominium: CreateCondominiumRequest,
-    ) -> CondominiumModel:
+    ) -> CondominiumResponse:
         condominium_to_create = CondominiumModel(
             id= uuid7(),
             nome= condominium.nome,
@@ -34,7 +34,7 @@ class CondominiumRepository:
         self.session.flush()
         self.session.commit()
 
-        return condominium_to_create
+        return self.create_response(condominium_to_create)
 
 
     def edit(

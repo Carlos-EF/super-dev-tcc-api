@@ -130,5 +130,26 @@ def edit(
             status_code=HTTPStatus.NOT_FOUND, 
             detail='Condomínio não encontrado.')
 
-    
 
+@router.post(
+    '',
+    summary='Criar um novo condomínio',
+    response_model=CondominiumResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses= {
+        201: {
+            'description': 'Condomínio criado com sucesso',
+            'model': CondominiumResponse
+        },
+    },
+)
+def create(
+    condominium: CreateCondominiumRequest,
+    session: Session = Depends(get_session)
+):
+    """Criar um novo condomínio."""
+    repositorio = CondominiumRepository(session=session)
+
+    new_condominium = repositorio.create(condominium)
+
+    return new_condominium
