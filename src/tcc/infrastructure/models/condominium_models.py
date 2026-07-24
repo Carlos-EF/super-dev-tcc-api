@@ -1,5 +1,5 @@
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, Date
 from tcc.infrastructure.models.base_model import BaseModel
 
 class CondominiumModel(BaseModel):
@@ -45,4 +45,14 @@ class CondominiumModel(BaseModel):
     cidade = Column(
         String(50),
         nullable=False
+    )
+
+    criado_em = Column(
+        Date,
+        nullable=False
+    )
+
+    alterado_em = Column(
+        Date,
+        nullable=True
     )

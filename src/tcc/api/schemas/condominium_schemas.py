@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel, Field
 
@@ -208,6 +209,18 @@ class CondominiumResponse(BaseModel):
         examples=['Blumenau']
     )
 
+    criado_em: datetime = Field(
+        ...,
+        description='Data e hora da criação do registro do condomínio.',
+        examples=['2026-03-26T08:35:00']
+    )
+
+    alterado_em: datetime | None = Field(
+        None,
+        description='Data e hora da última alteração do registro do condomínio.',
+        examples=[None]
+    )
+
     model_config = {
         'json_schema_extra': {
             'examples': [
@@ -219,7 +232,9 @@ class CondominiumResponse(BaseModel):
                     'numero': 204,
                     'bairro': 'Velha',
                     'estado': 'SC',
-                    'cidade': 'Blumenau'
+                    'cidade': 'Blumenau',
+                    'criado_em': '2026-03-26T08:35:00',
+                    'alterado_em': None
                 }
             ]
         }
