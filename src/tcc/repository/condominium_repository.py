@@ -91,7 +91,23 @@ class CondominiumRepository:
             CondominiumModel
         ).all()
 
-        return [self.create_response(condominium) for condominium in condominiums] 
+        return [self.create_response(condominium) for condominium in condominiums]
+
+
+    def get_by_id(
+            self,
+            id: UUID
+    ) -> CondominiumResponse | False:
+        condominium = self.session.query(
+            CondominiumModel
+        ).filter(
+            CondominiumModel.id == id
+        ).first()
+
+        if not condominium:
+            return False
+
+        return self.create_response(condominium)
 
 
     def create_response(
