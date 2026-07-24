@@ -6,13 +6,14 @@ class CreateCondominiumRequest(BaseModel):
     nome: str = Field(
         ...,
         min_length=3,
-        max_length=50,
+        max_length=60,
         description='Nome do condomínio',
         examples=['Atlanta']
     )
 
     cep: str = Field(
         ...,
+        min_length=9,
         max_length=9,
         description='CEP do condomínio',
         examples=['89040-001']
@@ -40,18 +41,18 @@ class CreateCondominiumRequest(BaseModel):
         examples=['Velha']
     )
 
-    estado: str = Field(
+    uf: str = Field(
         ...,
-        min_length=4,
-        max_length=20,
-        description='Estado onde se localiza o condomínio',
-        examples=['Santa Catarina']
+        min_length=2,
+        max_length=2,
+        description='UF onde se localiza o condomínio',
+        examples=['SC']
     )
 
     cidade: str = Field(
         ...,
         min_length=3,
-        max_length=40,
+        max_length=50,
         description='Cidade do condomínio',
         examples=['Blumenau']
     )
