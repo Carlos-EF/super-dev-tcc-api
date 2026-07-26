@@ -63,8 +63,6 @@ class CondominiumRepository:
 
         self.session.commit(condominium_to_edit)
 
-        return condominium_to_edit
-
 
     def delete(
             self,
@@ -121,6 +119,7 @@ class CondominiumRepository:
             logradouro= condominium.logradouro,
             numero= condominium.numero,
             bairro= condominium.bairro,
+            cidade= condominium.cidade,
             uf= condominium.uf,
             criado_em= condominium.criado_em,
             alterado_em= condominium.alterado_em,
