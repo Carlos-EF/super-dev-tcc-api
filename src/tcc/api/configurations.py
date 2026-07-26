@@ -14,10 +14,10 @@ class Configurations(BaseSettings):
         case_sensitive=False
     )
     @property
-    def producao(self) -> bool:
+    def prod(self) -> bool:
         return self.ENVIROMENT.lower() == 'prod'
     @property
-    def swagger_habilitado(self) -> bool:
+    def swagger_on(self) -> bool:
         return not self.is_prod
     
 
