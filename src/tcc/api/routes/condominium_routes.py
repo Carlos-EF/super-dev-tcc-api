@@ -2,16 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from http import HTTPStatus
 from uuid import UUID
-from uuid6 import uuid7
 
 from tcc.infrastructure.connection import get_session
-from tcc.infrastructure.models.condominium_models import  CondominiumModel
 from tcc.api.schemas.condominium_schemas import CondominiumResponse, CreateCondominiumRequest, EditCondominiumRequest
 from tcc.repository.condominium_repository import CondominiumRepository
 
 router = APIRouter(
-    prefix='/condominios',
-    tags=['Condomínios'],
+    prefix='/condominiums',
+    tags=['Condominiums'],
 )
 
 
