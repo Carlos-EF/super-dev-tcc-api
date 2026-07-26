@@ -46,7 +46,7 @@ def create_app() -> FastAPI:
     logger.info('Registrando rotas')
     # Condomínios
     app.include_router(condominium_router)
-    logger.info('Rota "/condominio" registrada com sucesso.')
+    logger.info('Rota "/condominiums" registrada com sucesso.')
 
     @app.get(
         '/health',
