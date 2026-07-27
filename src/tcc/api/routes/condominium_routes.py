@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from http import HTTPStatus
@@ -26,12 +28,19 @@ router = APIRouter(
     },
 )
 def get_all(
+    busca: Optional[str] = None,
+    cidade: Optional[str] = None,
+    bairro: Optional[str] = None,
     session: Session = Depends(get_session)
 ):
     """Listagem de todos os condomínios cadastrados."""
     repository = CondominiumRepository(session=session)
 
-    condominiums = repository.get_all()
+    condominiums = repository.get_all(
+        busca=busca,
+        cidade=cidade,
+        bairro=bairro,
+    )
 
     return condominiums
 
