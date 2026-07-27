@@ -1,6 +1,7 @@
 from uuid import UUID
 from uuid6 import uuid7
 from datetime import datetime
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from tcc.api.schemas.condominium_schemas import CreateCondominiumRequest, EditCondominiumRequest, CondominiumResponse
 from tcc.infrastructure.models.condominium_models import CondominiumModel
@@ -85,11 +86,33 @@ class CondominiumRepository:
 
     def get_all(
             self,
+            busca: str | None = None,
+            cidade: str | None = None,
+            bairro: str | None = None,
     ) -> list[CondominiumResponse]:
-        condominiums = self.session.query(
-            CondominiumModel
-        ).all()
+        query = self.session.query(CondominiumModel)
 
+        if busca:
+            query = query.filter(
+                or_(
+                CondominiumModel.nome.ilike(f"%{busca}%"),
+                CondominiumModel.logradouro.ilike(f"%{busca}%"),
+                CondominiumModel.cep.ilike(f"%{busca}%"),
+                )
+            )
+
+        if cidade:
+            query = query.filter(
+                CondominiumModel.cidade == cidade
+            )
+
+        if bairro:
+            query = query.filter(
+                CondominiumModel.bairro == bairro
+            )
+
+        condominiums = query.all()
+        
         return [self.create_response(condominium) for condominium in condominiums]
 
 
