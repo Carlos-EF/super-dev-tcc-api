@@ -78,6 +78,7 @@ class CondominiumRepository:
             return False
 
         self.session.delete(condominium_to_delete)
+        self.session.commit()
 
         return True
 
