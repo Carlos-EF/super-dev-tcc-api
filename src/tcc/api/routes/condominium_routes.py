@@ -6,7 +6,7 @@ from http import HTTPStatus
 from uuid import UUID
 
 from tcc.infrastructure.connection import get_session
-from tcc.api.schemas.condominium_schemas import CondominiumResponse, CreateCondominiumRequest, EditCondominiumRequest, PaginatedCondominiumResponse
+from tcc.api.schemas.condominium_schemas import CitiesResponse, CondominiumResponse, CreateCondominiumRequest, DistrictsResponse, EditCondominiumRequest, PaginatedCondominiumResponse
 from tcc.repository.condominium_repository import CondominiumRepository
 
 router = APIRouter(
@@ -46,7 +46,51 @@ def get_all(
         por_pagina=por_pagina
     )
 
-    return condominiums
+
+@router.get(
+    '/cities',
+    summary='Listar cidades',
+    response_model=CitiesResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Lista dos cidades cadastradas',
+            'model': CitiesResponse
+        },
+    },
+)
+def get_all_cities(
+    session: Session = Depends(get_session)
+):
+    """Listagem de todas as cidades cadastradas."""
+    repository = CondominiumRepository(session=session)
+
+    cities = repository.get_all_cities()
+
+    return cities
+
+
+@router.get(
+    '/districts',
+    summary='Listar bairros',
+    response_model=DistrictsResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Lista dos bairros cadastrados',
+            'model': DistrictsResponse
+        },
+    },
+)
+def get_all_districts(
+    session: Session = Depends(get_session)
+):
+    """Listagem de todos os bairros cadastrados."""
+    repository = CondominiumRepository(session=session)
+
+    districts = repository.get_all_districts( )
+
+    return districts
 
 
 @router.get(
