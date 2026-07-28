@@ -53,16 +53,18 @@ class CondominiumRepository:
             return False
 
 
-        condominium_to_edit.nome= condominium.nome,
-        condominium_to_edit.cep= condominium.cep, 
-        condominium_to_edit.logradouro= condominium.logradouro, 
-        condominium_to_edit.numero= condominium.numero, 
-        condominium_to_edit.bairro= condominium.bairro, 
-        condominium_to_edit.uf= condominium.uf, 
-        condominium_to_edit.cidade= condominium.cidade,
+        condominium_to_edit.nome= condominium.nome
+        condominium_to_edit.cep= condominium.cep
+        condominium_to_edit.logradouro= condominium.logradouro
+        condominium_to_edit.numero= condominium.numero
+        condominium_to_edit.bairro= condominium.bairro
+        condominium_to_edit.uf= condominium.uf
+        condominium_to_edit.cidade= condominium.cidade
         condominium_to_edit.alterado_em= datetime.now()
 
-        self.session.commit(condominium_to_edit)
+        self.session.commit()
+
+        return self.create_response(condominium_to_edit)
 
 
     def delete(

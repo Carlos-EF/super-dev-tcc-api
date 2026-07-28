@@ -137,6 +137,8 @@ def edit(
             status_code=HTTPStatus.NOT_FOUND, 
             detail='Condomínio não encontrado.')
 
+    return condominium_to_edit
+
 
 @router.post(
     '',
