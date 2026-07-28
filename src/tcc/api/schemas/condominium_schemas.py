@@ -239,3 +239,23 @@ class CondominiumResponse(BaseModel):
             ]
         }
     }
+
+
+class PaginatedCondominiumResponse(BaseModel):
+    condominios: list[CondominiumResponse]
+
+    pagina: int
+
+    por_pagina: int
+
+    total: int
+    
+    total_paginas: int
+
+
+class CitiesResponse(BaseModel):
+    cidades: list[str]
+
+
+class DistrictsResponse(BaseModel):
+    bairros: list[str]

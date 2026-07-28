@@ -1,12 +1,12 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from http import HTTPStatus
 from uuid import UUID
 
 from tcc.infrastructure.connection import get_session
-from tcc.api.schemas.condominium_schemas import CondominiumResponse, CreateCondominiumRequest, EditCondominiumRequest
+from tcc.api.schemas.condominium_schemas import CitiesResponse, CondominiumResponse, CreateCondominiumRequest, DistrictsResponse, EditCondominiumRequest, PaginatedCondominiumResponse
 from tcc.repository.condominium_repository import CondominiumRepository
 
 router = APIRouter(
@@ -18,12 +18,12 @@ router = APIRouter(
 @router.get(
     '',
     summary='Listar condomínios',
-    response_model=list[CondominiumResponse],
+    response_model=PaginatedCondominiumResponse,
     status_code=status.HTTP_200_OK,
     responses= {
         200: {
             'description': 'Lista dos condomínios cadastrados',
-            'model': list[CondominiumResponse]
+            'model': PaginatedCondominiumResponse
         },
     },
 )
@@ -31,6 +31,8 @@ def get_all(
     busca: Optional[str] = None,
     cidade: Optional[str] = None,
     bairro: Optional[str] = None,
+    pagina: int = Query(1, ge=1),
+    por_pagina: int = Query(10, ge=1, le=100),
     session: Session = Depends(get_session)
 ):
     """Listagem de todos os condomínios cadastrados."""
@@ -40,9 +42,57 @@ def get_all(
         busca=busca,
         cidade=cidade,
         bairro=bairro,
+        pagina=pagina,
+        por_pagina=por_pagina
     )
 
     return condominiums
+
+
+@router.get(
+    '/cities',
+    summary='Listar cidades',
+    response_model=CitiesResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Lista dos cidades cadastradas',
+            'model': CitiesResponse
+        },
+    },
+)
+def get_all_cities(
+    session: Session = Depends(get_session)
+):
+    """Listagem de todas as cidades cadastradas."""
+    repository = CondominiumRepository(session=session)
+
+    cities = repository.get_all_cities()
+
+    return cities
+
+
+@router.get(
+    '/districts',
+    summary='Listar bairros',
+    response_model=DistrictsResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Lista dos bairros cadastrados',
+            'model': DistrictsResponse
+        },
+    },
+)
+def get_all_districts(
+    session: Session = Depends(get_session)
+):
+    """Listagem de todos os bairros cadastrados."""
+    repository = CondominiumRepository(session=session)
+
+    districts = repository.get_all_districts()
+
+    return districts
 
 
 @router.get(
@@ -136,6 +186,8 @@ def edit(
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, 
             detail='Condomínio não encontrado.')
+
+    return condominium_to_edit
 
 
 @router.post(

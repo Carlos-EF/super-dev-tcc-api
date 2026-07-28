@@ -3,7 +3,8 @@ from uuid6 import uuid7
 from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
-from tcc.api.schemas.condominium_schemas import CreateCondominiumRequest, EditCondominiumRequest, CondominiumResponse
+from math import ceil
+from tcc.api.schemas.condominium_schemas import CitiesResponse, CreateCondominiumRequest, DistrictsResponse, EditCondominiumRequest, CondominiumResponse, PaginatedCondominiumResponse
 from tcc.infrastructure.models.condominium_models import CondominiumModel
 
 
@@ -53,16 +54,18 @@ class CondominiumRepository:
             return False
 
 
-        condominium_to_edit.nome= condominium.nome,
-        condominium_to_edit.cep= condominium.cep, 
-        condominium_to_edit.logradouro= condominium.logradouro, 
-        condominium_to_edit.numero= condominium.numero, 
-        condominium_to_edit.bairro= condominium.bairro, 
-        condominium_to_edit.uf= condominium.uf, 
-        condominium_to_edit.cidade= condominium.cidade,
+        condominium_to_edit.nome= condominium.nome
+        condominium_to_edit.cep= condominium.cep
+        condominium_to_edit.logradouro= condominium.logradouro
+        condominium_to_edit.numero= condominium.numero
+        condominium_to_edit.bairro= condominium.bairro
+        condominium_to_edit.uf= condominium.uf
+        condominium_to_edit.cidade= condominium.cidade
         condominium_to_edit.alterado_em= datetime.now()
 
-        self.session.commit(condominium_to_edit)
+        self.session.commit()
+
+        return self.create_response(condominium_to_edit)
 
 
     def delete(
@@ -89,7 +92,9 @@ class CondominiumRepository:
             busca: str | None = None,
             cidade: str | None = None,
             bairro: str | None = None,
-    ) -> list[CondominiumResponse]:
+            pagina: int = 1,
+            por_pagina: int = 10,
+    ) -> PaginatedCondominiumResponse:
         query = self.session.query(CondominiumModel)
 
         if busca:
@@ -111,9 +116,62 @@ class CondominiumRepository:
                 CondominiumModel.bairro == bairro
             )
 
-        condominiums = query.all()
-        
-        return [self.create_response(condominium) for condominium in condominiums]
+        total = query.count()
+
+        condominiums = (
+            query.order_by(
+                CondominiumModel.nome.asc()
+            ).offset((pagina - 1) * por_pagina)
+            .limit(por_pagina).all()
+        )
+
+        return PaginatedCondominiumResponse(
+            condominios=[self.create_response(condominium) for condominium in condominiums],
+            pagina=pagina,
+            por_pagina=por_pagina,
+            total=total,
+            total_paginas=ceil(total / por_pagina) if total > 0 else 0,
+        )
+
+
+    def get_all_cities(
+            self,
+    ) -> CitiesResponse | None:
+        cities = self.session.query(
+            CondominiumModel.cidade
+        ).filter(
+            CondominiumModel.cidade.isnot(None)
+        ).distinct(
+        ).order_by(
+            CondominiumModel.cidade
+        ).all()
+
+        if not cities:
+            return None
+
+        return CitiesResponse(
+            cidades=[city[0] for city in cities]
+        )
+
+    
+    def get_all_districts(
+            self,
+    ) -> DistrictsResponse | None:
+        districts = self.session.query(
+            CondominiumModel.bairro
+        ).filter(
+            CondominiumModel.bairro.isnot(None)
+        ).distinct(
+        ).order_by(
+            CondominiumModel.bairro
+        ).all()
+
+        if not districts:
+            return None
+
+        return DistrictsResponse(
+            bairros=[district[0] for district in districts]
+        )
 
 
     def get_by_id(
@@ -150,4 +208,3 @@ class CondominiumRepository:
         )
 
         return condominium_response
-
