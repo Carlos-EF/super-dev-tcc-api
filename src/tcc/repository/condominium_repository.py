@@ -3,7 +3,8 @@ from uuid6 import uuid7
 from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
-from tcc.api.schemas.condominium_schemas import CreateCondominiumRequest, EditCondominiumRequest, CondominiumResponse
+from math import ceil
+from tcc.api.schemas.condominium_schemas import CreateCondominiumRequest, EditCondominiumRequest, CondominiumResponse, PaginatedCondominiumResponse
 from tcc.infrastructure.models.condominium_models import CondominiumModel
 
 
@@ -91,7 +92,9 @@ class CondominiumRepository:
             busca: str | None = None,
             cidade: str | None = None,
             bairro: str | None = None,
-    ) -> list[CondominiumResponse]:
+            pagina: int = 1,
+            por_pagina: int = 10,
+    ) -> PaginatedCondominiumResponse:
         query = self.session.query(CondominiumModel)
 
         if busca:
@@ -113,9 +116,22 @@ class CondominiumRepository:
                 CondominiumModel.bairro == bairro
             )
 
-        condominiums = query.all()
-        
-        return [self.create_response(condominium) for condominium in condominiums]
+        total = query.count()
+
+        condominiums = (
+            query.order_by(
+                CondominiumModel.nome.asc()
+            ).offset((pagina - 1) * por_pagina)
+            .limit(por_pagina).all()
+        )
+
+        return PaginatedCondominiumResponse(
+            condominios=[self.create_response(condominium) for condominium in condominiums],
+            pagina=pagina,
+            por_pagina=por_pagina,
+            total=total,
+            total_paginas=ceil(total / por_pagina) if total > 0 else 0,
+        )
 
 
     def get_by_id(
@@ -152,4 +168,3 @@ class CondominiumRepository:
         )
 
         return condominium_response
-

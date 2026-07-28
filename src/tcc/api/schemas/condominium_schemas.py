@@ -239,3 +239,15 @@ class CondominiumResponse(BaseModel):
             ]
         }
     }
+
+
+class PaginatedCondominiumResponse(BaseModel):
+    condominios: list[CondominiumResponse]
+
+    pagina: int
+
+    por_pagina: int
+
+    total: int
+    
+    total_paginas: int
