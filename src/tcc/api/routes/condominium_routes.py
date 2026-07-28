@@ -46,6 +46,8 @@ def get_all(
         por_pagina=por_pagina
     )
 
+    return condominiums
+
 
 @router.get(
     '/cities',
@@ -88,7 +90,7 @@ def get_all_districts(
     """Listagem de todos os bairros cadastrados."""
     repository = CondominiumRepository(session=session)
 
-    districts = repository.get_all_districts( )
+    districts = repository.get_all_districts()
 
     return districts
 
