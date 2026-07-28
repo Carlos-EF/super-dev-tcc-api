@@ -255,3 +255,7 @@ class PaginatedCondominiumResponse(BaseModel):
 
 class CitiesResponse(BaseModel):
     cidades: list[str]
+
+
+class DistrictsResponse(BaseModel):
+    bairros: list[str]

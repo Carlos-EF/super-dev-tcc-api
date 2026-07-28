@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from math import ceil
-from tcc.api.schemas.condominium_schemas import CitiesResponse, CreateCondominiumRequest, EditCondominiumRequest, CondominiumResponse, PaginatedCondominiumResponse
+from tcc.api.schemas.condominium_schemas import CitiesResponse, CreateCondominiumRequest, DistrictsResponse, EditCondominiumRequest, CondominiumResponse, PaginatedCondominiumResponse
 from tcc.infrastructure.models.condominium_models import CondominiumModel
 
 
@@ -151,6 +151,26 @@ class CondominiumRepository:
 
         return CitiesResponse(
             cidades=[city[0] for city in cities]
+        )
+
+    
+    def get_all_districts(
+            self,
+    ) -> DistrictsResponse | None:
+        districts = self.session.query(
+            CondominiumModel.bairro
+        ).filter(
+            CondominiumModel.bairro.isnot(None)
+        ).distinct(
+        ).order_by(
+            CondominiumModel.bairro
+        ).all()
+
+        if not districts:
+            return None
+
+        return DistrictsResponse(
+            bairros=[district[0] for district in districts]
         )
 
 
