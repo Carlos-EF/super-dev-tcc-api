@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from tcc.api.configurations import configurations
 from tcc.api.routes.condominium_routes import router as condominium_router
+from tcc.api.routes.search_cep_routes import router as cep_router
 
 logging.basicConfig(
     level=configurations.LOG_LEVEL,
@@ -47,6 +48,9 @@ def create_app() -> FastAPI:
     # Condomínios
     app.include_router(condominium_router)
     logger.info('Rota "/condominiums" registrada com sucesso.')
+    # CEPs
+    app.include_router(cep_router)
+    logger.info('Rota "/cep" registrada com sucesso.')
 
     @app.get(
         '/health',
