@@ -251,3 +251,7 @@ class PaginatedCondominiumResponse(BaseModel):
     total: int
     
     total_paginas: int
+
+
+class CitiesResponse(BaseModel):
+    cidades: list[str]

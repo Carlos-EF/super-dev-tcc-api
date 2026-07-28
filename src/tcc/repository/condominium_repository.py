@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from math import ceil
-from tcc.api.schemas.condominium_schemas import CreateCondominiumRequest, EditCondominiumRequest, CondominiumResponse, PaginatedCondominiumResponse
+from tcc.api.schemas.condominium_schemas import CitiesResponse, CreateCondominiumRequest, EditCondominiumRequest, CondominiumResponse, PaginatedCondominiumResponse
 from tcc.infrastructure.models.condominium_models import CondominiumModel
 
 
@@ -131,6 +131,26 @@ class CondominiumRepository:
             por_pagina=por_pagina,
             total=total,
             total_paginas=ceil(total / por_pagina) if total > 0 else 0,
+        )
+
+
+    def get_all_cities(
+            self,
+    ) -> CitiesResponse | None:
+        cities = self.session.query(
+            CondominiumModel.cidade
+        ).filter(
+            CondominiumModel.cidade.isnot(None)
+        ).distinct(
+        ).order_by(
+            CondominiumModel.cidade
+        ).all()
+
+        if not cities:
+            return None
+
+        return CitiesResponse(
+            cidades=[city[0] for city in cities]
         )
 
 
