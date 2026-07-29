@@ -1,6 +1,8 @@
 import logging
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from tcc.infrastructure.sql.scripts.seed_condominiums import seed_condominiums
 from tcc.api.configurations import configurations
 from tcc.api.routes.condominium_routes import router as condominium_router
 from tcc.api.routes.search_cep_routes import router as cep_router
@@ -13,6 +15,18 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+@asynccontextmanager 
+async def lifespan(app: FastAPI): 
+    logger.info('Executando seeds de inicialização...')
+    
+    try: 
+        seed_condominiums() 
+        logger.info('Seed de condomínios executada com sucesso.') 
+    except Exception as e: 
+        logger.exception(f'Erro ao executar seed: {e}') 
+    
+    yield
+
 
 def create_app() -> FastAPI:
     if configurations.prod:
@@ -20,7 +34,8 @@ def create_app() -> FastAPI:
         app = FastAPI(
             docs_url= None,
             redoc_url= None,
-            openapi_url= None
+            openapi_url= None,
+            lifespan=lifespan
         )
     else:
         logger.info('Iniciando aplicação em modo DESENVOLVIMENTO (Swagger habilitado)')
@@ -30,6 +45,7 @@ def create_app() -> FastAPI:
             docs_url='/docs',
             redoc_url='/redoc',
             openapi_url='/openapi.json',
+            lifespan=lifespan
         )
 
     logger.info('Configurando middleware de CORS')
@@ -43,15 +59,15 @@ def create_app() -> FastAPI:
         allow_headers=['*']
     )
 
-    # Resgistrando rotas
     logger.info('Registrando rotas')
-    # Condomínios
+    
     app.include_router(condominium_router)
     logger.info('Rota "/condominiums" registrada com sucesso.')
-    # CEPs
+    
     app.include_router(cep_router)
     logger.info('Rota "/cep" registrada com sucesso.')
-
+    
+        
     @app.get(
         '/health',
         tags=["Sistema"],
