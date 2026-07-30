@@ -40,6 +40,21 @@ class BrokerRepository:
         return self.create_response(broker_to_create)
 
 
+    def get_by_id(
+            self,
+            id: UUID
+    ) -> BrokerResponse | False:
+        broker = self.session.query(
+            BrokerResponse
+        ).filter(
+            BrokerResponse.id == id
+        ).first()
+
+        if not broker:
+            return False
+
+        return self.create_response(broker)
+
     
     def create_response(
             self,
