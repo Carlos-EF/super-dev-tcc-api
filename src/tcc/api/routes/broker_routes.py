@@ -76,3 +76,33 @@ def get_by_id(
             detail='corretor não encontrado.')
 
     return broker
+
+
+@router.delete(
+    '/{id}',
+    summary='Excluir um corretor existente',
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses= {
+        204: {
+            'description': 'Corretor excluído com sucesso',
+        },
+        404: {
+            'description': 'Corretor não encontrado',
+        },
+    },
+)
+def delete(
+    id: UUID,
+    session: Session = Depends(get_session)
+):
+    """Excluir um corretor existente filtrando por ID."""
+    repository = BrokerRepository(session=session)
+
+    broker_to_delete = repository.get_by_id(id)
+
+    if not broker_to_delete:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, 
+            detail='Corretor não encontrado.')
+
+    repository.delete(broker_to_delete.id)
