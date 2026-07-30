@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from tcc.infrastructure.sql.scripts.seed_condominiums import seed_condominiums
 from tcc.api.configurations import configurations
 from tcc.api.routes.condominium_routes import router as condominium_router
+from tcc.api.routes.broker_routes import router as broker_router
 from tcc.api.routes.search_cep_routes import router as cep_router
 
 logging.basicConfig(
@@ -63,6 +64,9 @@ def create_app() -> FastAPI:
     
     app.include_router(condominium_router)
     logger.info('Rota "/condominiums" registrada com sucesso.')
+
+    app.include_router(broker_router)
+    logger.info('Rota "/brokers" registrada com sucesso.')
     
     app.include_router(cep_router)
     logger.info('Rota "/cep" registrada com sucesso.')
