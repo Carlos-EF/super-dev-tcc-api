@@ -1,5 +1,5 @@
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, String, Integer, Date
+from sqlalchemy import Column, String, Date
 from tcc.infrastructure.models.base_model import BaseModel
 
 
@@ -24,8 +24,13 @@ class BrokerModel(BaseModel):
         nullable=False
     )
 
+    creci = Column(
+        String(7),
+        nullable=False
+    )
+
     numero = Column(
-        String(14),
+        String(15),
         nullable=False
     )
 
