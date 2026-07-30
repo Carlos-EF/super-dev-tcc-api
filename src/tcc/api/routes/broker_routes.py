@@ -44,3 +44,35 @@ def get_all(
     )
 
     return brokers
+
+
+@router.get(
+    '/{id}',
+    summary='Obter corretor filtrando por ID',
+    response_model=BrokerResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Corretor encontrado',
+            'model': BrokerResponse
+        },
+        404: {
+            'description': 'Corretor não encontrado',
+        },
+    },
+)
+def get_by_id(
+    id: UUID,
+    session: Session = Depends(get_session)
+):
+    """Obter um corretor específico filtrando por ID."""
+    repository = BrokerRepository(session=session)
+
+    broker = repository.get_by_id(id)
+
+    if not broker:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, 
+            detail='corretor não encontrado.')
+
+    return broker
