@@ -13,3 +13,18 @@ CREATE TABLE
         criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+CREATE TABLE
+    corretores (
+        id UUID PRIMARY KEY NOT NULL,
+        nome VARCHAR(60) NOT NULL,
+        codigo VARCHAR(4) NOT NULL,
+        creci VARCHAR(7) NOT NULL,
+        numero VARCHAR(15) NOT NULL,
+        email VARCHAR(60) NOT NULL,
+        data_nascimento VARCHAR(10),
+        rg VARCHAR(9),
+        cpf VARCHAR(14),
+        criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
