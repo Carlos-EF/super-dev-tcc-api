@@ -106,3 +106,36 @@ def delete(
             detail='Corretor não encontrado.')
 
     repository.delete(broker_to_delete.id)
+
+
+@router.put(
+    '/{id}',
+    summary='Alterar um corretor existente',
+    response_model=BrokerResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Corretor alterado com sucesso',
+            'model': BrokerResponse
+        },
+        404: {
+            'description': 'Corretor não encontrado',
+        },
+    },
+)
+def edit(
+    id: UUID,
+    condominium: EditBrokerRequest,
+    session: Session = Depends(get_session)
+):
+    """Alterar um corretor existente filtrando por ID."""
+    repository = BrokerRepository(session=session)
+
+    broker_to_edit = repository.edit(id, condominium)
+
+    if broker_to_edit == False:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, 
+            detail='Corretor não encontrado.')
+
+    return broker_to_edit
