@@ -74,7 +74,7 @@ class BrokerRepository:
                 busca: str | None = None,
                 pagina: int = 1,
                 por_pagina: int = 10,
-        ) -> PaginatedBrokerResponse :
+        ) -> PaginatedBrokerResponse:
             query = self.session.query(BrokerModel)
 
             search = f"%{busca}%"
