@@ -55,6 +55,26 @@ class BrokerRepository:
 
         return self.create_response(broker)
 
+
+    
+    def delete(
+            self,
+            id: UUID,
+    ) -> bool:
+        broker_to_delete = self.session.query(
+            BrokerModel
+        ).filter(
+            BrokerModel.id == id
+        ).first()
+
+        if not broker_to_delete:
+            return False
+
+        self.session.delete(broker_to_delete)
+        self.session.commit()
+
+        return True
+
     
     def create_response(
             self,
