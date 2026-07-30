@@ -139,3 +139,27 @@ def edit(
             detail='Corretor não encontrado.')
 
     return broker_to_edit
+
+
+@router.post(
+    '',
+    summary='Criar um novo corretor',
+    response_model=BrokerResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses= {
+        201: {
+            'description': 'Corretor criado com sucesso',
+            'model': BrokerResponse
+        },
+    },
+)
+def create(
+    condominium: CreateBrokerRequest,
+    session: Session = Depends(get_session)
+):
+    """Criar um novo corretor."""
+    repository = BrokerRepository(session=session)
+
+    new_broker = repository.create(condominium)
+
+    return new_broker
