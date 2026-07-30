@@ -259,3 +259,15 @@ class BrokerResponse(BaseModel):
             ]
         }
     }
+
+
+class FilteredBrokerResponse(BaseModel):
+    corretores: list[BrokerResponse]
+
+    pagina: int
+
+    por_pagina: int
+
+    total: int
+    
+    total_paginas: int
