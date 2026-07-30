@@ -40,6 +40,35 @@ class BrokerRepository:
         return self.create_response(broker_to_create)
 
 
+    def edit(
+            self,
+            id: UUID,
+            broker: EditBrokerRequest
+    ) -> BrokerResponse | False:
+        broker_to_edit = self.session.query(
+            BrokerModel
+        ).filter(
+            BrokerModel.id == id
+        ).first()
+
+        if not broker_to_edit:
+            return False
+
+
+        broker_to_edit.nome= broker.nome
+        broker_to_edit.creci= broker.creci
+        broker_to_edit.numero= broker.numero
+        broker_to_edit.email= broker.email
+        broker_to_edit.rg= broker.rg
+        broker_to_edit.cpf= broker.cpf
+        broker_to_edit.data_nascimento= broker.data_nascimento
+        broker_to_edit.alterado_em= datetime.now()
+
+        self.session.commit()
+
+        return self.create_response(broker_to_edit)
+
+
     def get_by_id(
             self,
             id: UUID

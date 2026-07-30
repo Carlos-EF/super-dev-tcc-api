@@ -43,7 +43,7 @@ class CondominiumRepository:
             self,
             id: UUID,
             condominium: EditCondominiumRequest
-    ) -> CondominiumModel | False:
+    ) -> CondominiumResponse | False:
         condominium_to_edit = self.session.query(
             CondominiumModel
         ).filter(
