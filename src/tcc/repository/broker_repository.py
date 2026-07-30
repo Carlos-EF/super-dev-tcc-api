@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from math import ceil
-from tcc.api.schemas.broker_schemas import CreateBrokerRequest, EditBrokerRequest, FilteredBrokerResponse, BrokerResponse
+from tcc.api.schemas.broker_schemas import CreateBrokerRequest, EditBrokerRequest, PaginatedBrokerResponse, BrokerResponse
 from tcc.infrastructure.models.broker_models import BrokerModel
 
 
@@ -67,6 +67,45 @@ class BrokerRepository:
         self.session.commit()
 
         return self.create_response(broker_to_edit)
+
+
+    def get_all(
+                self,
+                busca: str | None = None,
+                pagina: int = 1,
+                por_pagina: int = 10,
+        ) -> PaginatedBrokerResponse :
+            query = self.session.query(BrokerModel)
+
+            search = f"%{busca}%"
+    
+            if busca:
+                query = query.filter(
+                    or_(
+                    BrokerModel.nome.ilike(search),
+                    BrokerModel.codigo.ilike(search),
+                    BrokerModel.creci.ilike(search),
+                    BrokerModel.email.ilike(search),
+                    BrokerModel.numero.ilike(search),
+                    )
+                )
+
+            total = query.count()
+    
+            brokers = (
+                query.order_by(
+                    BrokerModel.nome.asc()
+                ).offset((pagina - 1) * por_pagina)
+                .limit(por_pagina).all()
+            )
+    
+            return PaginatedBrokerResponse(
+                corretores=[self.create_response(broker) for broker in brokers],
+                pagina=pagina,
+                por_pagina=por_pagina,
+                total=total,
+                total_paginas=ceil(total / por_pagina) if total > 0 else 0,
+            )
 
 
     def get_by_id(

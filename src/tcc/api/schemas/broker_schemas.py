@@ -261,7 +261,7 @@ class BrokerResponse(BaseModel):
     }
 
 
-class FilteredBrokerResponse(BaseModel):
+class PaginatedBrokerResponse(BaseModel):
     corretores: list[BrokerResponse]
 
     pagina: int
