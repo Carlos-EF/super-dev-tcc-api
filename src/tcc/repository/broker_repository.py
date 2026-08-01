@@ -113,9 +113,9 @@ class BrokerRepository:
             id: UUID
     ) -> BrokerResponse | False:
         broker = self.session.query(
-            BrokerResponse
+            BrokerModel
         ).filter(
-            BrokerResponse.id == id
+            BrokerModel.id == id
         ).first()
 
         if not broker:
