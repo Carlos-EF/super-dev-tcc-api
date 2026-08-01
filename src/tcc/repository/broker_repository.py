@@ -76,17 +76,15 @@ class BrokerRepository:
                 por_pagina: int = 10,
         ) -> PaginatedBrokerResponse:
             query = self.session.query(BrokerModel)
-
-            search = f"%{busca}%"
     
             if busca:
                 query = query.filter(
                     or_(
-                    BrokerModel.nome.ilike(search),
-                    BrokerModel.codigo.ilike(search),
-                    BrokerModel.creci.ilike(search),
-                    BrokerModel.email.ilike(search),
-                    BrokerModel.numero.ilike(search),
+                    BrokerModel.nome.ilike(f"%{busca}%"),
+                    BrokerModel.codigo.ilike(f"%{busca}%"),
+                    BrokerModel.creci.ilike(f"%{busca}%"),
+                    BrokerModel.email.ilike(f"%{busca}%"),
+                    BrokerModel.numero.ilike(f"%{busca}%"),
                     )
                 )
 
