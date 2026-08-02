@@ -78,6 +78,60 @@ class CreateClientRequest(BaseModel):
     }
 
 
+class EditClientRequest(BaseModel):
+    nome: str = Field(
+        ...,
+        min_length=3,
+        max_length=60,
+        description='Nome do cliente',
+        examples=['João da Silva']
+    )
+
+    numero: str = Field(
+        ...,
+        min_length=15,
+        max_length=15,
+        description='Número de telefone do cliente',
+        examples=['(47) 91234-5678', '(47) 98765-4321']
+    )
+
+    email: str = Field(
+        ...,
+        min_length=5,
+        max_length=60,
+        description='Email do cliente',
+        examples=['joao@exemplo.com', 'maria@exemplo.com']
+    )
+
+    tipo: ClientType = Field(
+        ...,
+        max_length=11,
+        description='Tipo do cliente',
+        examples=['interessado', 'cliente']
+    )
+
+    como_encontrou: ContactType | None = Field(
+        None,
+        max_length=18,
+        description='Como o cliente encontrou a empresa',
+        examples=['Indicação', 'Whatsapp', 'Instagram']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': [
+                {
+                    'nome': 'João da Silva',
+                    'numero': '(47) 91234-5678',
+                    'email': 'joao@exemplo.com',
+                    'tipo': 'interessado',
+                    'como_encontrou': 'Indicação'
+                }
+            ]
+        }
+    }
+
+
 class CreateInterestedClientRequest(BaseModel):
     cliente_id: UUID = Field(
         ...,
