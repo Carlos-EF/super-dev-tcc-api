@@ -209,6 +209,68 @@ class EditClientRequest(BaseModel):
     }
 
 
+class InterestedClientResponse(BaseModel):
+    id: UUID = Field(
+        ...,
+        description='ID (UUIDv7) do cliente interessado',
+        examples=['f47ac10b-58cc-4372-a567-0e02b2c3d479']
+    )
+
+    cliente_id: UUID = Field(
+        ...,
+        description='ID (UUIDv7) do cliente (tabela principal) interessado',
+        examples=['f47ac10b-58cc-4372-a567-0e02b2c3d479']
+    )
+
+    procura: PropertyTypes | None = Field(
+        None,
+        description='Tipo de imóvel que o cliente interessado está procurando',
+        examples=['Casa', 'Apartamento', 'Terreno']
+    )
+
+    finalidade: ClientFinalityTypes | None = Field(
+        None,
+        description='Finalidade do cliente interessado',
+        examples=['Alugar', 'Comprar']
+    )
+
+    preferencia: str | None = Field(
+        None,
+        min_length=3,
+        max_length=60,
+        description='Preferência de bairro do cliente interessado',
+        examples=['Centro', 'Bairro Novo', 'Jardim das Flores']
+    )
+
+    criado_em: datetime = Field(
+        ...,
+        description='Data e hora da criação do registro do cliente interessado.',
+        examples=['2023-07-21T14:30:00Z']
+    )
+
+    alterado_em: datetime | None = Field(
+        None,
+        description='Data e hora da última alteração do registro do cliente interessado.',
+        examples=['2023-07-22T10:15:00Z']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': [
+                {
+                    'id': 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+                    'cliente_id': 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+                    'procura': 'Casa',
+                    'finalidade': 'Comprar',
+                    'preferencia': 'Centro',
+                    'criado_em': '2023-07-21T14:30:00Z',
+                    'alterado_em': '2023-07-22T10:15:00Z'
+                }
+            ]
+        }
+    }
+
+
 class CreateInterestedClientRequest(BaseModel):
     cliente_id: UUID = Field(
         ...,
