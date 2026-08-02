@@ -139,14 +139,14 @@ class CreateInterestedClientRequest(BaseModel):
         examples=['f47ac10b-58cc-4372-a567-0e02b2c3d479']
     )
 
-    procura: PropertyTypes = Field(
-        ...,
+    procura: PropertyTypes | None = Field(
+        None,
         description='Tipo de imóvel que o cliente interessado está procurando',
         examples=['Casa', 'Apartamento', 'Terreno']
     )
 
-    finalidade: ClientFinalityTypes = Field(
-        ...,
+    finalidade: ClientFinalityTypes | None = Field(
+        None,
         description='Finalidade do cliente interessado',
         examples=['Alugar', 'Comprar']
     )
@@ -164,6 +164,40 @@ class CreateInterestedClientRequest(BaseModel):
             'examples': [
                 {
                     'cliente_id': 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+                    'procura': 'Casa',
+                    'finalidade': 'Comprar',
+                    'preferencia': 'Centro'
+                }
+            ]
+        }
+    }
+
+
+class EditInterestedClientRequest(BaseModel):
+    procura: PropertyTypes | None = Field(
+        None,
+        description='Tipo de imóvel que o cliente interessado está procurando',
+        examples=['Casa', 'Apartamento', 'Terreno']
+    )
+
+    finalidade: ClientFinalityTypes | None = Field(
+        None,
+        description='Finalidade do cliente interessado',
+        examples=['Alugar', 'Comprar']
+    )
+
+    preferencia: str | None = Field(
+        None,
+        min_length=3,
+        max_length=60,
+        description='Preferência de bairro do cliente interessado',
+        examples=['Centro', 'Bairro Novo', 'Jardim das Flores']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': [
+                {
                     'procura': 'Casa',
                     'finalidade': 'Comprar',
                     'preferencia': 'Centro'
