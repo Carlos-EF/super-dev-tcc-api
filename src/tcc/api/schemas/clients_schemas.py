@@ -4,6 +4,8 @@ from pydantic import BaseModel, Field
 
 from src.tcc.infrastructure.models.enums.clients_types import ClientType
 from src.tcc.infrastructure.models.enums.contact_types import ContactType
+from src.tcc.infrastructure.models.enums.finality_types import ClientFinalityTypes
+from src.tcc.infrastructure.models.enums.property_types import PropertyTypes
 
 
 class CreateClientRequest(BaseModel):
@@ -59,6 +61,22 @@ class CreateClientRequest(BaseModel):
         examples=['Indicação', 'Whatsapp', 'Instagram']
     )
 
+    model_config = {
+        'json_schema_extra': {
+            'examples': [
+                {
+                    'id': 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+                    'nome': 'João da Silva',
+                    'codigo': '1234',
+                    'numero': '(47) 91234-5678',
+                    'email': 'joao@exemplo.com',
+                    'tipo': 'interessado',
+                    'como_encontrou': 'Indicação'
+                }
+            ]
+        }
+    }
+
 
 class CreateInterestedClientRequest(BaseModel):
     cliente_id: UUID = Field(
@@ -67,4 +85,35 @@ class CreateInterestedClientRequest(BaseModel):
         examples=['f47ac10b-58cc-4372-a567-0e02b2c3d479']
     )
 
-    
+    procura: PropertyTypes = Field(
+        ...,
+        description='Tipo de imóvel que o cliente interessado está procurando',
+        examples=['Casa', 'Apartamento', 'Terreno']
+    )
+
+    finalidade: ClientFinalityTypes = Field(
+        ...,
+        description='Finalidade do cliente interessado',
+        examples=['Alugar', 'Comprar']
+    )
+
+    preferencia: str | None = Field(
+        None,
+        min_length=3,
+        max_length=60,
+        description='Preferência de bairro do cliente interessado',
+        examples=['Centro', 'Bairro Novo', 'Jardim das Flores']
+    )
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': [
+                {
+                    'cliente_id': 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+                    'procura': 'Casa',
+                    'finalidade': 'Comprar',
+                    'preferencia': 'Centro'
+                }
+            ]
+        }
+    }

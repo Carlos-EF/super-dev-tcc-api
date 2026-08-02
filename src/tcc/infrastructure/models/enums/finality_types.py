@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class ClientFinalityTypes(str, Enum):
-    ALUGAR = 'alugar'
-    COMPRAR = 'comprar'
+    ALUGAR = 'Alugar'
+    COMPRAR = 'Comprar'
 
 
 class FinalityTypes(str, Enum):

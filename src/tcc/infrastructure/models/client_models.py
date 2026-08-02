@@ -95,6 +95,16 @@ class InterestedClientModel(ClientModel):
         nullable=True
     )
 
+    criado_em = Column(
+        Date,
+        nullable=False
+    )
+    
+    alterado_em = Column(
+        Date,
+        nullable=True
+    )
+
     cliente = relationship(
         'ClientModel',
         back_populates='interessado'
