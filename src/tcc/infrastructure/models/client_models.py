@@ -1,5 +1,6 @@
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, String, Date
+from sqlalchemy import Column, String, Date, ForeignKey
+from sqlalchemy.orm import relationship
 from tcc.infrastructure.models.base_model import BaseModel
 
 
@@ -34,7 +35,7 @@ class ClientModel(BaseModel):
         nullable=False
     )
 
-    tipo_pessoa = Column(
+    tipo = Column(
         String(11),
         nullable=False
     )
@@ -52,4 +53,49 @@ class ClientModel(BaseModel):
     alterado_em = Column(
         Date,
         nullable=True
+    )
+
+    interessado = relationship(
+        'InterestedClientModel',
+        back_populates='cliente'
+    )
+
+
+class InterestedClientModel(ClientModel):
+    __tablename__= 'interessados'
+
+    id = Column(
+        UUID(
+            as_uuid=True
+        ),
+        nullable=False,
+        primary_key=True
+    )
+    
+    cliente_id = Column(
+        UUID(
+            as_uuid=True
+        ),
+        ForeignKey('clientes.id'),
+        nullable=False
+    )
+
+    procura = Column(
+        String(11),
+        nullable=True
+    )
+
+    finalidade = Column(
+        String(6),
+        nullable=True
+    )
+
+    preferencia = Column(
+        String(50),
+        nullable=True
+    )
+
+    cliente = relationship(
+        'ClientModel',
+        back_populates='interessado'
     )
