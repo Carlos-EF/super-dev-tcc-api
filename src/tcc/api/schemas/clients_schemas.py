@@ -58,3 +58,13 @@ class CreateClientRequest(BaseModel):
         description='Como o cliente encontrou a empresa',
         examples=['Indicação', 'Whatsapp', 'Instagram']
     )
+
+
+class CreateInterestedClientRequest(BaseModel):
+    cliente_id: UUID = Field(
+        ...,
+        description='ID (UUIDv7) do cliente (tabela principal) interessado',
+        examples=['f47ac10b-58cc-4372-a567-0e02b2c3d479']
+    )
+
+    
