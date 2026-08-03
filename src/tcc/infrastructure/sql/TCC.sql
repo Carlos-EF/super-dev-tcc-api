@@ -28,3 +28,29 @@ CREATE TABLE
         criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+CREATE TABLE
+    clientes (
+        id UUID PRIMARY KEY NOT NULL,
+        nome VARCHAR(60) NOT NULL,
+        numero VARCHAR(15) NOT NULL,
+        email VARCHAR(60) NOT NULL,
+        data_nascimento VARCHAR(10),
+        rg VARCHAR(9),
+        cpf VARCHAR(14),
+        criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+CREATE TABLE
+    interessados (
+        id UUID PRIMARY KEY NOT NULL,
+        cliente_id UUID NOT NULL,
+        procura VARCHAR(11),
+        finalidade VARCHAR(6),
+        preferencia VARCHAR(50),
+        criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        
+        FOREIGN KEY (cliente_id) REFERENCES clientes (id) ON DELETE CASCADE
+    );
