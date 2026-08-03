@@ -7,7 +7,7 @@ from uuid import UUID
 
 from src.tcc.repository.client_repository import ClientRepository
 from tcc.infrastructure.connection import get_session
-from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, InterestedClientResponse, PaginatedClientResponse, ClientResponse
+from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, EditInterestedClientRequest, InterestedClientResponse, PaginatedClientResponse, ClientResponse
 
 
 router = APIRouter(
@@ -99,3 +99,59 @@ def create_interested_client(
     )
 
     return created_interested_client
+
+
+@router.put(
+    '/{id}',
+    summary='Editar cliente',
+    response_model=ClientResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Cliente editado com sucesso',
+            'model': ClientResponse
+        },
+    },
+)
+def edit(
+    id: UUID,
+    client: EditClientRequest,
+    session: Session = Depends(get_session)
+):
+    """Edição de um cliente existente."""
+    repository = ClientRepository(session=session)
+
+    edited_client = repository.edit(
+        id=id,
+        client=client
+    )
+
+    return edited_client
+
+
+@router.put(
+    '/{id}/interested',
+    summary='Editar cliente interessado',
+    response_model=InterestedClientResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Cliente interessado editado com sucesso',
+            'model': InterestedClientResponse
+        },
+    },
+)
+def edit_interested_client(
+    id: UUID,
+    interested: EditInterestedClientRequest,
+    session: Session = Depends(get_session)
+):
+    """Edição de um cliente interessado existente."""
+    repository = ClientRepository(session=session)
+
+    edited_interested_client = repository.edit_interested_client(
+        id=id,
+        interested=interested
+    )
+
+    return edited_interested_client
