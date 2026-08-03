@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from math import ceil
-from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, InterestedClientResponse, PaginatedClientResponse, ClientResponse
+from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, EditInterestedClientRequest, InterestedClientResponse, PaginatedClientResponse, ClientResponse
 from tcc.infrastructure.models.client_models import ClientModel, InterestedClientModel
 
 
@@ -117,3 +117,27 @@ class ClientRepository:
         self.session.commit()
 
         return self.create_response(client_to_edit)
+
+
+    def edit_interested_client(
+            self,
+            id: UUID,
+            interested: EditInterestedClientRequest
+    ) -> InterestedClientResponse:
+        interested_to_edit = self.session.query(
+            InterestedClientModel
+            ).filter(
+                InterestedClientModel.cliente_id == id
+                ).first()
+
+        if not interested_to_edit:
+            return None
+
+        interested_to_edit.procura = interested.procura
+        interested_to_edit.finalidade = interested.finalidade
+        interested_to_edit.preferencia = interested.preferencia
+        interested_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_interested_client_response(interested_to_edit)
