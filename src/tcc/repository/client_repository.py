@@ -141,3 +141,22 @@ class ClientRepository:
         self.session.commit()
 
         return self.create_interested_client_response(interested_to_edit)
+
+
+    def delete(
+            self,
+            id: UUID
+    ) -> bool:
+        client_to_delete = self.session.query(
+            ClientModel
+            ).filter(
+                ClientModel.id == id
+                ).first()
+
+        if not client_to_delete:
+            return False
+
+        self.session.delete(client_to_delete)
+        self.session.commit()
+
+        return True
