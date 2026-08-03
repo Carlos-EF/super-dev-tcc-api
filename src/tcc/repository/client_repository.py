@@ -196,10 +196,10 @@ class ClientRepository:
 
     def get_all(
             self,
-            pagina: int,
             busca: str | None,
             tipo: str | None,
             origem: str | None,
+            pagina: int,
             por_pagina: int
     ) -> PaginatedClientResponse:
         total_clients = self.session.query(ClientModel).count()
