@@ -47,3 +47,27 @@ def get_all(
     )
 
     return clients
+
+
+@router.post(
+    '',
+    summary='Criar cliente',
+    response_model=ClientResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses= {
+        201: {
+            'description': 'Cliente criado com sucesso',
+            'model': ClientResponse
+        },
+    },
+)
+def create(
+    client: CreateClientRequest,
+    session: Session = Depends(get_session)
+):
+    """Criação de um novo cliente."""
+    repository = ClientRepository(session=session)
+
+    created_client = repository.create(client=client)
+
+    return created_client
