@@ -7,7 +7,7 @@ from uuid import UUID
 
 from src.tcc.repository.client_repository import ClientRepository
 from tcc.infrastructure.connection import get_session
-from tcc.api.schemas.clients_schemas import CreateClientRequest, EditClientRequest, PaginatedClientResponse, ClientResponse
+from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, InterestedClientResponse, PaginatedClientResponse, ClientResponse
 
 
 router = APIRouter(
@@ -71,3 +71,31 @@ def create(
     created_client = repository.create(client=client)
 
     return created_client
+
+
+@router.post(
+    '/{id}/interested',
+    summary='Criar cliente interessado',
+    response_model=InterestedClientResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses= {
+        201: {
+            'description': 'Cliente interessado criado com sucesso',
+            'model': InterestedClientResponse
+        },
+    },
+)
+def create_interested_client(
+    id: UUID,
+    interested: CreateInterestedClientRequest,
+    session: Session = Depends(get_session)
+):
+    """Criação de um novo cliente interessado."""
+    repository = ClientRepository(session=session)
+
+    created_interested_client = repository.create_interested_client(
+        id=id,
+        interested=interested
+    )
+
+    return created_interested_client
