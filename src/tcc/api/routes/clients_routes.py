@@ -186,3 +186,69 @@ def delete(
         )
 
     return None
+
+
+@router.get(
+    '/{id}',
+    summary='Obter cliente por ID',
+    response_model=ClientResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Cliente encontrado',
+            'model': ClientResponse
+        },
+        404: {
+            'description': 'Cliente não encontrado',
+        },
+    },
+)
+def get_by_id(
+    id: UUID,
+    session: Session = Depends(get_session)
+):
+    """Obtenção de um cliente existente por ID."""
+    repository = ClientRepository(session=session)
+
+    client = repository.get_by_id(id=id)
+
+    if not client:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Cliente não encontrado'
+        )
+
+    return client
+
+
+@router.get(
+    '/{id}/interested',
+    summary='Obter cliente interessado por ID',
+    response_model=InterestedClientResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Cliente interessado encontrado',
+            'model': InterestedClientResponse
+        },
+        404: {
+            'description': 'Cliente interessado não encontrado',
+        },
+    },
+)
+def get_interested_client_by_id(
+    id: UUID,
+    session: Session = Depends(get_session)
+):
+    """Obtenção de um cliente interessado existente por ID."""
+    repository = ClientRepository(session=session)
+
+    interested_client = repository.get_interested_client_by_id(id=id)
+
+    if not interested_client:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Cliente interessado não encontrado'
+        )
+
+    return interested_client
