@@ -155,3 +155,34 @@ def edit_interested_client(
     )
 
     return edited_interested_client
+
+
+@router.delete(
+    '/{id}',
+    summary='Deletar cliente',
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses= {
+        204: {
+            'description': 'Cliente deletado com sucesso',
+        },
+        404: {
+            'description': 'Cliente não encontrado',
+        },
+    },
+)
+def delete(
+    id: UUID,
+    session: Session = Depends(get_session)
+):
+    """Deleção de um cliente existente."""
+    repository = ClientRepository(session=session)
+
+    deleted = repository.delete(id=id)
+
+    if not deleted:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Cliente não encontrado'
+        )
+
+    return None
