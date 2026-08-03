@@ -4,8 +4,8 @@ from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from math import ceil
-from tcc.api.schemas.clients_schemas import CreateClientRequest, EditClientRequest, PaginatedClientResponse, ClientResponse
-from tcc.infrastructure.models.client_models import ClientModel
+from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, InterestedClientResponse, PaginatedClientResponse, ClientResponse
+from tcc.infrastructure.models.client_models import ClientModel, InterestedClientModel
 
 
 class ClientRepository:
@@ -51,5 +51,44 @@ class ClientRepository:
             email= client.email, 
             tipo= client.tipo, 
             como_encontrou= client.como_encontrou, 
-            criado_em= client.criado_em
+            criado_em= client.criado_em,
+            alterado_em= client.alterado_em
+        )
+
+
+    def create_interested_client(
+            self,
+            id: UUID,
+            interested: CreateInterestedClientRequest
+    ) -> InterestedClientResponse:
+
+        interested_to_create = InterestedClientModel(
+            id= uuid7(),
+            client_id= id,
+            procura= interested.procura,
+            finalidade= interested.finalidade,
+            preferencia= interested.preferencia,
+            criado_em= datetime.now()
+        )
+         
+        self.session.add(interested_to_create)
+        self.session.flush()
+        self.session.commit()
+
+        return self.create_interested_client_response(interested_to_create)
+
+
+    def create_interested_client_response(
+            self,
+            interested: InterestedClientModel
+    ) -> InterestedClientResponse:
+        
+        return InterestedClientResponse(
+            id= interested.id,
+            cliente_id= interested.cliente_id,
+            procura= interested.procura,
+            finalidade= interested.finalidade,
+            preferencia= interested.preferencia,
+            criado_em= interested.criado_em,
+            alterado_em= interested.alterado_em
         )
