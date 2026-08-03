@@ -180,12 +180,6 @@ class EditClientRequest(BaseModel):
         examples=['joao@exemplo.com', 'maria@exemplo.com']
     )
 
-    tipo: ClientType = Field(
-        ...,
-        max_length=11,
-        description='Tipo do cliente',
-        examples=['interessado', 'cliente']
-    )
 
     como_encontrou: ContactType | None = Field(
         None,
@@ -201,7 +195,6 @@ class EditClientRequest(BaseModel):
                     'nome': 'João da Silva',
                     'numero': '(47) 91234-5678',
                     'email': 'joao@exemplo.com',
-                    'tipo': 'interessado',
                     'como_encontrou': 'Indicação'
                 }
             ]
@@ -344,3 +337,15 @@ class EditInterestedClientRequest(BaseModel):
             ]
         }
     }
+
+
+class PaginatedClientResponse(BaseModel):
+    clientes: list[ClientResponse]
+
+    pagina: int
+
+    por_pagina: int
+
+    total: int
+    
+    total_paginas: int
