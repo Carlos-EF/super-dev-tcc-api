@@ -160,3 +160,35 @@ class ClientRepository:
         self.session.commit()
 
         return True
+
+
+    def get_by_id(
+            self,
+            id: UUID
+    ) -> ClientResponse:
+        client = self.session.query(
+            ClientModel
+            ).filter(
+                ClientModel.id == id
+                ).first()
+
+        if not client:
+            return None
+
+        return self.create_response(client)
+
+
+    def get_interested_client_by_id(
+            self,
+            id: UUID
+    ) -> InterestedClientResponse:
+        interested_client = self.session.query(
+            InterestedClientModel
+            ).filter(
+                InterestedClientModel.cliente_id == id
+                ).first()
+
+        if not interested_client:
+            return None
+
+        return self.create_interested_client_response(interested_client)
