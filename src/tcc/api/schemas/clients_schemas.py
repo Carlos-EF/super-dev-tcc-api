@@ -342,8 +342,10 @@ class EditInterestedClientRequest(BaseModel):
 class PaginatedClientResponse(BaseModel):
     clientes: list[ClientResponse]
 
-    busca: str
+    pagina: int
 
-    tipo: ClientType
+    por_pagina: int
 
-    origem: ContactType
+    total: int
+    
+    total_paginas: int
