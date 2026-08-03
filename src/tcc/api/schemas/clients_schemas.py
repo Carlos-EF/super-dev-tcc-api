@@ -344,3 +344,13 @@ class EditInterestedClientRequest(BaseModel):
             ]
         }
     }
+
+
+class PaginatedClientResponse(BaseModel):
+    clientes: list[ClientResponse]
+
+    busca: str
+
+    tipo: ClientType
+
+    origem: ContactType
