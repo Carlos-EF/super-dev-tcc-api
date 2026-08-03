@@ -92,3 +92,28 @@ class ClientRepository:
             criado_em= interested.criado_em,
             alterado_em= interested.alterado_em
         )
+
+
+    def edit(
+            self,
+            id: UUID,
+            client: EditClientRequest
+    ) -> ClientResponse:
+        client_to_edit = self.session.query(
+            ClientModel
+            ).filter(
+                ClientModel.id == id
+                ).first()
+
+        if not client_to_edit:
+            return None
+
+        client_to_edit.nome = client.nome
+        client_to_edit.numero = client.numero
+        client_to_edit.email = client.email
+        client_to_edit.como_encontrou = client.como_encontrou
+        client_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_response(client_to_edit)
