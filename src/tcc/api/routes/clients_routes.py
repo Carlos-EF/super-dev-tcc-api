@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from http import HTTPStatus
 from uuid import UUID
 
-from src.tcc.repository.client_repository import ClientRepository
+from tcc.repository.client_repository import ClientRepository
 from tcc.infrastructure.connection import get_session
 from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, EditInterestedClientRequest, InterestedClientResponse, PaginatedClientResponse, ClientResponse
 

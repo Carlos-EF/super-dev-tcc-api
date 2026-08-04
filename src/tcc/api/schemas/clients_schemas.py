@@ -2,10 +2,10 @@ from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel, Field
 
-from src.tcc.infrastructure.models.enums.clients_types import ClientType
-from src.tcc.infrastructure.models.enums.contact_types import ContactType
-from src.tcc.infrastructure.models.enums.finality_types import ClientFinalityTypes
-from src.tcc.infrastructure.models.enums.property_types import PropertyTypes
+from tcc.infrastructure.models.enums.clients_types import ClientType
+from tcc.infrastructure.models.enums.contact_types import ContactType
+from tcc.infrastructure.models.enums.finality_types import ClientFinalityTypes
+from tcc.infrastructure.models.enums.property_types import PropertyTypes
 
 
 class ClientResponse(BaseModel):
