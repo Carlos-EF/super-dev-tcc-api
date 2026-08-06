@@ -8,7 +8,8 @@ from uuid import UUID
 from tcc.infrastructure.connection import get_session
 from tcc.api.schemas.broker_schemas import CreateBrokerRequest, EditBrokerRequest, PaginatedBrokerResponse, BrokerResponse
 from tcc.repository.broker_repository import BrokerRepository
-
+from tcc.infrastructure.models.enums.broker_tables_types import BrokerTablesTypes
+from tcc.infrastructure.models.enums.sort_types import SortTypes
 
 router = APIRouter(
     prefix='/brokers',
@@ -32,6 +33,8 @@ def get_all(
     busca: Optional[str] = None,
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(10, ge=1, le=100),
+    ordenar_por: BrokerTablesTypes = Query(BrokerTablesTypes.NOME),
+    direcao: SortTypes = Query(SortTypes.ASC),
     session: Session = Depends(get_session)
 ):
     """Listagem de todos os corretores cadastrados."""
@@ -40,7 +43,9 @@ def get_all(
     brokers = repository.get_all(
         busca=busca,
         pagina=pagina,
-        por_pagina=por_pagina
+        por_pagina=por_pagina,
+        ordenar_por=ordenar_por,
+        direcao=direcao
     )
 
     return brokers

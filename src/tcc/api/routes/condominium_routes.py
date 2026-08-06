@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from http import HTTPStatus
 from uuid import UUID
 
+from tcc.infrastructure.models.enums.cond_tables_types import CondTablesTypes
+from tcc.infrastructure.models.enums.sort_types import SortTypes
 from tcc.infrastructure.connection import get_session
 from tcc.api.schemas.condominium_schemas import CitiesResponse, CondominiumResponse, CreateCondominiumRequest, DistrictsResponse, EditCondominiumRequest, PaginatedCondominiumResponse
 from tcc.repository.condominium_repository import CondominiumRepository
@@ -33,6 +35,8 @@ def get_all(
     bairro: Optional[str] = None,
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(10, ge=1, le=100),
+    ordernar_por: CondTablesTypes = Query(CondTablesTypes.NOME),
+    direcao: SortTypes = Query(SortTypes.ASC),
     session: Session = Depends(get_session)
 ):
     """Listagem de todos os condomínios cadastrados."""
@@ -43,7 +47,9 @@ def get_all(
         cidade=cidade,
         bairro=bairro,
         pagina=pagina,
-        por_pagina=por_pagina
+        por_pagina=por_pagina,
+        ordenar_por=ordernar_por,
+        direcao=direcao
     )
 
     return condominiums

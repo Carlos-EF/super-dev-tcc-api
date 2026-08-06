@@ -1,11 +1,13 @@
 from uuid import UUID
 from uuid6 import uuid7
 from datetime import datetime
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 from math import ceil
 from tcc.api.schemas.condominium_schemas import CitiesResponse, CreateCondominiumRequest, DistrictsResponse, EditCondominiumRequest, CondominiumResponse, PaginatedCondominiumResponse
 from tcc.infrastructure.models.condominium_models import CondominiumModel
+from tcc.infrastructure.models.enums.cond_tables_types import CondTablesTypes
+from tcc.infrastructure.models.enums.sort_types import SortTypes
 
 
 class CondominiumRepository:
@@ -94,6 +96,8 @@ class CondominiumRepository:
             bairro: str | None = None,
             pagina: int = 1,
             por_pagina: int = 10,
+            ordenar_por: CondTablesTypes = CondTablesTypes.NOME,
+            direcao: SortTypes = SortTypes.ASC,
     ) -> PaginatedCondominiumResponse:
         query = self.session.query(CondominiumModel)
 
@@ -118,12 +122,22 @@ class CondominiumRepository:
 
         total = query.count()
 
+        if ordenar_por == CondTablesTypes.NOME: 
+            order_column = func.lower(CondominiumModel.nome)
+        elif ordenar_por == CondTablesTypes.ENDERECO:
+            order_column = func.lower(CondominiumModel.logradouro)
+
+        if direcao == SortTypes.ASC:
+            query = query.order_by(order_column.asc())
+        else:
+            query = query.order_by(order_column.desc())
+
         condominiums = (
-            query.order_by(
-                CondominiumModel.nome.asc()
-            ).offset((pagina - 1) * por_pagina)
-            .limit(por_pagina).all()
-        )
+            query.offset(
+            (pagina - 1) * por_pagina
+            ).limit(
+                por_pagina
+            ).all())
 
         return PaginatedCondominiumResponse(
             condominios=[self.create_response(condominium) for condominium in condominiums],

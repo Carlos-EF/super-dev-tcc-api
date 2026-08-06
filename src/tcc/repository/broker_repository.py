@@ -1,11 +1,13 @@
 from uuid import UUID
 from uuid6 import uuid7
 from datetime import datetime
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 from math import ceil
 from tcc.api.schemas.broker_schemas import CreateBrokerRequest, EditBrokerRequest, PaginatedBrokerResponse, BrokerResponse
 from tcc.infrastructure.models.broker_models import BrokerModel
+from tcc.infrastructure.models.enums.broker_tables_types import BrokerTablesTypes
+from tcc.infrastructure.models.enums.sort_types import SortTypes
 
 
 class BrokerRepository:
@@ -74,6 +76,8 @@ class BrokerRepository:
                 busca: str | None = None,
                 pagina: int = 1,
                 por_pagina: int = 10,
+                ordenar_por: BrokerTablesTypes = BrokerTablesTypes.NOME ,
+                direcao: SortTypes = SortTypes.ASC,
         ) -> PaginatedBrokerResponse:
             query = self.session.query(BrokerModel)
     
@@ -89,13 +93,21 @@ class BrokerRepository:
                 )
 
             total = query.count()
-    
+
+            if ordenar_por == BrokerTablesTypes.NOME:
+                order_column = func.lower(BrokerModel.nome)
+
+            if direcao == SortTypes.ASC:
+                query = query.order_by(order_column.asc())
+            else:
+                query = query.order_by(order_column.desc())
+
             brokers = (
-                query.order_by(
-                    BrokerModel.nome.asc()
-                ).offset((pagina - 1) * por_pagina)
-                .limit(por_pagina).all()
-            )
+                query.offset(
+                (pagina - 1) * por_pagina
+                ).limit(
+                por_pagina
+                ).all())
     
             return PaginatedBrokerResponse(
                 corretores=[self.create_response(broker) for broker in brokers],
