@@ -132,7 +132,8 @@ class CondominiumRepository:
         else:
             query = query.order_by(order_column.desc())
 
-        condominiums = ( query.offset(
+        condominiums = (
+            query.offset(
             (pagina - 1) * por_pagina
             ).limit(
                 por_pagina
