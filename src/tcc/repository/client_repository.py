@@ -194,52 +194,54 @@ class ClientRepository:
         return self.create_interested_client_response(interested_client)
 
 
-    def get_all(
+    def get_all( 
             self,
-            busca: str | None,
-            tipo: str | None,
-            origem: str | None,
-            pagina: int,
-            por_pagina: int
-    ) -> PaginatedClientResponse:
-        total_clients = self.session.query(ClientModel).count()
-        total_pages = ceil(total_clients / por_pagina)
+            busca: str | None, 
+            tipo: str | None, 
+            origem: str | None, 
+            pagina: int, 
+            por_pagina: int 
+        ) -> PaginatedClientResponse: 
+           query = self.session.query(ClientModel)
 
-        clients = self.session.query(
-            ClientModel).offset(
-                (pagina - 1) * por_pagina).limit(
-                    por_pagina).all()
+           if busca: 
+               query = query.filter(
+                    or_( 
+                        ClientModel.nome.ilike(f'%{busca}%'), 
+                        ClientModel.numero.ilike(f'%{busca}%'),
+                        ClientModel.email.ilike(f'%{busca}%') 
+                        ) 
+                    )
 
-        if busca:
-            clients = self.session.query(ClientModel).filter(
-                or_(
-                    ClientModel.nome.ilike(f'%{busca}%'),
-                    ClientModel.numero.ilike(f'%{busca}%'),
-                    ClientModel.email.ilike(f'%{busca}%')
+
+           if tipo: 
+                query = query.filter(
+                    ClientModel.tipo == tipo
                 )
-            ).offset(
-                (pagina - 1) * por_pagina).limit(
-                    por_pagina).all()
 
-        if tipo:
-            clients = self.session.query(ClientModel).filter(
-                ClientModel.tipo == tipo
-            ).offset(
-                (pagina - 1) * por_pagina).limit(
-                    por_pagina).all()
-
-        if origem:
-            clients = self.session.query(ClientModel).filter(
-                ClientModel.como_encontrou == origem
-            ).offset(
-                (pagina - 1) * por_pagina).limit(
-                    por_pagina).all()
+           if origem: 
+               query = query.filter(
+                   ClientModel.como_encontrou == origem
+                )
 
 
-        return PaginatedClientResponse(
-            clientes= [self.create_response(client) for client in clients],
-            total= total_clients,
-            total_paginas= total_pages,
-            pagina= pagina,
-            por_pagina= por_pagina,
-        )
+           total_clients = query.count()
+
+           total_pages = ceil(
+               total_clients / por_pagina
+           ) if total_clients >  0 else 1
+
+           clients = (
+               query
+               .offset((pagina - 1) * por_pagina)
+               .limit(por_pagina)
+               .all()
+           )
+
+           return PaginatedClientResponse(
+               clientes=[self.create_response(client) for client in clients],
+               total=total_clients,
+               total_paginas=total_pages,
+               pagina=pagina,
+               por_pagina=por_pagina
+           )

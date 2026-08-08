@@ -57,7 +57,8 @@ class ClientModel(BaseModel):
 
     interessado = relationship(
         'InterestedClientModel',
-        back_populates='cliente'
+        back_populates='cliente',
+        uselist=False
     )
 
 
@@ -107,5 +108,6 @@ class InterestedClientModel(ClientModel):
 
     cliente = relationship(
         'ClientModel',
-        back_populates='interessado'
+        back_populates='interessado',
+        uselist=False
     )
