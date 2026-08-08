@@ -69,7 +69,7 @@ class ClientRepository:
 
         interested_to_create = InterestedClientModel(
             id= uuid7(),
-            client_id= id,
+            cliente_id= id,
             procura= interested.procura,
             finalidade= interested.finalidade,
             preferencia= interested.preferencia,
@@ -77,7 +77,6 @@ class ClientRepository:
         )
          
         self.session.add(interested_to_create)
-        self.session.flush()
         self.session.commit()
 
         return self.create_interested_client_response(interested_to_create)

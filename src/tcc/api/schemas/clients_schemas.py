@@ -49,7 +49,7 @@ class ClientResponse(BaseModel):
 
     tipo: ClientType = Field(
         ...,
-        max_length=11,
+        max_length=12,
         description='Tipo do cliente',
         examples=['interessado', 'cliente']
     )
@@ -127,7 +127,7 @@ class CreateClientRequest(BaseModel):
 
     tipo: ClientType = Field(
         ...,
-        max_length=11,
+        max_length=12,
         description='Tipo do cliente',
         examples=['interessado', 'cliente']
     )

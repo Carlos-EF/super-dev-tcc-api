@@ -36,7 +36,7 @@ class ClientModel(BaseModel):
     )
 
     tipo = Column(
-        String(11),
+        String(12),
         nullable=False
     )
 
@@ -62,7 +62,7 @@ class ClientModel(BaseModel):
     )
 
 
-class InterestedClientModel(ClientModel):
+class InterestedClientModel(BaseModel):
     __tablename__= 'interessados'
 
     id = Column(
@@ -87,7 +87,7 @@ class InterestedClientModel(ClientModel):
     )
 
     finalidade = Column(
-        String(6),
+        String(7),
         nullable=True
     )
 
