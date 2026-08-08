@@ -2,9 +2,9 @@ from uuid import UUID
 from uuid6 import uuid7
 from datetime import datetime
 from sqlalchemy import or_
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from math import ceil
-from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, EditInterestedClientRequest, InterestedClientResponse, PaginatedClientResponse, ClientResponse
+from tcc.api.schemas.clients_schemas import ClientWithInterestResponse, CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, EditInterestedClientRequest, InterestedClientData, InterestedClientResponse, PaginatedClientResponse, ClientResponse
 from tcc.infrastructure.models.client_models import ClientModel, InterestedClientModel
 
 
@@ -41,9 +41,9 @@ class ClientRepository:
     def create_response(
             self,
             client: ClientModel
-    ) -> ClientResponse:
+    ) -> ClientWithInterestResponse:
         
-        return ClientResponse(
+        return ClientWithInterestResponse(
             id= client.id,
             nome= client.nome,
             codigo= client.codigo, 
@@ -52,7 +52,12 @@ class ClientRepository:
             tipo= client.tipo, 
             como_encontrou= client.como_encontrou, 
             criado_em= client.criado_em,
-            alterado_em= client.alterado_em
+            alterado_em= client.alterado_em,
+            interesse=InterestedClientData(
+                procura=client.interessado.procura,
+                finalidade=client.interessado.finalidade,
+                preferencia=client.interessado.preferencia
+            ) if client.interessado else None
         )
 
 
@@ -64,7 +69,7 @@ class ClientRepository:
 
         interested_to_create = InterestedClientModel(
             id= uuid7(),
-            client_id= id,
+            cliente_id= id,
             procura= interested.procura,
             finalidade= interested.finalidade,
             preferencia= interested.preferencia,
@@ -72,7 +77,6 @@ class ClientRepository:
         )
          
         self.session.add(interested_to_create)
-        self.session.flush()
         self.session.commit()
 
         return self.create_interested_client_response(interested_to_create)
@@ -194,52 +198,61 @@ class ClientRepository:
         return self.create_interested_client_response(interested_client)
 
 
-    def get_all(
+    def get_all( 
             self,
-            busca: str | None,
-            tipo: str | None,
-            origem: str | None,
-            pagina: int,
-            por_pagina: int
-    ) -> PaginatedClientResponse:
-        total_clients = self.session.query(ClientModel).count()
-        total_pages = ceil(total_clients / por_pagina)
-
-        clients = self.session.query(
-            ClientModel).offset(
-                (pagina - 1) * por_pagina).limit(
-                    por_pagina).all()
-
-        if busca:
-            clients = self.session.query(ClientModel).filter(
-                or_(
-                    ClientModel.nome.ilike(f'%{busca}%'),
-                    ClientModel.numero.ilike(f'%{busca}%'),
-                    ClientModel.email.ilike(f'%{busca}%')
+            busca: str | None, 
+            tipo: str | None, 
+            origem: str | None, 
+            pagina: int, 
+            por_pagina: int 
+        ) -> PaginatedClientResponse: 
+           query = (
+               self.session.query(
+                   ClientModel
+                   )
+                .options(
+                    joinedload(
+                        ClientModel.interessado
+                    )
+                  )            
                 )
-            ).offset(
-                (pagina - 1) * por_pagina).limit(
-                    por_pagina).all()
 
-        if tipo:
-            clients = self.session.query(ClientModel).filter(
-                ClientModel.tipo == tipo
-            ).offset(
-                (pagina - 1) * por_pagina).limit(
-                    por_pagina).all()
+           if busca: 
+               query = query.filter(
+                    or_( 
+                        ClientModel.nome.ilike(f'%{busca}%'), 
+                        ClientModel.numero.ilike(f'%{busca}%'),
+                        ClientModel.email.ilike(f'%{busca}%') 
+                        ) 
+                    )
 
-        if origem:
-            clients = self.session.query(ClientModel).filter(
-                ClientModel.como_encontrou == origem
-            ).offset(
-                (pagina - 1) * por_pagina).limit(
-                    por_pagina).all()
+           if tipo: 
+                query = query.filter(
+                    ClientModel.tipo == tipo
+                )
 
+           if origem: 
+               query = query.filter(
+                   ClientModel.como_encontrou == origem
+                )
 
-        return PaginatedClientResponse(
-            clientes= [self.create_response(client) for client in clients],
-            total= total_clients,
-            total_paginas= total_pages,
-            pagina= pagina,
-            por_pagina= por_pagina,
-        )
+           total_clients = query.count()
+
+           total_pages = ceil(
+               total_clients / por_pagina
+           ) if total_clients >  0 else 1
+
+           clients = (
+               query
+               .offset((pagina - 1) * por_pagina)
+               .limit(por_pagina)
+               .all()
+           )
+
+           return PaginatedClientResponse(
+               clientes=[self.create_response(client) for client in clients],
+               total=total_clients,
+               total_paginas=total_pages,
+               pagina=pagina,
+               por_pagina=por_pagina
+           )

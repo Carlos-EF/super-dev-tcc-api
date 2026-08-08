@@ -1,3 +1,4 @@
+
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 CREATE TABLE
@@ -33,6 +34,7 @@ CREATE TABLE
     clientes (
         id UUID PRIMARY KEY NOT NULL,
         nome VARCHAR(60) NOT NULL,
+		codi
         numero VARCHAR(15) NOT NULL,
         email VARCHAR(60) NOT NULL,
         data_nascimento VARCHAR(10),
@@ -47,10 +49,10 @@ CREATE TABLE
         id UUID PRIMARY KEY NOT NULL,
         cliente_id UUID NOT NULL,
         procura VARCHAR(11),
-        finalidade VARCHAR(6),
+        finalidade VARCHAR(7),
         preferencia VARCHAR(50),
         criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         
-        FOREIGN KEY (cliente_id) REFERENCES clientes (id) ON DELETE CASCADE
+        FOREIGN KEY (cliente_id) REFERENCES clientes (id) ON DELETE CASCADE 
     );

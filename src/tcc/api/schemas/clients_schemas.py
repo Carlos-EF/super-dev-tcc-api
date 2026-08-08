@@ -49,7 +49,7 @@ class ClientResponse(BaseModel):
 
     tipo: ClientType = Field(
         ...,
-        max_length=11,
+        max_length=12,
         description='Tipo do cliente',
         examples=['interessado', 'cliente']
     )
@@ -127,7 +127,7 @@ class CreateClientRequest(BaseModel):
 
     tipo: ClientType = Field(
         ...,
-        max_length=11,
+        max_length=12,
         description='Tipo do cliente',
         examples=['interessado', 'cliente']
     )
@@ -340,7 +340,7 @@ class EditInterestedClientRequest(BaseModel):
 
 
 class PaginatedClientResponse(BaseModel):
-    clientes: list[ClientResponse]
+    clientes: list[ClientWithInterestResponse]
 
     pagina: int
 
@@ -349,3 +349,22 @@ class PaginatedClientResponse(BaseModel):
     total: int
     
     total_paginas: int
+
+
+class ClientWithInterestResponse(BaseModel):
+    id: UUID 
+    nome: str 
+    codigo: str 
+    numero: str 
+    email: str 
+    tipo: ClientType
+    como_encontrou: ContactType | None = None 
+    criado_em: datetime 
+    alterado_em: datetime | None = None 
+    interesse: InterestedClientData | None = None
+
+
+class InterestedClientData(BaseModel):
+    procura: PropertyTypes | None = None 
+    finalidade: ClientFinalityTypes | None = None 
+    preferencia: str | None = None
