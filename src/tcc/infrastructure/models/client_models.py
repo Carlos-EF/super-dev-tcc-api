@@ -109,5 +109,4 @@ class InterestedClientModel(ClientModel):
     cliente = relationship(
         'ClientModel',
         back_populates='interessado',
-        uselist=False
     )

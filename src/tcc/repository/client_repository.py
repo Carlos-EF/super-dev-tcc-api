@@ -2,9 +2,9 @@ from uuid import UUID
 from uuid6 import uuid7
 from datetime import datetime
 from sqlalchemy import or_
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from math import ceil
-from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, EditInterestedClientRequest, InterestedClientResponse, PaginatedClientResponse, ClientResponse
+from tcc.api.schemas.clients_schemas import ClientWithInterestResponse, CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, EditInterestedClientRequest, InterestedClientData, InterestedClientResponse, PaginatedClientResponse, ClientResponse
 from tcc.infrastructure.models.client_models import ClientModel, InterestedClientModel
 
 
@@ -41,9 +41,9 @@ class ClientRepository:
     def create_response(
             self,
             client: ClientModel
-    ) -> ClientResponse:
+    ) -> ClientWithInterestResponse:
         
-        return ClientResponse(
+        return ClientWithInterestResponse(
             id= client.id,
             nome= client.nome,
             codigo= client.codigo, 
@@ -52,7 +52,12 @@ class ClientRepository:
             tipo= client.tipo, 
             como_encontrou= client.como_encontrou, 
             criado_em= client.criado_em,
-            alterado_em= client.alterado_em
+            alterado_em= client.alterado_em,
+            interesse=InterestedClientData(
+                procura=client.interessado.procura,
+                finalidade=client.interessado.finalidade,
+                preferencia=client.interessado.preferencia
+            ) if client.interessado else None
         )
 
 
@@ -202,7 +207,16 @@ class ClientRepository:
             pagina: int, 
             por_pagina: int 
         ) -> PaginatedClientResponse: 
-           query = self.session.query(ClientModel)
+           query = (
+               self.session.query(
+                   ClientModel
+                   )
+                .options(
+                    joinedload(
+                        ClientModel.interessado
+                    )
+                  )            
+                )
 
            if busca: 
                query = query.filter(
@@ -213,7 +227,6 @@ class ClientRepository:
                         ) 
                     )
 
-
            if tipo: 
                 query = query.filter(
                     ClientModel.tipo == tipo
@@ -223,7 +236,6 @@ class ClientRepository:
                query = query.filter(
                    ClientModel.como_encontrou == origem
                 )
-
 
            total_clients = query.count()
 
