@@ -58,6 +58,7 @@ class ClientModel(BaseModel):
     interessado = relationship(
         'InterestedClientModel',
         back_populates='cliente',
+        cascade="all, delete-orphan", 
         uselist=False
     )
 
@@ -77,8 +78,8 @@ class InterestedClientModel(BaseModel):
         UUID(
             as_uuid=True
         ),
-        ForeignKey('clientes.id'),
-        nullable=False
+        ForeignKey('clientes.id', ondelete='CASCADE'),
+        nullable=False,
     )
 
     procura = Column(
