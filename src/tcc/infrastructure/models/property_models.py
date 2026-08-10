@@ -55,7 +55,7 @@ class PropertyModel(BaseModel):
 
     em_condominio = Column(
         Boolean,
-        nullable=True
+        nullable=False
     )
 
     condominio = Column(
