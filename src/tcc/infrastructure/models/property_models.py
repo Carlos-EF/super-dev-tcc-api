@@ -1,8 +1,15 @@
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, Integer, Numeric, String, Date, ForeignKey, Boolean
+from sqlalchemy.dialects.postgresql import ENUM, UUID
+from sqlalchemy import ARRAY, Column, Integer, Numeric, String, Date, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
+from src.tcc.infrastructure.models.enums.furnished_types import FurnitureTypes
 from tcc.infrastructure.models.base_model import BaseModel
 
+
+mobilia_types = ENUM(
+    FurnitureTypes, 
+    name='mobilia_checks',
+    create_type=True 
+)
 
 class PropertyModel(BaseModel):
     __tablename__= 'imoveis'
@@ -117,4 +124,86 @@ class PropertyModel(BaseModel):
     alterado_em = Column(
         Date,
         nullable=True
+    )
+
+    casa = relationship(
+        'HouseModel',
+        back_populates='imovel',
+        cascade="all, delete-orphan", 
+        uselist=False
+    )
+
+class HouseModel(BaseModel):
+    __tablename__= 'casas'
+
+    id = Column(
+        UUID(
+            as_uuid=True
+        ),
+        nullable=False,
+        primary_key=True
+    )
+    
+    imovel_id = Column(
+        UUID(
+            as_uuid=True
+        ),
+        ForeignKey('imoveis.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+
+    quartos = Column(
+        Integer,
+        nullable=True
+    )
+
+    suites = Column(
+        Integer,
+        nullable=True
+    )
+
+    banheiros = Column(
+        Integer,
+        nullable=True
+    )
+
+    garagens = Column(
+        Integer,
+        nullable=True
+    )
+
+    andares = Column(
+        Integer,
+        nullable=True
+    )
+
+    salas = Column(
+        Integer,
+        nullable=True
+    )
+
+    esta_mobiliado = Column(
+        String(13),
+        nullable=True
+    )
+
+    mobilia = Column( 
+        ARRAY(mobilia_types), 
+        nullable=True, 
+        default=list 
+    )
+
+    criado_em = Column(
+        Date,
+        nullable=False
+    )
+    
+    alterado_em = Column(
+        Date,
+        nullable=True
+    )
+
+    imovel = relationship(
+        'PropertyModel',
+        back_populates='casa',
     )
