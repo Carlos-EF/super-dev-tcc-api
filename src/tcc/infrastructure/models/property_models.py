@@ -140,6 +140,14 @@ class PropertyModel(BaseModel):
         uselist=False
     )
 
+    terreno = relationship(
+        'LandModel',
+        back_populates='imovel',
+        cascade="all, delete-orphan", 
+        uselist=False
+    )
+
+
 class HouseModel(BaseModel):
     __tablename__= 'casas'
 
@@ -289,4 +297,74 @@ class ApartmentModel(BaseModel):
     imovel = relationship(
         'PropertyModel',
         back_populates='apartamento',
+    )
+
+
+class LandModel(BaseModel):
+    __tablename__= 'terrenos'
+
+    id = Column(
+        UUID(
+            as_uuid=True
+        ),
+        nullable=False,
+        primary_key=True
+    )
+    
+    imovel_id = Column(
+        UUID(
+            as_uuid=True
+        ),
+        ForeignKey('imoveis.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+
+    area_total = Column(
+        Numeric(precision=10, scale=2),
+        nullable=True
+    )
+
+    medida_esquerda = Column(
+        Numeric(precision=10, scale=2),
+        nullable=True
+    )
+
+    medida_direita = Column(
+        Numeric(precision=10, scale=2),
+        nullable=True
+    )
+
+    medida_frente = Column(
+        Numeric(precision=10, scale=2),
+        nullable=True
+    )
+
+    medida_fundo = Column(
+        Numeric(precision=10, scale=2),
+        nullable=True
+    )
+
+    zoneamento = Column(
+        String(11),
+        nullable=True
+    )
+
+    coeficiente = Column(
+        Numeric(precision=10, scale=2),
+        nullable=True
+    )
+
+    criado_em = Column(
+        Date,
+        nullable=False
+    )
+    
+    alterado_em = Column(
+        Date,
+        nullable=True
+    )
+
+    imovel = relationship(
+        'PropertyModel',
+        back_populates='terreno',
     )
