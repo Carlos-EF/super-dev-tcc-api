@@ -1,7 +1,7 @@
 from uuid import UUID
 from uuid6 import uuid7
 from datetime import datetime
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from sqlalchemy.orm import Session, joinedload
 from math import ceil
 from tcc.api.schemas.clients_schemas import ClientWithInterestResponse, CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, EditInterestedClientRequest, InterestedClientData, InterestedClientResponse, PaginatedClientResponse, ClientResponse
@@ -204,7 +204,8 @@ class ClientRepository:
             tipo: str | None, 
             origem: str | None, 
             pagina: int, 
-            por_pagina: int 
+            por_pagina: int,
+            ordem: str | None
         ) -> PaginatedClientResponse: 
            query = (
                self.session.query(
@@ -237,6 +238,19 @@ class ClientRepository:
                 )
 
            total_clients = query.count()
+
+           if ordem == 'nome-asc':
+                order_column = func.lower(ClientModel.nome)
+                
+                query = query.order_by(order_column.asc())
+           elif ordem == 'nome-desc':
+                order_column = func.lower(ClientModel.nome)
+                
+                query = query.order_by(order_column.desc())
+           elif ordem == 'code':
+                order_column = func.lower(ClientModel.codigo)
+
+                query = query.order_by(order_column.asc())
 
            total_pages = ceil(
                total_clients / por_pagina
