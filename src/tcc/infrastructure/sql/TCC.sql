@@ -34,12 +34,11 @@ CREATE TABLE
     clientes (
         id UUID PRIMARY KEY NOT NULL,
         nome VARCHAR(60) NOT NULL,
-		codi
+		codigo VARCHAR(4) NOT NULL,
         numero VARCHAR(15) NOT NULL,
         email VARCHAR(60) NOT NULL,
-        data_nascimento VARCHAR(10),
-        rg VARCHAR(9),
-        cpf VARCHAR(14),
+        tipo VARCHAR(12) NOT NULL,
+        como_encontrou VARCHAR(18),
         criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
