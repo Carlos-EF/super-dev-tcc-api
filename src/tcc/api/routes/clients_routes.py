@@ -33,6 +33,7 @@ def get_all(
     origem: Optional[str] = None,
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(10, ge=1, le=100),
+    ordem: Optional[str] = None,
     session: Session = Depends(get_session)
 ):
     """Listagem de todos os clientes cadastrados."""
@@ -43,7 +44,8 @@ def get_all(
         tipo=tipo,
         origem=origem,
         pagina=pagina,
-        por_pagina=por_pagina
+        por_pagina=por_pagina,
+        ordem=ordem
     )
 
     return clients

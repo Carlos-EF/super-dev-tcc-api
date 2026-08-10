@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from tcc.infrastructure.sql.scripts.seed_condominiums import seed_condominiums
 from tcc.infrastructure.sql.scripts.seed_brokers import seed_brokers
+from tcc.infrastructure.sql.scripts.seed_clients import seed_clients
 from tcc.api.configurations import configurations
 from tcc.api.routes.condominium_routes import router as condominium_router
 from tcc.api.routes.broker_routes import router as broker_router
@@ -27,6 +28,8 @@ async def lifespan(app: FastAPI):
         logger.info('Seed de condomínios executada com sucesso.') 
         seed_brokers() 
         logger.info('Seed de corretores executada com sucesso.') 
+        seed_clients() 
+        logger.info('Seed de clientes executada com sucesso.') 
     except Exception as e: 
         logger.exception(f'Erro ao executar seed: {e}') 
     
