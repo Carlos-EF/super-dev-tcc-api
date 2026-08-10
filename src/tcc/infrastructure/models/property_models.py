@@ -133,6 +133,13 @@ class PropertyModel(BaseModel):
         uselist=False
     )
 
+    apartamento = relationship(
+        'ApartmentModel',
+        back_populates='imovel',
+        cascade="all, delete-orphan", 
+        uselist=False
+    )
+
 class HouseModel(BaseModel):
     __tablename__= 'casas'
 
@@ -206,4 +213,80 @@ class HouseModel(BaseModel):
     imovel = relationship(
         'PropertyModel',
         back_populates='casa',
+    )
+
+
+class ApartmentModel(BaseModel):
+    __tablename__= 'apartamentos'
+
+    id = Column(
+        UUID(
+            as_uuid=True
+        ),
+        nullable=False,
+        primary_key=True
+    )
+    
+    imovel_id = Column(
+        UUID(
+            as_uuid=True
+        ),
+        ForeignKey('imoveis.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+
+    quartos = Column(
+        Integer,
+        nullable=True
+    )
+
+    suites = Column(
+        Integer,
+        nullable=True
+    )
+
+    banheiros = Column(
+        Integer,
+        nullable=True
+    )
+
+    garagens = Column(
+        Integer,
+        nullable=True
+    )
+
+    andares = Column(
+        Integer,
+        nullable=True
+    )
+
+    salas = Column(
+        Integer,
+        nullable=True
+    )
+
+    esta_mobiliado = Column(
+        String(13),
+        nullable=True
+    )
+
+    mobilia = Column( 
+        ARRAY(mobilia_types), 
+        nullable=True, 
+        default=list 
+    )
+
+    criado_em = Column(
+        Date,
+        nullable=False
+    )
+    
+    alterado_em = Column(
+        Date,
+        nullable=True
+    )
+
+    imovel = relationship(
+        'PropertyModel',
+        back_populates='apartamento',
     )
