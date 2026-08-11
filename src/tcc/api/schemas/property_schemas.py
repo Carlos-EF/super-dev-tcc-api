@@ -251,6 +251,94 @@ class CreateHouseRequest(BaseModel):
      }
 
     
+class EditHouseRequest(BaseModel):
+    metragem: float | None = Field(
+        None,
+        description='Metragem total da casa',
+        examples=[65.20]
+    )
+
+    quartos: int | None = Field(
+        None,
+        description='Quantidade de quartos',
+        examples=[2]
+    )
+
+    suites: int | None = Field(
+        None,
+        description='Quantidade de quartos que são suítes',
+        examples=[1]
+    )
+
+    banheiros: int | None = Field(
+        None,
+        description='Quantidade de banheiros',
+        examples=[2]
+    )
+
+    garagens: int | None = Field(
+        None,
+        description='Quantidade de vagas de garagens',
+        examples=[2]
+    )
+
+    andares: int | None = Field(
+        None,
+        description='Quantidade de pavimentos',
+        examples=[1]
+    )
+
+    salas: int | None = Field(
+        None,
+        description='Quantidade de salas',
+        examples=[4]
+    )
+
+    esta_mobiliado: FurnishedTypes | None = Field(
+        None,
+        description='Diz se a casa possui mobília ou não',
+        examples=[FurnishedTypes.SEMI, FurnishedTypes.NAO]
+    )
+
+    mobilia: list[FurnitureTypes] | None = Field(
+        None,
+        description='Lugares que possuí mobília',
+        examples=[
+            [
+                FurnitureTypes.SOFA,
+                FurnitureTypes.ARMARIOS_QUARTOS,
+                FurnitureTypes.ARMARIOS_BANHEIROS,
+                FurnitureTypes.COZINHA_PLANEJADA,
+            ]
+        ]
+    )
+
+    model_config = { 
+        'json_schema_extra': { 
+            'examples': 
+            [ 
+                { 
+                    'metragem': 120.5, 
+                    'quartos': 3, 
+                    'suites': 1, 
+                    'banheiros': 2, 
+                    'garagens': 2, 
+                    'andares': 1, 
+                    'salas': 2, 
+                    'esta_mobiliado': 'Semi mobiliado', 
+                    'mobilia': 
+                    [ 
+                    'Sofá', 
+                    'Armários nos quartos', 
+                    'Armários nos banheiros',
+                    'Cozinha planejada' 
+                    ] 
+                }
+            ] 
+        } 
+     }
+
+    
 class CreateApartmentRequest(BaseModel):
     imovel_id: UUID = Field(
         ...,
