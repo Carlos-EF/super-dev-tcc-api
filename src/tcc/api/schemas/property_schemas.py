@@ -2,6 +2,7 @@ from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel, Field
 
+from src.tcc.infrastructure.models.enums.zoning_types import ZoningTypes
 from tcc.infrastructure.models.enums.property_types import PropertyTypes
 from tcc.infrastructure.models.enums.finality_types import FinalityTypes
 from tcc.infrastructure.models.enums.furnished_types import FurnishedTypes, FurnitureTypes
@@ -310,10 +311,10 @@ class CreateApartmentRequest(BaseModel):
         description='Lugares que possuí mobília',
         examples=[
             [
-                FurnitureTypes.SOFA,
-                FurnitureTypes.ARMARIOS_QUARTOS,
-                FurnitureTypes.ARMARIOS_BANHEIROS,
-                FurnitureTypes.COZINHA_PLANEJADA,
+                'Sofá', 
+                'Armários nos quartos', 
+                'Armários nos banheiros',
+                'Cozinha planejada' 
             ]
         ]
     )
@@ -343,3 +344,71 @@ class CreateApartmentRequest(BaseModel):
             ] 
         } 
      }
+
+
+class CreateLandRequest(BaseModel):
+    imovel_id: UUID = Field(
+        ...,
+        description='ID do imóvel (tabela principal)',
+        examples=['2a1b3c4d-5e6f-4789-8a0b-1c2d3e4f5a6b']
+    )
+
+    area_total: float | None = Field(
+        None,
+        description='Área total do terreno',
+        examples=[420.22]
+    )
+
+    medida_esquerda: float | None = Field(
+        None,
+        description='Medida do lado esquerdo do terreno',
+        examples=[215.22]
+    )
+
+    medida_direita: float | None = Field(
+        None,
+        description='Medida do lado direito do terreno',
+        examples=[100.16]
+    )
+
+    medida_frente: float | None = Field(
+        None,
+        description='Medida da frente do terreno',
+        examples=[87.20]
+    )
+
+    medida_fundo: float | None = Field(
+        None,
+        description='Medida da fundo do terreno',
+        examples=[93.80]
+    )
+
+    zoneamento: ZoningTypes | None = Field(
+        None,
+        description='Tipo de zoneamento do terreno',
+        examples=['Residencial', 'Rural']
+    )
+
+    coeficiente: float | None = Field(
+        None,
+        description='Coeficiente do terreno',
+        examples=[3.7]
+    )
+
+    model_config = { 
+        'json_schema_extra': { 
+            'examples': 
+            [ 
+                { 
+                    'imovel_id': '2a1b3c4d-5e6f-4789-8a0b-1c2d3e4f5a6b', 
+                    'area_total': 420.22, 
+                    'medida_esquerda': 30.0, 
+                    'medida_direita': 30.0, 
+                    'medida_frente': 14.0, 
+                    'medida_fundo': 14.0, 
+                    'zoneamento': 'Residencial', 
+                    'coeficiente': 2.4 
+                }, 
+            ]
+        } 
+    }
