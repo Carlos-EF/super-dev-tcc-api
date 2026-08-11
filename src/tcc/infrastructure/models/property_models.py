@@ -167,6 +167,11 @@ class HouseModel(BaseModel):
         nullable=False,
     )
 
+    metragem = Column(
+        Numeric(precision=10, scale=2),
+        nullable=True
+    )
+
     quartos = Column(
         Integer,
         nullable=True
@@ -241,6 +246,11 @@ class ApartmentModel(BaseModel):
         ),
         ForeignKey('imoveis.id', ondelete='CASCADE'),
         nullable=False,
+    )
+
+    metragem = Column(
+        Numeric(precision=10, scale=2),
+        nullable=True
     )
 
     quartos = Column(
