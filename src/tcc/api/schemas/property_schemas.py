@@ -1307,3 +1307,27 @@ class CompletePropertyResponse(BaseModel):
     criado_em: datetime
 
     alterado_em: datetime | None = None
+
+    casa = HouseData | None = None
+
+
+class HouseData(BaseModel):
+    imovel_id: UUID
+    
+    metragem: float | None = None
+
+    quartos: int | None = None
+
+    suites: int | None = None
+
+    banheiros: int | None = None
+
+    garagens: int | None = None
+
+    andares: int | None = None
+
+    salas: int | None = None
+
+    esta_mobiliado: FurnishedTypes | None = None
+
+    mobilia: list[FurnitureTypes] | None = None
