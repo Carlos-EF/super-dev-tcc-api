@@ -1328,8 +1328,6 @@ class CompletePropertyResponse(BaseModel):
 
 
 class HouseData(BaseModel):
-    imovel_id: UUID
-    
     metragem: float | None = None
 
     quartos: int | None = None
@@ -1350,8 +1348,6 @@ class HouseData(BaseModel):
 
 
 class ApartmentData(BaseModel):
-    imovel_id: UUID
-    
     metragem: float | None = None
 
     quartos: int | None = None
@@ -1372,8 +1368,6 @@ class ApartmentData(BaseModel):
 
 
 class LandData(BaseModel):
-    imovel_id: UUID 
-    
     area_total: float | None = None
 
     medida_esquerda: float | None = None

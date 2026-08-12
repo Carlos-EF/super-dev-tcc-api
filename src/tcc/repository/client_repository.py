@@ -19,7 +19,7 @@ class ClientRepository:
     def create(
             self,
             client: CreateClientRequest,
-    ) -> ClientResponse:
+    ) -> ClientWithInterestResponse:
         client_to_create = ClientModel(
             id= uuid7(),
             nome= client.nome,
