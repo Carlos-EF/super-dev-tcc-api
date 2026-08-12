@@ -1265,3 +1265,45 @@ class EditLandRequest(BaseModel):
             ]
         } 
     }
+
+
+class CompletePropertyResponse(BaseModel):
+    id: UUID
+    
+    proprietario: UUID | None = None
+
+    corretor: UUID | None = None
+
+    codigo: str
+
+    finalidade: FinalityTypes
+
+    tipo: PropertyTypes
+
+    em_condominio: bool
+
+    condominio: UUID | None = None
+
+    cep: str
+
+    logradouro: str
+
+    numero: int
+
+    bairro: str
+
+    uf: str
+
+    cidade: str
+
+    complemento: str | None = None
+
+    valor: float | None = None
+
+    valor_iptu: float | None = None
+
+    valor_condominio: float | None = None
+
+    criado_em: datetime
+
+    alterado_em: datetime | None = None
