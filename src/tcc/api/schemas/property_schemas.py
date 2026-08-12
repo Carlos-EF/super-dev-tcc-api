@@ -1267,6 +1267,18 @@ class EditLandRequest(BaseModel):
     }
 
 
+class PaginatedPropertyResponse(BaseModel):
+    imoveis: list[CompletePropertyResponse]
+
+    pagina: int
+
+    por_pagina: int
+
+    total: int
+    
+    total_paginas: int
+
+
 class CompletePropertyResponse(BaseModel):
     id: UUID
     
