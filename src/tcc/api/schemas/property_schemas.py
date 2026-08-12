@@ -1312,6 +1312,8 @@ class CompletePropertyResponse(BaseModel):
 
     apartamento = ApartmentData | None = None
 
+    terreno = LandData | None = None
+
 
 class HouseData(BaseModel):
     imovel_id: UUID
@@ -1355,3 +1357,21 @@ class ApartmentData(BaseModel):
     esta_mobiliado: FurnishedTypes | None = None
 
     mobilia: list[FurnitureTypes] | None = None
+
+
+class LandData(BaseModel):
+    imovel_id: UUID 
+    
+    area_total: float | None = None
+
+    medida_esquerda: float | None = None
+
+    medida_direita: float | None = None
+
+    medida_frente: float | None = None
+
+    medida_fundo: float | None = None
+
+    zoneamento: ZoningTypes | None = None
+
+    coeficiente: float | None = None
