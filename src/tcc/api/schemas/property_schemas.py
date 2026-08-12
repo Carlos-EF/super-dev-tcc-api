@@ -752,7 +752,7 @@ class EditHouseRequest(BaseModel):
 class ApartmentResponse(BaseModel):
     id: UUID = Field(
         ...,
-        description='ID (UUIDv7) da casa',
+        description='ID (UUIDv7) do apartamento',
         examples=['f47ac10b-58cc-4372-a567-0e02b2c3d479']
     )
         
@@ -1046,6 +1046,96 @@ class EditApartmentRequest(BaseModel):
             ] 
         } 
      }
+
+
+class LandResponse(BaseModel):
+    id: UUID = Field(
+        ...,
+        description='ID (UUIDv7) do terreno',
+        examples=['f47ac10b-58cc-4372-a567-0e02b2c3d479']
+    )
+
+    imovel_id: UUID = Field(
+        ...,
+        description='ID do imóvel (tabela principal)',
+        examples=['2a1b3c4d-5e6f-4789-8a0b-1c2d3e4f5a6b']
+    )
+
+    area_total: float | None = Field(
+        None,
+        description='Área total do terreno',
+        examples=[420.22]
+    )
+
+    medida_esquerda: float | None = Field(
+        None,
+        description='Medida do lado esquerdo do terreno',
+        examples=[215.22]
+    )
+
+    medida_direita: float | None = Field(
+        None,
+        description='Medida do lado direito do terreno',
+        examples=[100.16]
+    )
+
+    medida_frente: float | None = Field(
+        None,
+        description='Medida da frente do terreno',
+        examples=[87.20]
+    )
+
+    medida_fundo: float | None = Field(
+        None,
+        description='Medida da fundo do terreno',
+        examples=[93.80]
+    )
+
+    zoneamento: ZoningTypes | None = Field(
+        None,
+        description='Tipo de zoneamento do terreno',
+        examples=['Residencial', 'Rural']
+    )
+
+    coeficiente: float | None = Field(
+        None,
+        description='Coeficiente do terreno',
+        examples=[3.7]
+    )
+
+    criado_em: datetime = Field(
+        ...,
+        description='Data e hora da criação do registro.',
+        examples=['2023-07-21T14:30:00Z']
+    )
+        
+    alterado_em: datetime | None = Field(
+        None,
+        description='Data e hora da última alteração do registro.',
+        examples=['2023-07-22T10:15:00Z']
+    )
+    
+
+    model_config = { 
+        'json_schema_extra': { 
+            'examples': 
+            [ 
+                { 
+                    'id': 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+                    'imovel_id': '2a1b3c4d-5e6f-4789-8a0b-1c2d3e4f5a6b', 
+                    'area_total': 420.22, 
+                    'medida_esquerda': 30.0, 
+                    'medida_direita': 30.0, 
+                    'medida_frente': 14.0, 
+                    'medida_fundo': 14.0, 
+                    'zoneamento': 'Residencial', 
+                    'coeficiente': 2.4,
+                    'criado_em': '2023-07-21T14:30:00Z',
+                    'alterado_em': '2023-07-22T10:15:00Z' 
+                }, 
+            ]
+        } 
+    }
 
 
 class CreateLandRequest(BaseModel):
