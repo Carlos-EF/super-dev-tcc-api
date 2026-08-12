@@ -450,6 +450,122 @@ class EditPropertyRequest(BaseModel):
     }
 
 
+class HouseResponse(BaseModel):
+    id: UUID = Field(
+        ...,
+        description='ID (UUIDv7) da casa',
+        examples=['f47ac10b-58cc-4372-a567-0e02b2c3d479']
+    )
+        
+    imovel_id: UUID = Field(
+        ...,
+        description='ID do imóvel (tabela principal)',
+        examples=['2a1b3c4d-5e6f-4789-8a0b-1c2d3e4f5a6b']
+    )
+
+    metragem: float | None = Field(
+        None,
+        description='Metragem total da casa',
+        examples=[65.20]
+    )
+
+    quartos: int | None = Field(
+        None,
+        description='Quantidade de quartos',
+        examples=[2]
+    )
+
+    suites: int | None = Field(
+        None,
+        description='Quantidade de quartos que são suítes',
+        examples=[1]
+    )
+
+    banheiros: int | None = Field(
+        None,
+        description='Quantidade de banheiros',
+        examples=[2]
+    )
+
+    garagens: int | None = Field(
+        None,
+        description='Quantidade de vagas de garagens',
+        examples=[2]
+    )
+
+    andares: int | None = Field(
+        None,
+        description='Quantidade de pavimentos',
+        examples=[1]
+    )
+
+    salas: int | None = Field(
+        None,
+        description='Quantidade de salas',
+        examples=[4]
+    )
+
+    esta_mobiliado: FurnishedTypes | None = Field(
+        None,
+        description='Diz se a casa possui mobília ou não',
+        examples=[FurnishedTypes.SEMI, FurnishedTypes.NAO]
+    )
+
+    criado_em: datetime = Field(
+        ...,
+        description='Data e hora da criação do registro.',
+        examples=['2023-07-21T14:30:00Z']
+    )
+    
+    alterado_em: datetime | None = Field(
+        None,
+        description='Data e hora da última alteração do registro.',
+        examples=['2023-07-22T10:15:00Z']
+    )
+
+    mobilia: list[FurnitureTypes] | None = Field(
+        None,
+        description='Lugares que possuí mobília',
+        examples=[
+            [
+                FurnitureTypes.SOFA,
+                FurnitureTypes.ARMARIOS_QUARTOS,
+                FurnitureTypes.ARMARIOS_BANHEIROS,
+                FurnitureTypes.COZINHA_PLANEJADA,
+            ]
+        ]
+    )
+
+    model_config = { 
+        'json_schema_extra': { 
+            'examples': 
+            [ 
+                { 
+                    'id': 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+                    'imovel_id': '2a1b3c4d-5e6f-4789-8a0b-1c2d3e4f5a6b', 
+                    'metragem': 120.5, 
+                    'quartos': 3, 
+                    'suites': 1, 
+                    'banheiros': 2, 
+                    'garagens': 2, 
+                    'andares': 1, 
+                    'salas': 2, 
+                    'esta_mobiliado': 'Semi mobiliado', 
+                    'mobilia': 
+                    [ 
+                    'Sofá', 
+                    'Armários nos quartos', 
+                    'Armários nos banheiros',
+                    'Cozinha planejada' 
+                    ],
+                    'criado_em': '2023-07-21T14:30:00Z',
+                    'alterado_em': '2023-07-22T10:15:00Z' 
+                }
+            ] 
+        } 
+     }
+
+    
 class CreateHouseRequest(BaseModel):
     imovel_id: UUID = Field(
         ...,
