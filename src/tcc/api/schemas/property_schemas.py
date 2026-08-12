@@ -1310,8 +1310,32 @@ class CompletePropertyResponse(BaseModel):
 
     casa = HouseData | None = None
 
+    apartamento = ApartmentData | None = None
+
 
 class HouseData(BaseModel):
+    imovel_id: UUID
+    
+    metragem: float | None = None
+
+    quartos: int | None = None
+
+    suites: int | None = None
+
+    banheiros: int | None = None
+
+    garagens: int | None = None
+
+    andares: int | None = None
+
+    salas: int | None = None
+
+    esta_mobiliado: FurnishedTypes | None = None
+
+    mobilia: list[FurnitureTypes] | None = None
+
+
+class ApartmentData(BaseModel):
     imovel_id: UUID
     
     metragem: float | None = None
