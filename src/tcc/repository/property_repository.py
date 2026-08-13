@@ -261,6 +261,16 @@ class PropertyRepository:
             PropertyModel
         ).filter(
             PropertyModel.id == id
+        ).options(
+            joinedload(
+                PropertyModel.casa
+            ),
+            joinedload(
+                PropertyModel.apartamento
+            ),
+            joinedload(
+                PropertyModel.terreno
+            )
         ).first()
 
         if not property:
@@ -299,3 +309,19 @@ class PropertyRepository:
             return None
 
         return self.create_apartment_response(apartment)
+
+    
+    def get_land_by_id(
+            self,
+            id: UUID
+    ) -> LandResponse | None:
+        land = self.session.query(
+            LandModel
+        ).filter(
+            LandModel.imovel_id == id
+        ).first()
+
+        if not land:
+            return None
+
+        return self.create_land_response(land)
