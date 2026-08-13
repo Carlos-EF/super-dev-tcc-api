@@ -77,6 +77,34 @@ class PropertyRepository:
         )
 
 
+    def create_house(
+            self,
+            id: UUID,
+            house: CreateHouseRequest
+    ) -> HouseResponse:
+        house_to_create = HouseModel(
+            id= uuid7(),
+            imovel_id= id,
+            metragem= house.metragem,
+            quartos= house.quartos,
+            suites= house.suites,
+            banheiros= house.banheiros,
+            garagens= house.garagens,
+            andares= house.andares,
+            salas= house.salas,
+            esta_mobiliado= house.esta_mobiliado,
+            mobilia= house.mobilia,
+            criado_em= datetime.now(),
+        )
+
+        self.session.add(house_to_create)
+        self.session.commit()
+
+        return self.create_house_response(
+            house_to_create
+        )
+
+
     def create_response(
             self,
             property: PropertyModel
@@ -152,4 +180,25 @@ class PropertyRepository:
             coeficiente= land.coeficiente,
             criado_em= land.criado_em,
             alterado_em= land.alterado_em,
+        )
+
+
+    def create_house_response(
+            self,
+            house: HouseModel
+    ) -> HouseResponse:
+        return HouseResponse(
+            id= house.id,
+            imovel_id= house.imovel_id,
+            metragem= house.metragem,
+            quartos= house.quartos,
+            suites= house.suites,
+            banheiros= house.banheiros,
+            garagens= house.garagens,
+            andares= house.andares,
+            salas= house.salas,
+            esta_mobiliado= house.esta_mobiliado,
+            mobilia= house.mobilia,
+            criado_em= house.criado_em,
+            alterado_em= house.alterado_em,
         )
