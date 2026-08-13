@@ -412,3 +412,67 @@ class PropertyRepository:
         return self.create_land_response(
             land_to_edit
         )
+
+
+    def edit_house(
+            self,
+            id: UUID,
+            house: EditHouseRequest
+    ) -> HouseResponse | None:
+        house_to_edit = self.session.query(
+            HouseModel
+        ).filter(
+            HouseModel.imovel_id == id
+        ).first()
+
+        if not house_to_edit:
+            return None
+
+        house_to_edit.metragem = house.metragem
+        house_to_edit.quartos = house.quartos
+        house_to_edit.suites = house.suites
+        house_to_edit.banheiros = house.banheiros
+        house_to_edit.garagens = house.garagens
+        house_to_edit.andares = house.andares
+        house_to_edit.salas = house.salas
+        house_to_edit.esta_mobiliado = house.esta_mobiliado
+        house_to_edit.mobilia = house.mobilia
+        house_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_house_response(
+            house_to_edit
+        )
+
+    
+    def edit_apartment(
+            self,
+            id: UUID,
+            apartment: EditApartmentRequest
+    ) -> ApartmentResponse | None:
+        apartment_to_edit = self.session.query(
+            ApartmentModel
+        ).filter(
+            ApartmentModel.imovel_id == id
+        ).first()
+
+        if not apartment_to_edit:
+            return None
+
+        apartment_to_edit.metragem = apartment.metragem
+        apartment_to_edit.quartos = apartment.quartos
+        apartment_to_edit.suites = apartment.suites
+        apartment_to_edit.banheiros = apartment.banheiros
+        apartment_to_edit.garagens = apartment.garagens
+        apartment_to_edit.andares = apartment.andares
+        apartment_to_edit.salas = apartment.salas
+        apartment_to_edit.esta_mobiliado = apartment.esta_mobiliado
+        apartment_to_edit.mobilia = apartment.mobilia
+        apartment_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_apartment_response(
+            apartment_to_edit
+        )
