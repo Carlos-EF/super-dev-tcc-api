@@ -251,3 +251,51 @@ class PropertyRepository:
             criado_em= apartment.criado_em,
             alterado_em= apartment.alterado_em,
         )
+
+
+    def get_property_by_id(
+            self,
+            id: UUID
+    ) -> CompletePropertyResponse | None:
+        property = self.session.query(
+            PropertyModel
+        ).filter(
+            PropertyModel.id == id
+        ).first()
+
+        if not property:
+            return None
+
+        return self.create_response(property)
+
+
+    def get_house_by_id(
+            self,
+            id: UUID
+    ) -> HouseResponse | None:
+        house = self.session.query(
+            HouseModel
+        ).filter(
+            HouseModel.imovel_id == id
+        ).first()
+
+        if not house:
+            return None
+
+        return self.create_house_response(house)
+
+    
+    def get_apartment_by_id(
+            self,
+            id: UUID
+    ) -> ApartmentResponse | None:
+        apartment = self.session.query(
+            ApartmentModel
+        ).filter(
+            ApartmentModel.imovel_id == id
+        ).first()
+
+        if not apartment:
+            return None
+
+        return self.create_apartment_response(apartment)
