@@ -332,6 +332,8 @@ class PropertyRepository:
             id: UUID
     ) -> bool:
         property_to_delete = self.session.query(
+            PropertyModel.id
+        ).filter(
             PropertyModel.id == id
         ).first()
 
@@ -343,3 +345,40 @@ class PropertyRepository:
         self.session.commit()
 
         return True
+
+
+    def edit_house(
+            self,
+            id: UUID,
+            property: EditPropertyRequest
+    ) -> CompletePropertyResponse | None: 
+        property_to_edit = self.session.query(
+            PropertyModel
+        ).filter(
+            PropertyModel.id == id
+        ).first()
+
+        if not property_to_edit:
+            return None
+
+        property_to_edit.proprietario_id = property.proprietario
+        property_to_edit.corretor_id = property.corretor
+        property_to_edit.finalidade = property.finalidade
+        property_to_edit.em_condominio = property.em_condominio
+        property_to_edit.condominio = property.condominio
+        property_to_edit.cep = property.cep
+        property_to_edit.logradouro = property.logradouro
+        property_to_edit.numero = property.numero
+        property_to_edit.uf = property.uf
+        property_to_edit.cidade = property.cidade
+        property_to_edit.complemento = property.complemento
+        property_to_edit.valor = property.valor
+        property_to_edit.valor_condominio = property.valor_condominio
+        property_to_edit.valor_iptu = property.valor_iptu
+        property_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_response(
+            property_to_edit
+        )
