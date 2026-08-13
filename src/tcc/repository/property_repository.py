@@ -382,3 +382,33 @@ class PropertyRepository:
         return self.create_response(
             property_to_edit
         )
+
+
+    def edit_land(
+            self,
+            id: UUID,
+            land: EditLandRequest
+    ) -> LandResponse | None:
+        land_to_edit = self.session.query(
+            LandModel
+        ).filter(
+            LandModel.imovel_id == id
+        ).first()
+
+        if not land_to_edit:
+            return None
+
+        land_to_edit.area_total = land.area_total
+        land_to_edit.medida_esquerda = land.medida_esquerda
+        land_to_edit.medida_direita = land.medida_direita
+        land_to_edit.medida_frente = land.medida_frente
+        land_to_edit.medida_fundo = land.medida_fundo
+        land_to_edit.coeficiente = land.coeficiente
+        land_to_edit.zoneamento = land.zoneamento
+        land_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_land_response(
+            land_to_edit
+        )
