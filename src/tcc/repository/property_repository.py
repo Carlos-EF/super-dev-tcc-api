@@ -325,3 +325,21 @@ class PropertyRepository:
             return None
 
         return self.create_land_response(land)
+
+
+    def delete(
+            self,
+            id: UUID
+    ) -> bool:
+        property_to_delete = self.session.query(
+            PropertyModel.id == id
+        ).first()
+
+        if not property_to_delete:
+            return False
+
+
+        self.session.delete(property_to_delete)
+        self.session.commit()
+
+        return True
