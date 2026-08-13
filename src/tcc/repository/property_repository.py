@@ -49,6 +49,32 @@ class PropertyRepository:
         self.session.commit()
 
         return self.create_response(property_to_create)
+    
+
+    def create_land(
+        self,
+        id: UUID,
+        land: CreateLandRequest
+    ) -> LandResponse:
+        land_to_create = LandModel(
+            id= uuid7(),
+            imovel_id= id,
+            area_total= land.area_total,
+            medida_esquerda= land.medida_esquerda,
+            medida_direita= land.medida_direita,
+            medida_frente= land.medida_frente,
+            medida_fundo= land.medida_fundo,
+            zoneamento= land.zoneamento,
+            coeficiente= land.coeficiente,
+            criado_em= datetime.now(),
+        )
+
+        self.session.add(land_to_create)
+        self.session.commit()
+
+        return self.create_land_response(
+            land_to_create
+        )
 
 
     def create_response(
@@ -107,4 +133,23 @@ class PropertyRepository:
                 zoneamento= property.terreno.zoneamento,
                 coeficiente= property.terreno.coeficiente,
             ) if property.terreno else None
+        )
+
+
+    def create_land_response(
+            self,
+            land: LandModel
+    ) -> LandResponse:
+        return LandResponse(
+            id=land.id,
+            imovel_id= land.imovel_id,
+            area_total= land.area_total,
+            medida_esquerda= land.medida_esquerda,
+            medida_direita= land.medida_direita,
+            medida_frente= land.medida_frente,
+            medida_fundo= land.medida_fundo,
+            zoneamento= land.zoneamento,
+            coeficiente= land.coeficiente,
+            criado_em= land.criado_em,
+            alterado_em= land.alterado_em,
         )
