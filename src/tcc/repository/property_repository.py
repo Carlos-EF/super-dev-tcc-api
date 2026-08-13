@@ -104,6 +104,34 @@ class PropertyRepository:
             house_to_create
         )
 
+    
+    def create_apartment(
+            self,
+            id: UUID,
+            apartment: CreateApartmentRequest
+    ) -> ApartmentResponse:
+        apartment_to_create = ApartmentModel(
+            id= uuid7(),
+            imovel_id= id,
+            metragem= apartment.metragem,
+            quartos= apartment.quartos,
+            suites= apartment.suites,
+            banheiros= apartment.banheiros,
+            garagens= apartment.garagens,
+            andares= apartment.andares,
+            salas= apartment.salas,
+            esta_mobiliado= apartment.esta_mobiliado,
+            mobilia= apartment.mobilia,
+            criado_em= datetime.now(),
+        )
+
+        self.session.add(apartment_to_create)
+        self.session.commit()
+
+        return self.create_apartment_response(
+            apartment_to_create
+        )
+
 
     def create_response(
             self,
@@ -201,4 +229,25 @@ class PropertyRepository:
             mobilia= house.mobilia,
             criado_em= house.criado_em,
             alterado_em= house.alterado_em,
+        )
+
+    
+    def create_apartment_response(
+            self,
+            apartment: ApartmentModel
+    ) -> HouseResponse:
+        return ApartmentResponse(
+            id= apartment.id,
+            imovel_id= apartment.imovel_id,
+            metragem= apartment.metragem,
+            quartos= apartment.quartos,
+            suites= apartment.suites,
+            banheiros= apartment.banheiros,
+            garagens= apartment.garagens,
+            andares= apartment.andares,
+            salas= apartment.salas,
+            esta_mobiliado= apartment.esta_mobiliado,
+            mobilia= apartment.mobilia,
+            criado_em= apartment.criado_em,
+            alterado_em= apartment.alterado_em,
         )
