@@ -49,6 +49,88 @@ class PropertyRepository:
         self.session.commit()
 
         return self.create_response(property_to_create)
+    
+
+    def create_land(
+        self,
+        id: UUID,
+        land: CreateLandRequest
+    ) -> LandResponse:
+        land_to_create = LandModel(
+            id= uuid7(),
+            imovel_id= id,
+            area_total= land.area_total,
+            medida_esquerda= land.medida_esquerda,
+            medida_direita= land.medida_direita,
+            medida_frente= land.medida_frente,
+            medida_fundo= land.medida_fundo,
+            zoneamento= land.zoneamento,
+            coeficiente= land.coeficiente,
+            criado_em= datetime.now(),
+        )
+
+        self.session.add(land_to_create)
+        self.session.commit()
+
+        return self.create_land_response(
+            land_to_create
+        )
+
+
+    def create_house(
+            self,
+            id: UUID,
+            house: CreateHouseRequest
+    ) -> HouseResponse:
+        house_to_create = HouseModel(
+            id= uuid7(),
+            imovel_id= id,
+            metragem= house.metragem,
+            quartos= house.quartos,
+            suites= house.suites,
+            banheiros= house.banheiros,
+            garagens= house.garagens,
+            andares= house.andares,
+            salas= house.salas,
+            esta_mobiliado= house.esta_mobiliado,
+            mobilia= house.mobilia,
+            criado_em= datetime.now(),
+        )
+
+        self.session.add(house_to_create)
+        self.session.commit()
+
+        return self.create_house_response(
+            house_to_create
+        )
+
+    
+    def create_apartment(
+            self,
+            id: UUID,
+            apartment: CreateApartmentRequest
+    ) -> ApartmentResponse:
+        apartment_to_create = ApartmentModel(
+            id= uuid7(),
+            imovel_id= id,
+            metragem= apartment.metragem,
+            quartos= apartment.quartos,
+            suites= apartment.suites,
+            banheiros= apartment.banheiros,
+            garagens= apartment.garagens,
+            andares= apartment.andares,
+            salas= apartment.salas,
+            esta_mobiliado= apartment.esta_mobiliado,
+            mobilia= apartment.mobilia,
+            criado_em= datetime.now(),
+        )
+
+        self.session.add(apartment_to_create)
+        self.session.commit()
+
+        return self.create_apartment_response(
+            apartment_to_create
+        )
 
 
     def create_response(
@@ -107,4 +189,290 @@ class PropertyRepository:
                 zoneamento= property.terreno.zoneamento,
                 coeficiente= property.terreno.coeficiente,
             ) if property.terreno else None
+        )
+
+
+    def create_land_response(
+            self,
+            land: LandModel
+    ) -> LandResponse:
+        return LandResponse(
+            id=land.id,
+            imovel_id= land.imovel_id,
+            area_total= land.area_total,
+            medida_esquerda= land.medida_esquerda,
+            medida_direita= land.medida_direita,
+            medida_frente= land.medida_frente,
+            medida_fundo= land.medida_fundo,
+            zoneamento= land.zoneamento,
+            coeficiente= land.coeficiente,
+            criado_em= land.criado_em,
+            alterado_em= land.alterado_em,
+        )
+
+
+    def create_house_response(
+            self,
+            house: HouseModel
+    ) -> HouseResponse:
+        return HouseResponse(
+            id= house.id,
+            imovel_id= house.imovel_id,
+            metragem= house.metragem,
+            quartos= house.quartos,
+            suites= house.suites,
+            banheiros= house.banheiros,
+            garagens= house.garagens,
+            andares= house.andares,
+            salas= house.salas,
+            esta_mobiliado= house.esta_mobiliado,
+            mobilia= house.mobilia,
+            criado_em= house.criado_em,
+            alterado_em= house.alterado_em,
+        )
+
+    
+    def create_apartment_response(
+            self,
+            apartment: ApartmentModel
+    ) -> HouseResponse:
+        return ApartmentResponse(
+            id= apartment.id,
+            imovel_id= apartment.imovel_id,
+            metragem= apartment.metragem,
+            quartos= apartment.quartos,
+            suites= apartment.suites,
+            banheiros= apartment.banheiros,
+            garagens= apartment.garagens,
+            andares= apartment.andares,
+            salas= apartment.salas,
+            esta_mobiliado= apartment.esta_mobiliado,
+            mobilia= apartment.mobilia,
+            criado_em= apartment.criado_em,
+            alterado_em= apartment.alterado_em,
+        )
+
+
+    def get_property_by_id(
+            self,
+            id: UUID
+    ) -> CompletePropertyResponse | None:
+        property = self.session.query(
+            PropertyModel
+        ).filter(
+            PropertyModel.id == id
+        ).options(
+            joinedload(
+                PropertyModel.casa
+            ),
+            joinedload(
+                PropertyModel.apartamento
+            ),
+            joinedload(
+                PropertyModel.terreno
+            )
+        ).first()
+
+        if not property:
+            return None
+
+        return self.create_response(property)
+
+
+    def get_house_by_id(
+            self,
+            id: UUID
+    ) -> HouseResponse | None:
+        house = self.session.query(
+            HouseModel
+        ).filter(
+            HouseModel.imovel_id == id
+        ).first()
+
+        if not house:
+            return None
+
+        return self.create_house_response(house)
+
+    
+    def get_apartment_by_id(
+            self,
+            id: UUID
+    ) -> ApartmentResponse | None:
+        apartment = self.session.query(
+            ApartmentModel
+        ).filter(
+            ApartmentModel.imovel_id == id
+        ).first()
+
+        if not apartment:
+            return None
+
+        return self.create_apartment_response(apartment)
+
+    
+    def get_land_by_id(
+            self,
+            id: UUID
+    ) -> LandResponse | None:
+        land = self.session.query(
+            LandModel
+        ).filter(
+            LandModel.imovel_id == id
+        ).first()
+
+        if not land:
+            return None
+
+        return self.create_land_response(land)
+
+
+    def delete(
+            self,
+            id: UUID
+    ) -> bool:
+        property_to_delete = self.session.query(
+            PropertyModel.id
+        ).filter(
+            PropertyModel.id == id
+        ).first()
+
+        if not property_to_delete:
+            return False
+
+
+        self.session.delete(property_to_delete)
+        self.session.commit()
+
+        return True
+
+
+    def edit_house(
+            self,
+            id: UUID,
+            property: EditPropertyRequest
+    ) -> CompletePropertyResponse | None: 
+        property_to_edit = self.session.query(
+            PropertyModel
+        ).filter(
+            PropertyModel.id == id
+        ).first()
+
+        if not property_to_edit:
+            return None
+
+        property_to_edit.proprietario_id = property.proprietario
+        property_to_edit.corretor_id = property.corretor
+        property_to_edit.finalidade = property.finalidade
+        property_to_edit.em_condominio = property.em_condominio
+        property_to_edit.condominio = property.condominio
+        property_to_edit.cep = property.cep
+        property_to_edit.logradouro = property.logradouro
+        property_to_edit.numero = property.numero
+        property_to_edit.uf = property.uf
+        property_to_edit.cidade = property.cidade
+        property_to_edit.complemento = property.complemento
+        property_to_edit.valor = property.valor
+        property_to_edit.valor_condominio = property.valor_condominio
+        property_to_edit.valor_iptu = property.valor_iptu
+        property_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_response(
+            property_to_edit
+        )
+
+
+    def edit_land(
+            self,
+            id: UUID,
+            land: EditLandRequest
+    ) -> LandResponse | None:
+        land_to_edit = self.session.query(
+            LandModel
+        ).filter(
+            LandModel.imovel_id == id
+        ).first()
+
+        if not land_to_edit:
+            return None
+
+        land_to_edit.area_total = land.area_total
+        land_to_edit.medida_esquerda = land.medida_esquerda
+        land_to_edit.medida_direita = land.medida_direita
+        land_to_edit.medida_frente = land.medida_frente
+        land_to_edit.medida_fundo = land.medida_fundo
+        land_to_edit.coeficiente = land.coeficiente
+        land_to_edit.zoneamento = land.zoneamento
+        land_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_land_response(
+            land_to_edit
+        )
+
+
+    def edit_house(
+            self,
+            id: UUID,
+            house: EditHouseRequest
+    ) -> HouseResponse | None:
+        house_to_edit = self.session.query(
+            HouseModel
+        ).filter(
+            HouseModel.imovel_id == id
+        ).first()
+
+        if not house_to_edit:
+            return None
+
+        house_to_edit.metragem = house.metragem
+        house_to_edit.quartos = house.quartos
+        house_to_edit.suites = house.suites
+        house_to_edit.banheiros = house.banheiros
+        house_to_edit.garagens = house.garagens
+        house_to_edit.andares = house.andares
+        house_to_edit.salas = house.salas
+        house_to_edit.esta_mobiliado = house.esta_mobiliado
+        house_to_edit.mobilia = house.mobilia
+        house_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_house_response(
+            house_to_edit
+        )
+
+    
+    def edit_apartment(
+            self,
+            id: UUID,
+            apartment: EditApartmentRequest
+    ) -> ApartmentResponse | None:
+        apartment_to_edit = self.session.query(
+            ApartmentModel
+        ).filter(
+            ApartmentModel.imovel_id == id
+        ).first()
+
+        if not apartment_to_edit:
+            return None
+
+        apartment_to_edit.metragem = apartment.metragem
+        apartment_to_edit.quartos = apartment.quartos
+        apartment_to_edit.suites = apartment.suites
+        apartment_to_edit.banheiros = apartment.banheiros
+        apartment_to_edit.garagens = apartment.garagens
+        apartment_to_edit.andares = apartment.andares
+        apartment_to_edit.salas = apartment.salas
+        apartment_to_edit.esta_mobiliado = apartment.esta_mobiliado
+        apartment_to_edit.mobilia = apartment.mobilia
+        apartment_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_apartment_response(
+            apartment_to_edit
         )
