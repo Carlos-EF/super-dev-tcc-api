@@ -191,7 +191,7 @@ def edit(
         },
     },
 )
-def edit(
+def edit_house(
     id: UUID,
     house: EditHouseRequest,
     session: Session = Depends(get_session)
@@ -205,3 +205,31 @@ def edit(
     )
 
     return edited_house
+
+
+@router.put(
+    '/{id}/land',
+    summary='Editar terreno',
+    response_model=LandResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Terreno editado com sucesso',
+            'model': LandResponse
+        },
+    },
+)
+def edit_land(
+    id: UUID,
+    land: EditLandRequest,
+    session: Session = Depends(get_session)
+):
+    """Edição de uma terreno existente."""
+    repository = PropertyRepository(session=session)
+
+    edited_land = repository.edit_land(
+        id=id,
+        land=land
+    )
+
+    return edited_land
