@@ -41,3 +41,27 @@ def get_all(
     )
 
     return propertys
+
+
+@router.post(
+    '',
+    summary='Criar imóvel',
+    response_model=CompletePropertyResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses= {
+        201: {
+            'description': 'Imóvel criado com sucesso',
+            'model': CompletePropertyResponse
+        },
+    },
+)
+def create(
+    property: CreatePropertyRequest,
+    session: Session = Depends(get_session)
+):
+    """Criação de um novo imóvel."""
+    repository = PropertyRepository(session=session)
+
+    created_property = repository.create(property=property)
+
+    return created_property
