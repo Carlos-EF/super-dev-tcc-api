@@ -65,3 +65,31 @@ def create(
     created_property = repository.create(property=property)
 
     return created_property
+
+
+@router.post(
+    '/{id}/house',
+    summary='Criar casa',
+    response_model=HouseResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses= {
+        201: {
+            'description': 'Casa criada com sucesso',
+            'model': HouseResponse
+        },
+    },
+)
+def create_house(
+    id: UUID,
+    house: CreateHouseRequest,
+    session: Session = Depends(get_session)
+):
+    """Criação de uma nova casa."""
+    repository = PropertyRepository(session=session)
+
+    created_house = repository.create_house(
+        id=id,
+        house=house
+    )
+
+    return created_house
