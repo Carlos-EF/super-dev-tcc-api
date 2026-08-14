@@ -391,3 +391,36 @@ def get_apartment_by_id(
         )
 
     return apartment
+
+
+@router.get(
+    '/{id}/land',
+    summary='Obter terreno por ID',
+    response_model=LandResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Terreno encontrada',
+            'model': LandResponse
+        },
+        404: {
+            'description': 'Terreno não encontrada',
+        },
+    },
+)
+def get_land_by_id(
+    id: UUID,
+    session: Session = Depends(get_session)
+):
+    """Obtenção de um terreno existente por ID."""
+    repository = PropertyRepository(session=session)
+
+    land = repository.get_land_by_id(id=id)
+
+    if not land:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Terreno não encontrado'
+        )
+
+    return land
