@@ -358,3 +358,36 @@ def get_house_by_id(
         )
 
     return house
+
+
+@router.get(
+    '/{id}/apartment',
+    summary='Obter apartamento por ID',
+    response_model=ApartmentResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Apartamento encontrada',
+            'model': ApartmentResponse
+        },
+        404: {
+            'description': 'Apartamento não encontrada',
+        },
+    },
+)
+def get_apartment_by_id(
+    id: UUID,
+    session: Session = Depends(get_session)
+):
+    """Obtenção de um apartamento existente por ID."""
+    repository = PropertyRepository(session=session)
+
+    apartment = repository.get_apartment_by_id(id=id)
+
+    if not apartment:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Apartamento não encontrado'
+        )
+
+    return apartment
