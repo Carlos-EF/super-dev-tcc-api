@@ -149,3 +149,31 @@ def create_apartment(
     )
 
     return created_apartment
+
+
+@router.put(
+    '/{id}',
+    summary='Editar imóvel',
+    response_model=PropertyResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Imóvel editado com sucesso',
+            'model': PropertyResponse
+        },
+    },
+)
+def edit(
+    id: UUID,
+    property: EditPropertyRequest,
+    session: Session = Depends(get_session)
+):
+    """Edição de um imóvel existente."""
+    repository = PropertyRepository(session=session)
+
+    edited_property = repository.edit_property(
+        id=id,
+        property=property
+    )
+
+    return edited_property

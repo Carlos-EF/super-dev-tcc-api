@@ -347,7 +347,7 @@ class PropertyRepository:
         return True
 
 
-    def edit_house(
+    def edit_property(
             self,
             id: UUID,
             property: EditPropertyRequest
