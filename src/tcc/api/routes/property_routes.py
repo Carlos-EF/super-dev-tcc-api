@@ -261,3 +261,34 @@ def edit_apartment(
     )
 
     return edited_apartment
+
+
+@router.delete(
+    '/{id}',
+    summary='Deletar imóvel',
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses= {
+        204: {
+            'description': 'Imóvel deletado com sucesso',
+        },
+        404: {
+            'description': 'Imóvel não encontrado',
+        },
+    },
+)
+def delete(
+    id: UUID,
+    session: Session = Depends(get_session)
+):
+    """Deleção de um imóvel existente."""
+    repository = PropertyRepository(session=session)
+
+    deleted = repository.delete(id=id)
+
+    if not deleted:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Imóvel não encontrado'
+        )
+
+    return None
