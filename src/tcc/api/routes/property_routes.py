@@ -233,3 +233,31 @@ def edit_land(
     )
 
     return edited_land
+
+
+@router.put(
+    '/{id}/land',
+    summary='Editar apartamento',
+    response_model=ApartmentResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Apartamento editado com sucesso',
+            'model': ApartmentResponse
+        },
+    },
+)
+def edit_apartment(
+    id: UUID,
+    apartment: EditApartmentRequest,
+    session: Session = Depends(get_session)
+):
+    """Edição de uma apartamento existente."""
+    repository = PropertyRepository(session=session)
+
+    edited_apartment = repository.edit_apartment(
+        id=id,
+        apartment=apartment
+    )
+
+    return edited_apartment
