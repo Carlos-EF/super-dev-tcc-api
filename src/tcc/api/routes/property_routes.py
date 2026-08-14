@@ -292,3 +292,36 @@ def delete(
         )
 
     return None
+
+
+@router.get(
+    '/{id}',
+    summary='Obter imóvel por ID',
+    response_model=CompletePropertyResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Imóvel encontrado',
+            'model': CompletePropertyResponse
+        },
+        404: {
+            'description': 'Imóvel não encontrado',
+        },
+    },
+)
+def get_by_id(
+    id: UUID,
+    session: Session = Depends(get_session)
+):
+    """Obtenção de um imóvel existente por ID."""
+    repository = PropertyRepository(session=session)
+
+    property = repository.get_property_by_id(id=id)
+
+    if not property:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Imóvel não encontrado'
+        )
+
+    return property
