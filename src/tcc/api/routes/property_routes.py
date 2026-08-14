@@ -177,3 +177,31 @@ def edit(
     )
 
     return edited_property
+
+
+@router.put(
+    '/{id}/house',
+    summary='Editar casa',
+    response_model=HouseResponse,
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Casa editado com sucesso',
+            'model': HouseResponse
+        },
+    },
+)
+def edit(
+    id: UUID,
+    house: EditHouseRequest,
+    session: Session = Depends(get_session)
+):
+    """Edição de uma casa existente."""
+    repository = PropertyRepository(session=session)
+
+    edited_house = repository.edit_house(
+        id=id,
+        house=house
+    )
+
+    return edited_house
