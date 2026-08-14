@@ -347,7 +347,7 @@ class PropertyRepository:
         return True
 
 
-    def edit_house(
+    def edit_property(
             self,
             id: UUID,
             property: EditPropertyRequest
@@ -476,3 +476,45 @@ class PropertyRepository:
         return self.create_apartment_response(
             apartment_to_edit
         )
+
+
+    def get_all(
+            self,
+            pagina: int,
+            por_pagina: int
+    ) -> PaginatedPropertyResponse:
+        query = self.session.query(
+            PropertyModel
+        ).options(
+            joinedload(
+                PropertyModel.casa
+            ),
+            joinedload(
+                PropertyModel.apartamento
+            ),
+            joinedload(
+                PropertyModel.terreno
+            ),
+        )
+
+        total_propertys = query.count()
+
+        total_pages = ceil(
+            total_propertys / por_pagina
+        ) if total_propertys >  0 else 1
+
+        propertys = (
+            query
+            .offset((pagina - 1) * por_pagina)
+            .limit(por_pagina)
+            .all()
+        )
+
+        return PaginatedPropertyResponse(
+            imoveis=[self.create_response(property) for property in propertys],
+            total=total_propertys,
+            total_paginas=total_pages,
+            pagina=pagina,
+            por_pagina=por_pagina
+        )
+        
