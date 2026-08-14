@@ -97,7 +97,7 @@ def create_house(
 
 @router.post(
     '/{id}/land',
-    summary='Criar casa',
+    summary='Criar terreno',
     response_model=LandResponse,
     status_code=status.HTTP_201_CREATED,
     responses= {
@@ -121,3 +121,31 @@ def create_land(
     )
 
     return created_land
+
+
+@router.post(
+    '/{id}/apartment',
+    summary='Criar apartamento',
+    response_model=ApartmentResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses= {
+        201: {
+            'description': 'Apartamento criado com sucesso',
+            'model': ApartmentResponse
+        },
+    },
+)
+def create_apartment(
+    id: UUID,
+    apartment: CreateApartmentRequest,
+    session: Session = Depends(get_session)
+):
+    """Criação de um novo apartamento."""
+    repository = PropertyRepository(session=session)
+
+    created_apartment = repository.create_apartment(
+        id=id,
+        apartment=apartment
+    )
+
+    return created_apartment
