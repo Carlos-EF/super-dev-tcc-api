@@ -510,19 +510,7 @@ class HouseResponse(BaseModel):
         description='Diz se a casa possui mobília ou não',
         examples=[FurnishedTypes.SEMI, FurnishedTypes.NAO]
     )
-
-    criado_em: datetime = Field(
-        ...,
-        description='Data e hora da criação do registro.',
-        examples=['2023-07-21T14:30:00Z']
-    )
-    
-    alterado_em: datetime | None = Field(
-        None,
-        description='Data e hora da última alteração do registro.',
-        examples=['2023-07-22T10:15:00Z']
-    )
-
+   
     mobilia: list[FurnitureTypes] | None = Field(
         None,
         description='Lugares que possuí mobília',
@@ -534,6 +522,18 @@ class HouseResponse(BaseModel):
                 FurnitureTypes.COZINHA_PLANEJADA,
             ]
         ]
+    )
+
+    criado_em: datetime = Field(
+        ...,
+        description='Data e hora da criação do registro.',
+        examples=['2023-07-21T14:30:00Z']
+    )
+    
+    alterado_em: datetime | None = Field(
+        None,
+        description='Data e hora da última alteração do registro.',
+        examples=['2023-07-22T10:15:00Z']
     )
 
     model_config = { 
