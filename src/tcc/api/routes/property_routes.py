@@ -154,12 +154,12 @@ def create_apartment(
 @router.put(
     '/{id}',
     summary='Editar imóvel',
-    response_model=PropertyResponse,
+    response_model=CompletePropertyResponse,
     status_code=status.HTTP_200_OK,
     responses= {
         200: {
             'description': 'Imóvel editado com sucesso',
-            'model': PropertyResponse
+            'model': CompletePropertyResponse
         },
     },
 )
