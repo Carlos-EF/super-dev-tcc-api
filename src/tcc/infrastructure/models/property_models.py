@@ -1,7 +1,7 @@
 from sqlalchemy.dialects.postgresql import ENUM, UUID
 from sqlalchemy import ARRAY, Column, Integer, Numeric, String, Date, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
-from src.tcc.infrastructure.models.enums.furnished_types import FurnitureTypes
+from tcc.infrastructure.models.enums.furnished_types import FurnitureTypes
 from tcc.infrastructure.models.base_model import BaseModel
 
 

@@ -60,6 +60,24 @@ class ClientRepository:
             ) if client.interessado else None
         )
 
+    
+    def create_response_for_owners(
+            self,
+            client: ClientModel
+    ) -> ClientResponse:
+        
+        return ClientResponse(
+            id= client.id,
+            nome= client.nome,
+            codigo= client.codigo, 
+            numero= client.numero, 
+            email= client.email, 
+            tipo= client.tipo, 
+            como_encontrou= client.como_encontrou, 
+            criado_em= client.criado_em,
+            alterado_em= client.alterado_em,
+        )
+
 
     def create_interested_client(
             self,
@@ -270,3 +288,16 @@ class ClientRepository:
                pagina=pagina,
                por_pagina=por_pagina
            )
+
+
+    
+    def get_all_owners(
+            self
+    ) -> list[ClientResponse]:
+        clients = self.session.query(
+            ClientModel
+        ).filter(
+            ClientModel.tipo == 'Proprietário'
+        ).all()
+
+        return [self.create_response_for_owners(client) for client in clients]

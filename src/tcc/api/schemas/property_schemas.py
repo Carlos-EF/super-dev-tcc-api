@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel, Field
 
-from src.tcc.infrastructure.models.enums.zoning_types import ZoningTypes
+from tcc.infrastructure.models.enums.zoning_types import ZoningTypes
 from tcc.infrastructure.models.enums.property_types import PropertyTypes
 from tcc.infrastructure.models.enums.finality_types import FinalityTypes
 from tcc.infrastructure.models.enums.furnished_types import FurnishedTypes, FurnitureTypes
@@ -1320,11 +1320,11 @@ class CompletePropertyResponse(BaseModel):
 
     alterado_em: datetime | None = None
 
-    casa = HouseData | None = None
+    casa: HouseData | None = None
 
-    apartamento = ApartmentData | None = None
+    apartamento: ApartmentData | None = None
 
-    terreno = LandData | None = None
+    terreno: LandData | None = None
 
 
 class HouseData(BaseModel):

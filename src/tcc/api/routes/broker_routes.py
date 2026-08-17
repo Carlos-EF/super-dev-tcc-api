@@ -52,6 +52,29 @@ def get_all(
 
 
 @router.get(
+    '/list',
+    summary='Buscar corretores para listas',
+    response_model=list[BrokerResponse],
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Lista dos corretores cadastrados',
+            'model': list[BrokerResponse]
+        },
+    },
+)
+def get_all(
+    session: Session = Depends(get_session)
+):
+    """Listagem de todos os corretores cadastrados."""
+    repository = BrokerRepository(session=session)
+
+    brokers = repository.get_all_for_list()
+
+    return brokers
+
+
+@router.get(
     '/{id}',
     summary='Obter corretor filtrando por ID',
     response_model=BrokerResponse,
