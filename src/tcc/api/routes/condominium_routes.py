@@ -56,6 +56,29 @@ def get_all(
 
 
 @router.get(
+    '/list',
+    summary='Listar condomínios para lista',
+    response_model=list[CondominiumResponse],
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Lista dos condomínios cadastrados',
+            'model': list[CondominiumResponse]
+        },
+    },
+)
+def get_all_for_list(
+    session: Session = Depends(get_session)
+):
+    """Listagem de todos os condomínios cadastrados."""
+    repository = CondominiumRepository(session=session)
+
+    condominiums = repository.get_all_for_list()
+
+    return condominiums
+
+
+@router.get(
     '/cities',
     summary='Listar cidades',
     response_model=CitiesResponse,

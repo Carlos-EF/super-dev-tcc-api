@@ -148,6 +148,16 @@ class CondominiumRepository:
         )
 
 
+    def get_all_for_list(
+            self
+    ) -> list[CondominiumResponse]:
+        condominiums = self.session.query(
+            CondominiumModel
+        ).all()
+
+        return [self.create_response(condominium) for condominium in condominiums]
+
+
     def get_all_cities(
             self,
     ) -> CitiesResponse | None:
