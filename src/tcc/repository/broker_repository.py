@@ -118,6 +118,18 @@ class BrokerRepository:
             )
 
 
+    def get_all_for_list(
+            self
+    ) -> list[BrokerResponse]:
+        brokers = self.session.query(
+            BrokerModel
+        ).all()
+
+        return self.create_response(
+            broker for broker in brokers 
+        )
+
+
     def get_by_id(
             self,
             id: UUID
