@@ -125,9 +125,7 @@ class BrokerRepository:
             BrokerModel
         ).all()
 
-        return self.create_response(
-            broker for broker in brokers 
-        )
+        return [self.create_response(broker) for broker in brokers]
 
 
     def get_by_id(
