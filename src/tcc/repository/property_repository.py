@@ -5,7 +5,7 @@ from sqlalchemy import or_, func
 from sqlalchemy.orm import Session, joinedload
 from math import ceil
 
-from tcc.api.schemas.property_schemas import CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, PropertyResponse, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, HouseData, ApartmentData, LandData
+from tcc.api.schemas.property_schemas import CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, HouseData, ApartmentData, LandData
 from tcc.infrastructure.models.property_models import PropertyModel, LandModel, HouseModel, ApartmentModel
 
 
@@ -139,8 +139,6 @@ class PropertyRepository:
     ) -> CompletePropertyResponse:
         return CompletePropertyResponse(
             id= property.id,
-            proprietario= property.proprietario_id,
-            corretor= property.corretor_id,
             codigo= property.codigo,
             finalidade= property.finalidade,
             tipo= property.tipo,

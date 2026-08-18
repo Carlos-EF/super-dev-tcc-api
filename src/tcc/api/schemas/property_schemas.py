@@ -1088,7 +1088,7 @@ class LandResponse(BaseModel):
         examples=[93.80]
     )
 
-    zoneamento: ZoningTypes | None = Field(
+    zoneamento: str | None = Field(
         None,
         description='Tipo de zoneamento do terreno',
         examples=['Residencial', 'Rural']
@@ -1172,7 +1172,7 @@ class CreateLandRequest(BaseModel):
         examples=[93.80]
     )
 
-    zoneamento: ZoningTypes | None = Field(
+    zoneamento: str | None = Field(
         None,
         description='Tipo de zoneamento do terreno',
         examples=['Residencial', 'Rural']
@@ -1234,7 +1234,7 @@ class EditLandRequest(BaseModel):
         examples=[93.80]
     )
 
-    zoneamento: ZoningTypes | None = Field(
+    zoneamento: str | None = Field(
         None,
         description='Tipo de zoneamento do terreno',
         examples=['Residencial', 'Rural']
@@ -1375,6 +1375,6 @@ class LandData(BaseModel):
 
     medida_fundo: float | None = None
 
-    zoneamento: ZoningTypes | None = None
+    zoneamento: str | None = None
 
     coeficiente: float | None = None

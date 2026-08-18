@@ -57,8 +57,8 @@ CREATE TABLE
 CREATE TABLE
     imoveis (
         id UUID PRIMARY KEY NOT NULL,
-        proprietario UUID,
-        corretor UUID,
+        proprietario_id UUID,
+        corretor_id UUID,
         codigo VARCHAR(4) NOT NULL,
         finalidade VARCHAR(7) NOT NULL,
         tipo VARCHAR(15) NOT NULL,
@@ -77,10 +77,9 @@ CREATE TABLE
         criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-        CONSTRAINT fk_imovel_proprietario FOREIGN KEY (proprietario) REFERENCES clientes (id) ON DELETE SET NULL,
-        CONSTRAINT fk_imovel_corretor FOREIGN KEY (corretor) REFERENCES corretores (id) ON DELETE SET NULL,
-        CONSTRAINT fk_imovel_condominio FOREIGN KEY (condominio) REFERENCES condominios (id) ON DELETE SET NULL,
-        CONSTRAINT uq_imovel_codigo UNIQUE (codigo)
+        CONSTRAINT fk_imovel_proprietario FOREIGN KEY (proprietario_id) REFERENCES clientes (id) ON DELETE SET NULL,
+        CONSTRAINT fk_imovel_corretor FOREIGN KEY (corretor_id) REFERENCES corretores (id) ON DELETE SET NULL,
+        CONSTRAINT fk_imovel_condominio FOREIGN KEY (condominio) REFERENCES condominios (id) ON DELETE SET NULL
     );
 
 CREATE TABLE
