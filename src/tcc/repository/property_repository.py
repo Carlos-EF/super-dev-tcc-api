@@ -23,7 +23,7 @@ class PropertyRepository:
     ) -> CompletePropertyResponse:
         property_to_create = PropertyModel(
             id = uuid7(),
-            propretario_id= property.proprietario,
+            proprietario_id= property.proprietario,
             corretor_id= property.corretor,
             codigo= property.codigo,
             finalidade= property.finalidade,
@@ -235,7 +235,7 @@ class PropertyRepository:
     def create_apartment_response(
             self,
             apartment: ApartmentModel
-    ) -> HouseResponse:
+    ) -> ApartmentResponse:
         return ApartmentResponse(
             id= apartment.id,
             imovel_id= apartment.imovel_id,

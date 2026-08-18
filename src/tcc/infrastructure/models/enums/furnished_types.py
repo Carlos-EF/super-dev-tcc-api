@@ -4,7 +4,7 @@ from enum import Enum
 class FurnishedTypes(Enum):
     SIM = 'Sim'
     NAO = 'Não'
-    SEMI = 'Semimobiliado'
+    SEMIMOBILIADO = 'Semimobiliado'
 
 
 class FurnitureTypes(str, Enum): 
@@ -17,3 +17,4 @@ class FurnitureTypes(str, Enum):
     MESA_JANTAR = 'Mesa de jantar' 
     CAMAS = 'Camas' 
     CORTINAS_PERSIANAS = 'Cortinas e persianas'
+    ILUMINACAO_PLANEJADA = 'Iluminação planejada'
