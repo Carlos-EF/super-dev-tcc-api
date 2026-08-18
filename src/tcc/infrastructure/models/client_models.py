@@ -61,7 +61,7 @@ class ClientModel(BaseModel):
         cascade="all, delete-orphan", 
         uselist=False
     )
-
+    
 
 class InterestedClientModel(BaseModel):
     __tablename__= 'interessados'
