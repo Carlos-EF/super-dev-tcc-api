@@ -1,15 +1,7 @@
-from sqlalchemy.dialects.postgresql import ENUM, UUID
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import ARRAY, Column, Integer, Numeric, String, Date, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
-from tcc.infrastructure.models.enums.furnished_types import FurnitureTypes
 from tcc.infrastructure.models.base_model import BaseModel
-
-
-mobilia_types = ENUM(
-    FurnitureTypes, 
-    name='mobilia_checks',
-    create_type=True 
-)
 
 class PropertyModel(BaseModel):
     __tablename__= 'imoveis'
@@ -203,12 +195,12 @@ class HouseModel(BaseModel):
     )
 
     esta_mobiliado = Column(
-        String(13),
+        String(15),
         nullable=True
     )
 
     mobilia = Column( 
-        ARRAY(mobilia_types), 
+        ARRAY(String), 
         nullable=True, 
         default=list 
     )
@@ -284,12 +276,12 @@ class ApartmentModel(BaseModel):
     )
 
     esta_mobiliado = Column(
-        String(13),
+        String(15),
         nullable=True
     )
 
     mobilia = Column( 
-        ARRAY(mobilia_types), 
+        ARRAY(String), 
         nullable=True, 
         default=list 
     )

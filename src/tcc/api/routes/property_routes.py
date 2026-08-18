@@ -62,7 +62,7 @@ def create(
     """Criação de um novo imóvel."""
     repository = PropertyRepository(session=session)
 
-    created_property = repository.create(property=property)
+    created_property = repository.create(property)
 
     return created_property
 

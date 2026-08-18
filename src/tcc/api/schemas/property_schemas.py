@@ -37,7 +37,6 @@ class PropertyResponse(BaseModel):
 
     finalidade: FinalityTypes = Field(
         ...,
-        min_length=7,
         max_length=7,
         description='finalidade do imóvel',
         examples=['Venda']
@@ -198,7 +197,6 @@ class CreatePropertyRequest(BaseModel):
 
     finalidade: FinalityTypes = Field(
         ...,
-        min_length=7,
         max_length=7,
         description='finalidade do imóvel',
         examples=['Venda']
@@ -336,7 +334,6 @@ class EditPropertyRequest(BaseModel):
 
     finalidade: FinalityTypes = Field(
         ...,
-        min_length=7,
         max_length=7,
         description='finalidade do imóvel',
         examples=['Venda']
@@ -505,21 +502,21 @@ class HouseResponse(BaseModel):
         examples=[4]
     )
 
-    esta_mobiliado: FurnishedTypes | None = Field(
+    esta_mobiliado: str | None = Field(
+    None,
+    description='Diz se a casa possui mobília ou não',
+    examples=['Semimobiliado', 'Não']
+)
+
+    mobilia: list[str] | None = Field(
         None,
-        description='Diz se a casa possui mobília ou não',
-        examples=[FurnishedTypes.SEMI, FurnishedTypes.NAO]
-    )
-   
-    mobilia: list[FurnitureTypes] | None = Field(
-        None,
-        description='Lugares que possuí mobília',
+        description='Lugares que possuem mobília',
         examples=[
             [
-                FurnitureTypes.SOFA,
-                FurnitureTypes.ARMARIOS_QUARTOS,
-                FurnitureTypes.ARMARIOS_BANHEIROS,
-                FurnitureTypes.COZINHA_PLANEJADA,
+                'Sofá',
+                'Armários nos quartos',
+                'Armários nos banheiros',
+                'Cozinha planejada'
             ]
         ]
     )
@@ -615,24 +612,24 @@ class CreateHouseRequest(BaseModel):
         examples=[4]
     )
 
-    esta_mobiliado: FurnishedTypes | None = Field(
-        None,
-        description='Diz se a casa possui mobília ou não',
-        examples=[FurnishedTypes.SEMI, FurnishedTypes.NAO]
+    esta_mobiliado: str | None = Field(
+    None,
+    description='Diz se a casa possui mobília ou não',
+    examples=['Semimobiliado', 'Não']
     )
 
-    mobilia: list[FurnitureTypes] | None = Field(
+    mobilia: list[str] | None = Field(
         None,
-        description='Lugares que possuí mobília',
+        description='Lugares que possuem mobília',
         examples=[
             [
-                FurnitureTypes.SOFA,
-                FurnitureTypes.ARMARIOS_QUARTOS,
-                FurnitureTypes.ARMARIOS_BANHEIROS,
-                FurnitureTypes.COZINHA_PLANEJADA,
-            ]
-        ]
-    )
+                'Sofá',
+                'Armários nos quartos',
+                'Armários nos banheiros',
+                'Cozinha planejada'
+            ]   
+          ]
+        )
 
     model_config = { 
         'json_schema_extra': { 
@@ -704,21 +701,21 @@ class EditHouseRequest(BaseModel):
         examples=[4]
     )
 
-    esta_mobiliado: FurnishedTypes | None = Field(
-        None,
-        description='Diz se a casa possui mobília ou não',
-        examples=[FurnishedTypes.SEMI, FurnishedTypes.NAO]
+    esta_mobiliado: str | None = Field(
+    None,
+    description='Diz se a casa possui mobília ou não',
+    examples=['Semimobiliado', 'Não']
     )
 
-    mobilia: list[FurnitureTypes] | None = Field(
+    mobilia: list[str] | None = Field(
         None,
-        description='Lugares que possuí mobília',
+        description='Lugares que possuem mobília',
         examples=[
             [
-                FurnitureTypes.SOFA,
-                FurnitureTypes.ARMARIOS_QUARTOS,
-                FurnitureTypes.ARMARIOS_BANHEIROS,
-                FurnitureTypes.COZINHA_PLANEJADA,
+                'Sofá',
+                'Armários nos quartos',
+                'Armários nos banheiros',
+                'Cozinha planejada'
             ]
         ]
     )
@@ -804,21 +801,21 @@ class ApartmentResponse(BaseModel):
         examples=[4]
     )
 
-    esta_mobiliado: FurnishedTypes | None = Field(
+    esta_mobiliado: str | None = Field(
         None,
-        description='Diz se o apartamento possui mobília ou não',
-        examples=[FurnishedTypes.SEMI, FurnishedTypes.NAO]
+        description='Diz se a casa possui mobília ou não',
+        examples=['Semimobiliado', 'Não']
     )
-
-    mobilia: list[FurnitureTypes] | None = Field(
+    
+    mobilia: list[str] | None = Field(
         None,
-        description='Lugares que possuí mobília',
+        description='Lugares que possuem mobília',
         examples=[
             [
-                'Sofá', 
-                'Armários nos quartos', 
+                'Sofá',
+                'Armários nos quartos',
                 'Armários nos banheiros',
-                'Cozinha planejada' 
+                'Cozinha planejada'
             ]
         ]
     )
@@ -914,21 +911,21 @@ class CreateApartmentRequest(BaseModel):
         examples=[4]
     )
 
-    esta_mobiliado: FurnishedTypes | None = Field(
+    esta_mobiliado: str | None = Field(
         None,
-        description='Diz se o apartamento possui mobília ou não',
-        examples=[FurnishedTypes.SEMI, FurnishedTypes.NAO]
+        description='Diz se a casa possui mobília ou não',
+        examples=['Semimobiliado', 'Não']
     )
-
-    mobilia: list[FurnitureTypes] | None = Field(
+    
+    mobilia: list[str] | None = Field(
         None,
-        description='Lugares que possuí mobília',
+        description='Lugares que possuem mobília',
         examples=[
             [
-                'Sofá', 
-                'Armários nos quartos', 
+                'Sofá',
+                'Armários nos quartos',
                 'Armários nos banheiros',
-                'Cozinha planejada' 
+                'Cozinha planejada'
             ]
         ]
     )
@@ -1003,21 +1000,21 @@ class EditApartmentRequest(BaseModel):
         examples=[4]
     )
 
-    esta_mobiliado: FurnishedTypes | None = Field(
+    esta_mobiliado: str | None = Field(
         None,
-        description='Diz se o apartamento possui mobília ou não',
-        examples=[FurnishedTypes.SEMI, FurnishedTypes.NAO]
+        description='Diz se a casa possui mobília ou não',
+        examples=['Semimobiliado', 'Não']
     )
 
-    mobilia: list[FurnitureTypes] | None = Field(
+    mobilia: list[str] | None = Field(
         None,
-        description='Lugares que possuí mobília',
+        description='Lugares que possuem mobília',
         examples=[
             [
-                'Sofá', 
-                'Armários nos quartos', 
+                'Sofá',
+                'Armários nos quartos',
                 'Armários nos banheiros',
-                'Cozinha planejada' 
+                'Cozinha planejada'
             ]
         ]
     )
@@ -1342,9 +1339,9 @@ class HouseData(BaseModel):
 
     salas: int | None = None
 
-    esta_mobiliado: FurnishedTypes | None = None
+    esta_mobiliado: str | None = None
 
-    mobilia: list[FurnitureTypes] | None = None
+    mobilia: list[str] | None = None
 
 
 class ApartmentData(BaseModel):
@@ -1362,9 +1359,9 @@ class ApartmentData(BaseModel):
 
     salas: int | None = None
 
-    esta_mobiliado: FurnishedTypes | None = None
+    esta_mobiliado: str | None = None
 
-    mobilia: list[FurnitureTypes] | None = None
+    mobilia: list[str] | None = None
 
 
 class LandData(BaseModel):
