@@ -1264,6 +1264,65 @@ class EditLandRequest(BaseModel):
     }
 
 
+class PropertyImageResponse(BaseModel):
+
+    id: UUID = Field(
+        ...,
+        description='ID da imagem do imóvel'
+    )
+
+    imovel_id: UUID = Field(
+        ...,
+        description='ID do imóvel'
+    )
+
+    caminho: str = Field(
+        ...,
+        description='Caminho da imagem no bucket'
+    )
+
+    url: str = Field(
+        ...,
+        description='URL pública da imagem'
+    )
+
+    principal: bool = Field(
+        ...,
+        description='Indica se esta é a imagem principal do imóvel'
+    )
+
+    criado_em: datetime = Field(
+        ...,
+        description='Data e hora da criação'
+    )
+
+    alterado_em: datetime | None = Field(
+        None,
+        description='Data e hora da última alteração'
+    )
+
+
+class CreatePropertyImageRequest(BaseModel):
+
+    imovel_id: UUID = Field(
+        ...,
+        description='ID do imóvel'
+    )
+
+    principal: bool = Field(
+        default=False,
+        description='Define se a imagem será a principal'
+    )
+
+
+class EditPropertyImageRequest(BaseModel):
+
+    principal: bool = Field(
+        ...,
+        description='Define se a imagem será a principal'
+    )
+
+
 class PaginatedPropertyResponse(BaseModel):
     imoveis: list[CompletePropertyResponse]
 
