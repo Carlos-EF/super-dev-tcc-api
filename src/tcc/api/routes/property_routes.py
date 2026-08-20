@@ -43,6 +43,24 @@ def get_all(
     return propertys
 
 
+@router.get(
+    '/{imovel_id}/images'
+)
+async def get_all_images(
+    imovel_id: UUID,
+    session: Session = Depends(get_session),
+):
+    repository = PropertyRepository(
+        session=session
+    )
+
+    images = repository.get_images_by_property_id(
+        imovel_id
+    )
+
+    return images
+
+
 @router.post(
     '',
     summary='Criar imóvel',
