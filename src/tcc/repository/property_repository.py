@@ -397,7 +397,7 @@ class PropertyRepository:
         return self.create_land_response(land)
 
 
-    def get_by_id(
+    def get_image_by_id(
         self,
         id: UUID
     ) -> PropertyImageResponse | None:
@@ -606,4 +606,22 @@ class PropertyRepository:
             pagina=pagina,
             por_pagina=por_pagina
         )
-        
+
+
+    def get_images_by_property_id(
+            self,
+            imovel_id: UUID
+    ) -> list[PropertyImageResponse]:
+        images = self.session.query(
+            PropertyImageModel
+        ).filter(
+            PropertyImageModel.imovel_id == imovel_id
+        ).order_by(
+            PropertyImageModel.principal.desc(),
+            PropertyImageModel.criado_em.asc()
+        ).all()
+
+        return [
+            self.create_image_response(image)
+            for image in images
+        ]
