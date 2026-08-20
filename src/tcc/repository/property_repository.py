@@ -258,7 +258,19 @@ class PropertyRepository:
                 medida_fundo= property.terreno.medida_fundo,
                 zoneamento= property.terreno.zoneamento,
                 coeficiente= property.terreno.coeficiente,
-            ) if property.terreno else None
+            ) if property.terreno else None,
+            imagens=[
+            PropertyImageResponse(
+                id=image.id,
+                imovel_id=image.imovel_id,
+                caminho=image.caminho,
+                url=image.url,
+                principal=image.principal,
+                criado_em=image.criado_em,
+                alterado_em=image.alterado_em,
+            )
+            for image in property.imagens
+        ]
         )
 
 
@@ -340,7 +352,10 @@ class PropertyRepository:
             ),
             joinedload(
                 PropertyModel.terreno
-            )
+            ),
+            joinedload(
+            PropertyModel.imagens
+            ),
         ).first()
 
         if not property:
@@ -665,6 +680,9 @@ class PropertyRepository:
             ),
             joinedload(
                 PropertyModel.terreno
+            ),
+            joinedload(
+            PropertyModel.imagens
             ),
         )
 

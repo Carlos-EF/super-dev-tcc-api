@@ -1382,6 +1382,8 @@ class CompletePropertyResponse(BaseModel):
 
     terreno: LandData | None = None
 
+    imagens: list[PropertyImageResponse] = []
+
 
 class HouseData(BaseModel):
     metragem: float | None = None
