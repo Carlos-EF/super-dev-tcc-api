@@ -5,16 +5,19 @@ from sqlalchemy import or_, func
 from sqlalchemy.orm import Session, joinedload
 from math import ceil
 
-from tcc.api.schemas.property_schemas import CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, HouseData, ApartmentData, LandData
-from tcc.infrastructure.models.property_models import PropertyModel, LandModel, HouseModel, ApartmentModel
+from tcc.api.schemas.property_schemas import CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, CreatePropertyImageRequest, EditPropertyImageRequest, PropertyImageResponse, HouseData, ApartmentData, LandData
+from tcc.infrastructure.models.property_models import PropertyModel, LandModel, HouseModel, ApartmentModel, PropertyImageModel
+from tcc.infrastructure.services.supabase_storage import SupabaseStorage
 
 
 class PropertyRepository:
     def __init__(
             self,
-            session: Session
+            session: Session,
+            storage: None | SupabaseStorage
             ):
         self.session = session
+        self.storage = storage
 
 
     def create(
@@ -130,6 +133,75 @@ class PropertyRepository:
 
         return self.create_apartment_response(
             apartment_to_create
+        )
+
+
+    def create_image(
+        self,
+        image: CreatePropertyImageRequest,
+        file_bytes: bytes,
+        content_type: str,
+        extension: str
+    ) -> PropertyImageResponse:
+
+        property_image_id = uuid7()
+
+        path = (
+            f'{image.imovel_id}/'
+            f'{property_image_id}.{extension}'
+        )
+
+        url = self.storage.upload(
+            file_bytes=file_bytes,
+            path=path,
+            content_type=content_type
+        )
+
+        if image.principal:
+
+            self.session.query(
+                PropertyImageModel
+            ).filter(
+                PropertyImageModel.imovel_id
+                == image.imovel_id
+            ).update(
+                {
+                    PropertyImageModel.principal: False
+                }
+            )
+
+        image_to_create = PropertyImageModel(
+            id=property_image_id,
+            imovel_id=image.imovel_id,
+            caminho=path,
+            url=url,
+            principal=image.principal,
+            criado_em=datetime.now()
+        )
+
+        self.session.add(
+            image_to_create
+        )
+
+        self.session.commit()
+
+        return self.create_image_response(
+            image_to_create
+        )
+
+
+    def create_image_response(
+        self,
+        image: PropertyImageModel
+    ) -> PropertyImageResponse:
+        return PropertyImageResponse(
+            id=image.id,
+            imovel_id=image.imovel_id,
+            caminho=image.caminho,
+            url=image.url,
+            principal=image.principal,
+            criado_em=image.criado_em,
+            alterado_em=image.alterado_em
         )
 
 
@@ -325,6 +397,25 @@ class PropertyRepository:
         return self.create_land_response(land)
 
 
+    def get_image_by_id(
+        self,
+        id: UUID
+    ) -> PropertyImageResponse | None:
+
+        image = self.session.query(
+            PropertyImageModel
+        ).filter(
+            PropertyImageModel.id == id
+        ).first()
+
+        if not image:
+            return None
+
+        return self.create_image_response(
+            image
+        )
+
+
     def delete(
             self,
             id: UUID
@@ -340,6 +431,49 @@ class PropertyRepository:
 
 
         self.session.delete(property_to_delete)
+        self.session.commit()
+
+        return True
+
+
+    def delete_image(
+        self,
+        id: UUID
+    ) -> bool:
+        image_to_delete = self.session.query(
+            PropertyImageModel
+        ).filter(
+            PropertyImageModel.id == id
+        ).first()
+
+        if not image_to_delete:
+            return False
+
+        imovel_id = image_to_delete.imovel_id
+        was_principal = image_to_delete.principal
+
+        self.storage.delete(
+            image_to_delete.caminho
+        )
+
+        self.session.delete(
+            image_to_delete
+        )
+
+        self.session.flush()
+
+        if was_principal:
+            next_image = self.session.query(
+                PropertyImageModel
+            ).filter(
+                PropertyImageModel.imovel_id == imovel_id
+            ).order_by(
+                PropertyImageModel.criado_em.asc()
+            ).first()
+
+            if next_image:
+                next_image.principal = True
+
         self.session.commit()
 
         return True
@@ -476,6 +610,45 @@ class PropertyRepository:
         )
 
 
+    def edit_image(
+        self,
+        id: UUID,
+        image: EditPropertyImageRequest
+    ) -> PropertyImageResponse | None:
+
+        image_to_edit = self.session.query(
+            PropertyImageModel
+        ).filter(
+            PropertyImageModel.id == id
+        ).first()
+
+        if not image_to_edit:
+            return None
+
+        if image.principal:
+            self.session.query(
+                PropertyImageModel
+            ).filter(
+                PropertyImageModel.imovel_id
+                == image_to_edit.imovel_id,
+                PropertyImageModel.id != id
+            ).update(
+                {
+                    PropertyImageModel.principal: False
+                }
+            )
+
+        image_to_edit.principal = image.principal
+
+        image_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_image_response(
+            image_to_edit
+        )
+
+    
     def get_all(
             self,
             pagina: int,
@@ -515,4 +688,22 @@ class PropertyRepository:
             pagina=pagina,
             por_pagina=por_pagina
         )
-        
+
+
+    def get_images_by_property_id(
+            self,
+            imovel_id: UUID
+    ) -> list[PropertyImageResponse]:
+        images = self.session.query(
+            PropertyImageModel
+        ).filter(
+            PropertyImageModel.imovel_id == imovel_id
+        ).order_by(
+            PropertyImageModel.principal.desc(),
+            PropertyImageModel.criado_em.asc()
+        ).all()
+
+        return [
+            self.create_image_response(image)
+            for image in images
+        ]

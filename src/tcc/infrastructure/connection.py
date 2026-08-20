@@ -1,6 +1,7 @@
 import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
+from supabase import create_client, Client
 from tcc.api.configurations import configurations
 
 logger = logging.getLogger(__name__)
@@ -29,3 +30,13 @@ def get_session() -> Session:
     finally:
         db.close()
         logger.debug("Sessão de banco de dados finalizada.")
+
+
+supabase: Client = create_client(
+    configurations.SUPABASE_URL,
+    configurations.SUPABASE_KEY
+)
+
+
+def get_storage():
+    return supabase.storage

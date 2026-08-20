@@ -2,23 +2,30 @@ from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Configurations(BaseSettings):
-    DATABASE_URL: str
+       DATABASE_URL: str
 
-    ENVIROMENT: str = 'dev'
+       SUPABASE_URL: str
+       SUPABASE_KEY: str
 
-    LOG_LEVEL: str = 'INFO'
+       ENVIROMENT: str = 'dev'
 
-    model_config = SettingsConfigDict(
-        env_file=str(Path(__file__).parent.parent.parent.parent / '.env'),
-        env_file_encoding='utf-8',
-        case_sensitive=False
-    )
-    @property
-    def prod(self) -> bool:
+       LOG_LEVEL: str = 'INFO'
+
+       model_config = SettingsConfigDict(
+            env_file=str(
+                Path(__file__).parent.parent.parent.parent / '.env'
+            ),
+            env_file_encoding='utf-8',
+            case_sensitive=False
+        )
+
+       @property
+       def prod(self) -> bool:
         return self.ENVIROMENT.lower() == 'prod'
-    @property
-    def swagger_on(self) -> bool:
-        return not self.is_prod
+
+       @property
+       def swagger_on(self) -> bool:
+        return not self.prod
     
 
 configurations = Configurations()

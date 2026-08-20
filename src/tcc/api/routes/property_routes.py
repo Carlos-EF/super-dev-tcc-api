@@ -1,13 +1,13 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from http import HTTPStatus
 from uuid import UUID
 
-from tcc.infrastructure.connection import get_session
+from tcc.infrastructure.connection import get_session, get_storage
 from tcc.repository.property_repository import PropertyRepository
-from tcc.api.schemas.property_schemas import CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, PropertyResponse, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, HouseData, ApartmentData, LandData
+from tcc.api.schemas.property_schemas import CreatePropertyImageRequest, CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyImageRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, PropertyResponse, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, HouseData, ApartmentData, LandData
 
 
 router = APIRouter(
@@ -41,6 +41,24 @@ def get_all(
     )
 
     return propertys
+
+
+@router.get(
+    '/{imovel_id}/images'
+)
+async def get_all_images(
+    imovel_id: UUID,
+    session: Session = Depends(get_session),
+):
+    repository = PropertyRepository(
+        session=session
+    )
+
+    images = repository.get_images_by_property_id(
+        imovel_id
+    )
+
+    return images
 
 
 @router.post(
@@ -149,6 +167,56 @@ def create_apartment(
     )
 
     return created_apartment
+
+
+@router.post(
+    '/{imovel_id}/images'
+)
+async def create_image(
+    imovel_id: UUID,
+    principal: bool = Form(False),
+    file: UploadFile = File(...),
+    session: Session = Depends(get_session),
+    storage = Depends(get_storage)
+):
+    allowed_types = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp'
+}
+
+    if file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=400,
+            detail='Formato de imagem não permitido.'
+        )
+
+    file_bytes = await file.read()
+
+    max_size = 5 * 1024 * 1024
+
+    if len(file_bytes) > max_size:
+        raise HTTPException(
+            status_code=400,
+            detail='A imagem deve possuir no máximo 5 MB.'
+        )
+
+    request = CreatePropertyImageRequest(
+        imovel_id=imovel_id,
+        principal=principal
+    )
+
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
+
+    return repository.create_image(
+        image=request,
+        file_bytes=file_bytes,
+        content_type=file.content_type,
+        extension=allowed_types[file.content_type]
+    )
 
 
 @router.put(
@@ -263,6 +331,34 @@ def edit_apartment(
     return edited_apartment
 
 
+@router.put(
+    '/images/{imagem_id}'
+)
+async def edit_image(
+    imagem_id: UUID,
+    request: EditPropertyImageRequest,
+    session: Session = Depends(get_session),
+    storage = Depends(get_storage),
+):
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+    )
+
+    image = repository.edit_image(
+        imagem_id,
+        request
+    )
+
+    if not image:
+        raise HTTPException(
+            status_code=404,
+            detail='Imagem não encontrada.'
+        )
+
+    return image
+
+
 @router.delete(
     '/{id}',
     summary='Deletar imóvel',
@@ -292,6 +388,34 @@ def delete(
         )
 
     return None
+
+
+@router.delete(
+    '/images/{imagem_id}'
+)
+async def delete_image(
+    imagem_id: UUID,
+    session: Session = Depends(get_session),
+    storage = Depends(get_storage),
+):
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+    )
+
+    image = repository.delete_image(
+        imagem_id
+    )
+
+    if not image:
+        raise HTTPException(
+            status_code=404,
+            detail='Imagem não encontrada.'
+        )
+
+    return {
+        'detail': 'Imagem excluída com sucesso.'
+    }
 
 
 @router.get(
@@ -424,3 +548,27 @@ def get_land_by_id(
         )
 
     return land
+
+
+@router.get(
+    '/images/{imagem_id}'
+)
+async def get_image_by_id(
+    imagem_id: UUID,
+    session: Session = Depends(get_session),
+):
+    repository = PropertyRepository(
+        session=session
+    )
+
+    image = repository.get_image_by_id(
+        imagem_id
+    )
+
+    if not image:
+        raise HTTPException(
+            status_code=404,
+            detail='Imagem não encontrada.'
+        )
+
+    return image

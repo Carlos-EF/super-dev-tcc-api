@@ -139,6 +139,13 @@ class PropertyModel(BaseModel):
         uselist=False
     )
 
+    imagens = relationship(
+    'PropertyImageModel',
+    back_populates='imovel',
+    cascade='all, delete-orphan',
+    order_by='PropertyImageModel.principal.desc()'
+    )
+
 
 class HouseModel(BaseModel):
     __tablename__= 'casas'
@@ -369,4 +376,58 @@ class LandModel(BaseModel):
     imovel = relationship(
         'PropertyModel',
         back_populates='terreno',
+    )
+
+
+class PropertyImageModel(BaseModel):
+    __tablename__ = 'imagens_imoveis'
+
+    id = Column(
+        UUID(
+            as_uuid=True
+        ),
+        nullable=False,
+        primary_key=True
+    )
+
+    imovel_id = Column(
+        UUID(
+            as_uuid=True
+        ),
+        ForeignKey(
+            'imoveis.id',
+            ondelete='CASCADE'
+        ),
+        nullable=False
+    )
+
+    caminho = Column(
+        String(500),
+        nullable=False
+    )
+
+    url = Column(
+        String(1000),
+        nullable=False
+    )
+
+    principal = Column(
+        Boolean,
+        nullable=False,
+        default=False
+    )
+
+    criado_em = Column(
+        Date,
+        nullable=False
+    )
+
+    alterado_em = Column(
+        Date,
+        nullable=True
+    )
+
+    imovel = relationship(
+        'PropertyModel',
+        back_populates='imagens'
     )
