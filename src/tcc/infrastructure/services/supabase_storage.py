@@ -46,3 +46,14 @@ class SupabaseStorage:
         return self.client.storage \
         .from_(self.bucket) \
         .get_public_url(path=path)
+
+
+    def delete(
+            self,
+            path: str
+    ) -> None:
+        self.client.storage \
+        .from_(self.bucket) \
+        .remove(
+            [path]
+        )
