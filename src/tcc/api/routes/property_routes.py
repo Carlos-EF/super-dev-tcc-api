@@ -1,13 +1,13 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from http import HTTPStatus
 from uuid import UUID
 
-from tcc.infrastructure.connection import get_session
+from tcc.infrastructure.connection import get_session, get_storage
 from tcc.repository.property_repository import PropertyRepository
-from tcc.api.schemas.property_schemas import CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, PropertyResponse, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, HouseData, ApartmentData, LandData
+from tcc.api.schemas.property_schemas import CreatePropertyImageRequest, CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, PropertyResponse, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, HouseData, ApartmentData, LandData
 
 
 router = APIRouter(
@@ -149,6 +149,56 @@ def create_apartment(
     )
 
     return created_apartment
+
+
+@router.post(
+    '/{imovel_id}/images'
+)
+async def create_image(
+    imovel_id: UUID,
+    principal: bool = Form(False),
+    file: UploadFile = File(...),
+    session: Session = Depends(get_session),
+    storage = Depends(get_storage)
+):
+    allowed_types = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp'
+}
+
+    if file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=400,
+            detail='Formato de imagem não permitido.'
+        )
+
+    file_bytes = await file.read()
+
+    max_size = 5 * 1024 * 1024
+
+    if len(file_bytes) > max_size:
+        raise HTTPException(
+            status_code=400,
+            detail='A imagem deve possuir no máximo 5 MB.'
+        )
+
+    request = CreatePropertyImageRequest(
+        imovel_id=imovel_id,
+        principal=principal
+    )
+
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
+
+    return repository.create(
+        image=request,
+        file_bytes=file_bytes,
+        content_type=file.content_type,
+        extension=allowed_types[file.content_type]
+    )
 
 
 @router.put(
