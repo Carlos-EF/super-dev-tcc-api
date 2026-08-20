@@ -372,6 +372,34 @@ def delete(
     return None
 
 
+@router.delete(
+    '/images/{imagem_id}'
+)
+async def delete_image(
+    imagem_id: UUID,
+    session: Session = Depends(get_session),
+    storage = Depends(get_storage),
+):
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+    )
+
+    image = repository.delete_image(
+        imagem_id
+    )
+
+    if not image:
+        raise HTTPException(
+            status_code=404,
+            detail='Imagem não encontrada.'
+        )
+
+    return {
+        'detail': 'Imagem excluída com sucesso.'
+    }
+
+
 @router.get(
     '/{id}',
     summary='Obter imóvel por ID',
