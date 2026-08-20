@@ -665,3 +665,29 @@ class PropertyRepository:
         return self.create_image_response(
             image_to_edit
         )
+
+
+    def delete_image(
+        self,
+        id: UUID
+    ) -> bool:
+        image_to_delete = self.session.query(
+            PropertyImageModel
+        ).filter(
+            PropertyImageModel.id == id
+        ).first()
+
+        if not image_to_delete:
+            return False
+
+        self.storage.delete(
+            image_to_delete.caminho
+        )
+
+        self.session.delete(
+            image_to_delete
+        )
+
+        self.session.commit()
+
+        return True
