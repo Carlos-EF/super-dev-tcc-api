@@ -625,3 +625,43 @@ class PropertyRepository:
             self.create_image_response(image)
             for image in images
         ]
+
+
+    def edit_image(
+        self,
+        id: UUID,
+        image: EditPropertyImageRequest
+    ) -> PropertyImageResponse | None:
+
+        image_to_edit = self.session.query(
+            PropertyImageModel
+        ).filter(
+            PropertyImageModel.id == id
+        ).first()
+
+        if not image_to_edit:
+            return None
+
+        if image.principal:
+
+            self.session.query(
+                PropertyImageModel
+            ).filter(
+                PropertyImageModel.imovel_id
+                == image_to_edit.imovel_id,
+                PropertyImageModel.id != id
+            ).update(
+                {
+                    PropertyImageModel.principal: False
+                }
+            )
+
+        image_to_edit.principal = image.principal
+
+        image_to_edit.alterado_em = datetime.now()
+
+        self.session.commit()
+
+        return self.create_image_response(
+            image_to_edit
+        )
