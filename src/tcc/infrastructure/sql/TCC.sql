@@ -139,3 +139,20 @@ CREATE TABLE
         CONSTRAINT fk_terreno_imovel FOREIGN KEY (imovel_id) REFERENCES imoveis (id) ON DELETE CASCADE,
         CONSTRAINT uq_terreno_imovel UNIQUE (imovel_id)
     );
+
+
+CREATE TABLE 
+    imagens_imoveis (
+        id UUID PRIMARY KEY,
+        imovel_id UUID NOT NULL,
+        caminho VARCHAR(500) NOT NULL,
+        url VARCHAR(1000) NOT NULL,
+        principal BOOLEAN NOT NULL DEFAULT FALSE,
+        criado_em DATE NOT NULL,
+        alterado_em DATE,
+
+        CONSTRAINT fk_imagens_imoveis_imovel
+        FOREIGN KEY (imovel_id)
+        REFERENCES imoveis(id)
+        ON DELETE CASCADE
+    );
