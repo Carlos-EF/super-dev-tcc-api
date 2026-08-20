@@ -680,6 +680,9 @@ class PropertyRepository:
         if not image_to_delete:
             return False
 
+        imovel_id = image_to_delete.imovel_id
+        era_principal = image_to_delete.principal
+
         self.storage.delete(
             image_to_delete.caminho
         )
@@ -687,6 +690,21 @@ class PropertyRepository:
         self.session.delete(
             image_to_delete
         )
+
+        self.session.flush()
+
+        if era_principal:
+
+            next_image = self.session.query(
+                PropertyImageModel
+            ).filter(
+                PropertyImageModel.imovel_id == imovel_id
+            ).order_by(
+                PropertyImageModel.criado_em.asc()
+            ).first()
+
+            if next_image:
+                next_image.principal = True
 
         self.session.commit()
 
