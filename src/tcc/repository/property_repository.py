@@ -5,6 +5,7 @@ from sqlalchemy import or_, func
 from sqlalchemy.orm import Session, joinedload
 from math import ceil
 
+from tcc.api.configurations import configurations
 from tcc.api.schemas.property_schemas import CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, CreatePropertyImageRequest, EditPropertyImageRequest, PropertyImageResponse, HouseData, ApartmentData, LandData
 from tcc.infrastructure.models.property_models import PropertyModel, LandModel, HouseModel, ApartmentModel, PropertyImageModel
 from tcc.infrastructure.services.supabase_storage import SupabaseStorage
@@ -151,11 +152,19 @@ class PropertyRepository:
             f'{property_image_id}.{extension}'
         )
 
-        url = self.storage.upload(
-            file_bytes=file_bytes,
-            path=path,
-            content_type=content_type
+        bucket = self.storage.from_(
+            configurations.SUPABASE_BUCKET
         )
+
+        bucket.upload(
+            path,
+            file_bytes,
+            {
+                "content-type": content_type
+            }
+        )
+
+        url = bucket.get_public_url(path)
 
         if image.principal:
 
@@ -188,7 +197,6 @@ class PropertyRepository:
         return self.create_image_response(
             image_to_create
         )
-
 
     def create_image_response(
         self,

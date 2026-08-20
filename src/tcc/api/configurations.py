@@ -6,6 +6,7 @@ class Configurations(BaseSettings):
 
        SUPABASE_URL: str
        SUPABASE_KEY: str
+       SUPABASE_BUCKET: str
 
        ENVIROMENT: str = 'dev'
 
@@ -16,7 +17,8 @@ class Configurations(BaseSettings):
                 Path(__file__).parent.parent.parent.parent / '.env'
             ),
             env_file_encoding='utf-8',
-            case_sensitive=False
+            case_sensitive=False,
+            extra='ignore'
         )
 
        @property
