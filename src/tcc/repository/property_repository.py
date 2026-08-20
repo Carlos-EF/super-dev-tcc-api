@@ -5,16 +5,19 @@ from sqlalchemy import or_, func
 from sqlalchemy.orm import Session, joinedload
 from math import ceil
 
-from tcc.api.schemas.property_schemas import CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, HouseData, ApartmentData, LandData
-from tcc.infrastructure.models.property_models import PropertyModel, LandModel, HouseModel, ApartmentModel
+from tcc.api.schemas.property_schemas import CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, CreatePropertyImageRequest, EditPropertyImageRequest, PropertyImageResponse, HouseData, ApartmentData, LandData
+from tcc.infrastructure.models.property_models import PropertyModel, LandModel, HouseModel, ApartmentModel, PropertyImageModel
+from tcc.infrastructure.services.supabase_storage import SupabaseStorage
 
 
 class PropertyRepository:
     def __init__(
             self,
-            session: Session
+            session: Session,
+            storage: SupabaseStorage
             ):
         self.session = session
+        self.storage = storage
 
 
     def create(
@@ -130,6 +133,75 @@ class PropertyRepository:
 
         return self.create_apartment_response(
             apartment_to_create
+        )
+
+
+    def create_image(
+        self,
+        image: CreatePropertyImageRequest,
+        file_bytes: bytes,
+        content_type: str,
+        extension: str
+    ) -> PropertyImageResponse:
+
+        property_image_id = uuid7()
+
+        path = (
+            f'{image.imovel_id}/'
+            f'{property_image_id}.{extension}'
+        )
+
+        url = self.storage.upload(
+            file_bytes=file_bytes,
+            path=path,
+            content_type=content_type
+        )
+
+        if image.principal:
+
+            self.session.query(
+                PropertyImageModel
+            ).filter(
+                PropertyImageModel.imovel_id
+                == image.imovel_id
+            ).update(
+                {
+                    PropertyImageModel.principal: False
+                }
+            )
+
+        image_to_create = PropertyImageModel(
+            id=property_image_id,
+            imovel_id=image.imovel_id,
+            caminho=path,
+            url=url,
+            principal=image.principal,
+            criado_em=datetime.now()
+        )
+
+        self.session.add(
+            image_to_create
+        )
+
+        self.session.commit()
+
+        return self.create_image_response(
+            image_to_create
+        )
+
+
+    def create_image_response(
+        self,
+        image: PropertyImageModel
+    ) -> PropertyImageResponse:
+        return PropertyImageResponse(
+            id=image.id,
+            imovel_id=image.imovel_id,
+            caminho=image.caminho,
+            url=image.url,
+            principal=image.principal,
+            criado_em=image.criado_em,
+            alterado_em=image.alterado_em
         )
 
 
