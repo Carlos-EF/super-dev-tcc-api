@@ -397,6 +397,25 @@ class PropertyRepository:
         return self.create_land_response(land)
 
 
+    def get_by_id(
+        self,
+        id: UUID
+    ) -> PropertyImageResponse | None:
+
+        image = self.session.query(
+            PropertyImageModel
+        ).filter(
+            PropertyImageModel.id == id
+        ).first()
+
+        if not image:
+            return None
+
+        return self.create_image_response(
+            image
+        )
+
+
     def delete(
             self,
             id: UUID
