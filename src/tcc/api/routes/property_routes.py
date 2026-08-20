@@ -548,3 +548,27 @@ def get_land_by_id(
         )
 
     return land
+
+
+@router.get(
+    '/images/{imagem_id}'
+)
+async def get_image_by_id(
+    imagem_id: UUID,
+    session: Session = Depends(get_session),
+):
+    repository = PropertyRepository(
+        session=session
+    )
+
+    image = repository.get_image_by_id(
+        imagem_id
+    )
+
+    if not image:
+        raise HTTPException(
+            status_code=404,
+            detail='Imagem não encontrada.'
+        )
+
+    return image
