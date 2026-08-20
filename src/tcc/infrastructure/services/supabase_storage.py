@@ -17,3 +17,32 @@ class SupabaseStorage:
             self.url,
             self.key
         )
+
+    def upload(
+            self,
+            file_bytes: bytes,
+            path: str,
+            content_type: str
+    ) -> str:
+        self.client.storage \
+        .from_(self.bucket) \
+        .upload(
+            path=path,
+            file=file_bytes,
+            file_options={
+                'content_type': content_type,
+                'upsert': False
+            }
+        )
+
+        return self.get_public_url(path)
+
+
+    def get_public_url(
+            self,
+            path: str
+    ) -> str:
+
+        return self.client.storage \
+        .from_(self.bucket) \
+        .get_public_url(path=path)
