@@ -140,10 +140,9 @@ class PropertyModel(BaseModel):
     )
 
     imagens = relationship(
-    'PropertyImageModel',
-    back_populates='imovel',
-    cascade='all, delete-orphan',
-    order_by='PropertyImageModel.principal.desc()'
+        'PropertyImageModel',
+        back_populates='imovel',
+        cascade='all, delete-orphan'
     )
 
 

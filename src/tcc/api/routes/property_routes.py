@@ -30,10 +30,14 @@ router = APIRouter(
 def get_all(
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(10, ge=1, le=100),
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage),
 ):
     """Listagem de todos os imóveis cadastrados."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     propertys = repository.get_all(
         pagina=pagina,
@@ -49,6 +53,7 @@ def get_all(
 async def get_all_images(
     imovel_id: UUID,
     session: Session = Depends(get_session),
+    storage= Depends(get_storage),
 ):
     repository = PropertyRepository(
         session=session
@@ -75,10 +80,14 @@ async def get_all_images(
 )
 def create(
     property: CreatePropertyRequest,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Criação de um novo imóvel."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     created_property = repository.create(property)
 
@@ -100,10 +109,14 @@ def create(
 def create_house(
     id: UUID,
     house: CreateHouseRequest,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Criação de uma nova casa."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     created_house = repository.create_house(
         id=id,
@@ -128,10 +141,14 @@ def create_house(
 def create_land(
     id: UUID,
     land: CreateLandRequest,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Criação de um novo terreno."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     created_land = repository.create_land(
         id=id,
@@ -156,10 +173,14 @@ def create_land(
 def create_apartment(
     id: UUID,
     apartment: CreateApartmentRequest,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Criação de um novo apartamento."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     created_apartment = repository.create_apartment(
         id=id,
@@ -177,7 +198,7 @@ async def create_image(
     principal: bool = Form(False),
     file: UploadFile = File(...),
     session: Session = Depends(get_session),
-    storage = Depends(get_storage)
+    storage= Depends(get_storage),
 ):
     allowed_types = {
     'image/jpeg': 'jpg',
@@ -234,10 +255,14 @@ async def create_image(
 def edit(
     id: UUID,
     property: EditPropertyRequest,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Edição de um imóvel existente."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     edited_property = repository.edit_property(
         id=id,
@@ -262,10 +287,14 @@ def edit(
 def edit_house(
     id: UUID,
     house: EditHouseRequest,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Edição de uma casa existente."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     edited_house = repository.edit_house(
         id=id,
@@ -290,10 +319,14 @@ def edit_house(
 def edit_land(
     id: UUID,
     land: EditLandRequest,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Edição de uma terreno existente."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     edited_land = repository.edit_land(
         id=id,
@@ -318,10 +351,14 @@ def edit_land(
 def edit_apartment(
     id: UUID,
     apartment: EditApartmentRequest,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Edição de uma apartamento existente."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     edited_apartment = repository.edit_apartment(
         id=id,
@@ -338,7 +375,7 @@ async def edit_image(
     imagem_id: UUID,
     request: EditPropertyImageRequest,
     session: Session = Depends(get_session),
-    storage = Depends(get_storage),
+    storage= Depends(get_storage),
 ):
     repository = PropertyRepository(
         session=session,
@@ -374,10 +411,14 @@ async def edit_image(
 )
 def delete(
     id: UUID,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Deleção de um imóvel existente."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     deleted = repository.delete(id=id)
 
@@ -396,7 +437,7 @@ def delete(
 async def delete_image(
     imagem_id: UUID,
     session: Session = Depends(get_session),
-    storage = Depends(get_storage),
+    storage= Depends(get_storage),
 ):
     repository = PropertyRepository(
         session=session,
@@ -435,10 +476,14 @@ async def delete_image(
 )
 def get_by_id(
     id: UUID,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Obtenção de um imóvel existente por ID."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     property = repository.get_property_by_id(id=id)
 
@@ -468,10 +513,14 @@ def get_by_id(
 )
 def get_house_by_id(
     id: UUID,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Obtenção de uma casa existente por ID."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     house = repository.get_house_by_id(id=id)
 
@@ -501,10 +550,14 @@ def get_house_by_id(
 )
 def get_apartment_by_id(
     id: UUID,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Obtenção de um apartamento existente por ID."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     apartment = repository.get_apartment_by_id(id=id)
 
@@ -534,10 +587,14 @@ def get_apartment_by_id(
 )
 def get_land_by_id(
     id: UUID,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    storage= Depends(get_storage)
 ):
     """Obtenção de um terreno existente por ID."""
-    repository = PropertyRepository(session=session)
+    repository = PropertyRepository(
+        session=session,
+        storage=storage
+        )
 
     land = repository.get_land_by_id(id=id)
 
@@ -556,6 +613,7 @@ def get_land_by_id(
 async def get_image_by_id(
     imagem_id: UUID,
     session: Session = Depends(get_session),
+    storage= Depends(get_storage),
 ):
     repository = PropertyRepository(
         session=session
