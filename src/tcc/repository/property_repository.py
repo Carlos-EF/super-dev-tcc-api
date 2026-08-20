@@ -14,7 +14,7 @@ class PropertyRepository:
     def __init__(
             self,
             session: Session,
-            storage: SupabaseStorage
+            storage: None | SupabaseStorage
             ):
         self.session = session
         self.storage = storage
