@@ -61,6 +61,12 @@ class ClientModel(BaseModel):
         cascade="all, delete-orphan", 
         uselist=False
     )
+
+    imoveis = relationship(
+    'PropertyModel',
+    foreign_keys='PropertyModel.proprietario_id',
+    back_populates='proprietario'
+    )
     
 
 class InterestedClientModel(BaseModel):

@@ -444,7 +444,7 @@ class PropertyRepository:
             id: UUID
     ) -> bool:
         property_to_delete = self.session.query(
-            PropertyModel.id
+            PropertyModel
         ).filter(
             PropertyModel.id == id
         ).first()

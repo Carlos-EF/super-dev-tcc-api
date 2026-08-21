@@ -1,5 +1,6 @@
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column, String, Date
+from sqlalchemy.orm import relationship
 from tcc.infrastructure.models.base_model import BaseModel
 
 
@@ -62,4 +63,10 @@ class BrokerModel(BaseModel):
     alterado_em = Column(
         Date,
         nullable=True
+    )
+
+    imoveis = relationship(
+    'PropertyModel',
+    foreign_keys='PropertyModel.corretor_id',
+    back_populates='corretor'
     )

@@ -1,5 +1,6 @@
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column, String, Integer, Date
+from sqlalchemy.orm import relationship
 from tcc.infrastructure.models.base_model import BaseModel
 
 class CondominiumModel(BaseModel):
@@ -56,4 +57,10 @@ class CondominiumModel(BaseModel):
     alterado_em = Column(
         Date,
         nullable=True
+    )
+
+    imoveis = relationship(
+    'PropertyModel',
+    foreign_keys='PropertyModel.condominio',
+    back_populates='condominio_relacionado'
     )

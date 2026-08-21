@@ -145,6 +145,25 @@ class PropertyModel(BaseModel):
         cascade='all, delete-orphan'
     )
 
+    condominio_relacionado = relationship(
+        'CondominiumModel',
+        foreign_keys=[condominio],
+        back_populates='imoveis'
+    )
+
+    proprietario = relationship(
+        'ClientModel',
+        foreign_keys=[proprietario_id],
+        back_populates='imoveis'
+    )
+
+    corretor = relationship(
+        'BrokerModel',
+        foreign_keys=[corretor_id],
+        back_populates='imoveis'
+    )
+
+
 
 class HouseModel(BaseModel):
     __tablename__= 'casas'
