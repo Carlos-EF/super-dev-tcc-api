@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, joinedload
 from math import ceil
 
 from tcc.api.configurations import configurations
-from tcc.api.schemas.property_schemas import CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, CreatePropertyImageRequest, EditPropertyImageRequest, PropertyImageResponse, HouseData, ApartmentData, LandData
+from tcc.api.schemas.property_schemas import BrokerData, CondData, CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, OwnerData, PaginatedPropertyResponse, CreatePropertyImageRequest, EditPropertyImageRequest, PropertyImageResponse, HouseData, ApartmentData, LandData
 from tcc.infrastructure.models.property_models import PropertyModel, LandModel, HouseModel, ApartmentModel, PropertyImageModel
 from tcc.infrastructure.services.supabase_storage import SupabaseStorage
 
@@ -221,23 +221,36 @@ class PropertyRepository:
             id= property.id,
             codigo= property.codigo,
             finalidade= property.finalidade,
-            proprietario=(
-                property.proprietario.id
-                if property.proprietario
-                else None
-            ),
-            corretor=(
-                property.corretor.id
-                if property.corretor
-                else None
-            ),
+
+           proprietario=OwnerData(
+            id=property.proprietario.id,
+            nome=property.proprietario.nome,
+            codigo=property.proprietario.codigo,
+            numero=property.proprietario.numero,
+            email=property.proprietario.email,
+            tipo=property.proprietario.tipo,
+            como_encontrou=property.proprietario.como_encontrou,
+        ) if property.proprietario else None,
+
+        corretor=BrokerData(
+            id=property.corretor.id,
+            nome=property.corretor.nome,
+            codigo=property.corretor.codigo,
+            creci=property.corretor.creci,
+            numero=property.corretor.numero,
+            email=property.corretor.email,
+            data_nascimento=property.corretor.data_nascimento,
+            rg=property.corretor.rg,
+            cpf=property.corretor.cpf,
+        ) if property.corretor else None,
+
             tipo= property.tipo,
             em_condominio= property.em_condominio,
-            condominio=(
-            property.condominio_relacionado.id
-            if property.condominio_relacionado
-            else None
-            ),
+        condominio=CondData(
+            id=property.condominio_relacionado.id,
+            nome=property.condominio_relacionado.nome,
+        ) if property.condominio_relacionado else None,
+
             cep= property.cep,
             logradouro= property.logradouro,
             numero= property.numero,
@@ -250,6 +263,7 @@ class PropertyRepository:
             valor_iptu= property.valor_iptu,
             criado_em= property.criado_em,
             alterado_em= property.alterado_em,
+
             casa= HouseData(
                 metragem= property.casa.metragem,
                 quartos= property.casa.quartos,
@@ -261,6 +275,7 @@ class PropertyRepository:
                 esta_mobiliado= property.casa.esta_mobiliado,
                 mobilia= property.casa.mobilia,
             ) if property.casa else None,
+
             apartamento= ApartmentData(
                 metragem= property.apartamento.metragem,
                 quartos= property.apartamento.quartos,
@@ -272,6 +287,7 @@ class PropertyRepository:
                 esta_mobiliado= property.apartamento.esta_mobiliado,
                 mobilia= property.apartamento.mobilia,
             ) if property.apartamento else None,
+
             terreno= LandData(
                 area_total= property.terreno.area_total,
                 medida_esquerda= property.terreno.medida_esquerda,
@@ -281,6 +297,7 @@ class PropertyRepository:
                 zoneamento= property.terreno.zoneamento,
                 coeficiente= property.terreno.coeficiente,
             ) if property.terreno else None,
+            
             imagens=[
             PropertyImageResponse(
                 id=image.id,

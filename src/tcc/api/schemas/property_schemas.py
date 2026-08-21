@@ -2,6 +2,8 @@ from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel, Field
 
+from src.tcc.infrastructure.models.enums.clients_types import ClientType
+from src.tcc.infrastructure.models.enums.contact_types import ContactType
 from tcc.infrastructure.models.enums.zoning_types import ZoningTypes
 from tcc.infrastructure.models.enums.property_types import PropertyTypes
 from tcc.infrastructure.models.enums.finality_types import FinalityTypes
@@ -1338,9 +1340,9 @@ class PaginatedPropertyResponse(BaseModel):
 class CompletePropertyResponse(BaseModel):
     id: UUID
     
-    proprietario: UUID | None = None
+    proprietario: OwnerData | None = None
 
-    corretor: UUID | None = None
+    corretor: BrokerData | None = None
 
     codigo: str
 
@@ -1349,8 +1351,8 @@ class CompletePropertyResponse(BaseModel):
     tipo: PropertyTypes
 
     em_condominio: bool
-
-    condominio: UUID | None = None
+ 
+    condominio: CondData | None = None
 
     cep: str
 
@@ -1383,6 +1385,48 @@ class CompletePropertyResponse(BaseModel):
     terreno: LandData | None = None
 
     imagens: list[PropertyImageResponse] = []
+
+
+class CondData(BaseModel):
+    id: UUID 
+
+    nome: str
+
+
+class OwnerData(BaseModel):
+    id: UUID 
+
+    nome: str 
+
+    codigo: str 
+
+    numero: str 
+
+    email: str 
+
+    tipo: ClientType
+
+    como_encontrou: ContactType | None = None 
+
+
+class BrokerData(BaseModel):
+    id: UUID
+
+    nome: str
+
+    codigo: str 
+
+    creci: str 
+
+    numero: str 
+
+    email: str 
+
+    data_nascimento: str | None = None
+
+    rg: str | None = None
+
+    cpf: str | None = None
 
 
 class HouseData(BaseModel):
