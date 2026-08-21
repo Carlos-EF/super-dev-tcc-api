@@ -414,7 +414,7 @@ def delete(
     session: Session = Depends(get_session),
     storage= Depends(get_storage)
 ):
-    """Deleção de um imóvel existente."""
+    """Delete de um imóvel existente."""
     repository = PropertyRepository(
         session=session,
         storage=storage
