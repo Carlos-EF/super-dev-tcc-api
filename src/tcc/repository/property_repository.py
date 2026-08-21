@@ -221,9 +221,23 @@ class PropertyRepository:
             id= property.id,
             codigo= property.codigo,
             finalidade= property.finalidade,
+            proprietario=(
+                property.proprietario.id
+                if property.proprietario
+                else None
+            ),
+            corretor=(
+                property.corretor.id
+                if property.corretor
+                else None
+            ),
             tipo= property.tipo,
             em_condominio= property.em_condominio,
-            condominio= property.condominio,
+            condominio=(
+            property.condominio_relacionado.id
+            if property.condominio_relacionado
+            else None
+            ),
             cep= property.cep,
             logradouro= property.logradouro,
             numero= property.numero,
@@ -363,6 +377,15 @@ class PropertyRepository:
             ),
             joinedload(
             PropertyModel.imagens
+            ),
+            joinedload(
+            PropertyModel.proprietario
+            ),
+            joinedload(
+            PropertyModel.corretor
+            ),
+            joinedload(
+            PropertyModel.condominio_relacionado
             ),
         ).first()
 
@@ -691,6 +714,15 @@ class PropertyRepository:
             ),
             joinedload(
             PropertyModel.imagens
+            ),
+             joinedload(
+            PropertyModel.proprietario
+            ),
+            joinedload(
+            PropertyModel.corretor
+            ),
+            joinedload(
+            PropertyModel.condominio_relacionado
             ),
         )
 
