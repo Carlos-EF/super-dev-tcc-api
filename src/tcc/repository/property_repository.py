@@ -1,10 +1,13 @@
 from uuid import UUID
 from uuid6 import uuid7
 from datetime import datetime
-from sqlalchemy import or_, func
+from sqlalchemy import String, or_, func
 from sqlalchemy.orm import Session, joinedload
 from math import ceil
 
+from tcc.infrastructure.models.broker_models import BrokerModel
+from tcc.infrastructure.models.client_models import ClientModel
+from tcc.infrastructure.models.condominium_models import CondominiumModel
 from tcc.api.configurations import configurations
 from tcc.api.schemas.property_schemas import BrokerData, CondData, CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, OwnerData, PaginatedPropertyResponse, CreatePropertyImageRequest, EditPropertyImageRequest, PropertyImageResponse, HouseData, ApartmentData, LandData
 from tcc.infrastructure.models.property_models import PropertyModel, LandModel, HouseModel, ApartmentModel, PropertyImageModel
@@ -197,6 +200,7 @@ class PropertyRepository:
         return self.create_image_response(
             image_to_create
         )
+
 
     def create_image_response(
         self,
@@ -713,10 +717,22 @@ class PropertyRepository:
 
     
     def get_all(
-            self,
-            pagina: int,
-            por_pagina: int
-    ) -> PaginatedPropertyResponse:
+        self,
+        pagina: int,
+        por_pagina: int,
+        busca: str | None = None,
+        finalidade: str | None = None,
+        ordem: str = 'recente-asc',
+        tipo: str | None = None,
+        cond: str | None = None,
+        corr: str | None = None,
+        prop: str | None = None,
+        bairro: str | None = None,
+        min_preco: float | None = None,
+        max_preco: float | None = None,
+        qtn_quartos: int | None = None
+) -> PaginatedPropertyResponse:
+
         query = self.session.query(
             PropertyModel
         ).options(
@@ -730,34 +746,147 @@ class PropertyRepository:
                 PropertyModel.terreno
             ),
             joinedload(
-            PropertyModel.imagens
-            ),
-             joinedload(
-            PropertyModel.proprietario
+                PropertyModel.imagens
             ),
             joinedload(
-            PropertyModel.corretor
+                PropertyModel.proprietario
             ),
             joinedload(
-            PropertyModel.condominio_relacionado
+                PropertyModel.corretor
+            ),
+            joinedload(
+                PropertyModel.condominio_relacionado
             ),
         )
 
+        if busca:
+            termo = f'%{busca.strip()}%'
+
+            query = query.filter(
+                or_(
+                    PropertyModel.codigo.ilike(termo),
+                    PropertyModel.logradouro.ilike(termo),
+                    PropertyModel.bairro.ilike(termo),
+                    PropertyModel.cidade.ilike(termo),
+                    PropertyModel.uf.ilike(termo),
+                    PropertyModel.cep.ilike(termo),
+                    PropertyModel.complemento.ilike(termo),
+                    func.cast(
+                        PropertyModel.numero,
+                        String
+                    ).ilike(termo),
+                    ClientModel.nome.ilike(termo),
+                    ClientModel.numero.ilike(termo),
+                    BrokerModel.nome.ilike(termo),
+                    BrokerModel.numero.ilike(termo),
+                    CondominiumModel.nome.ilike(termo),
+                )
+            )
+
+        if finalidade:
+            query = query.filter(
+                PropertyModel.finalidade == finalidade
+            )
+
+        if tipo:
+            query = query.filter(
+                PropertyModel.tipo == tipo
+            )
+
+
+        if cond:
+            if cond == 'null':
+                query = query.filter(
+                    PropertyModel.condominio.is_(None)
+                )
+            else:
+                query = query.filter(
+                    PropertyModel.condominio == UUID(cond)
+                )
+
+        if corr:
+            query = query.filter(
+                PropertyModel.corretor_id == UUID(corr)
+            )
+
+        if prop:
+            query = query.filter(
+                PropertyModel.proprietario_id == UUID(prop)
+            )
+
+        if bairro:
+            query = query.filter(
+                func.lower(
+                    PropertyModel.bairro
+                ) == bairro.strip().lower()
+            )
+
+        if min_preco is not None:
+            query = query.filter(
+                PropertyModel.valor >= min_preco
+            )
+
+        if max_preco is not None:
+            query = query.filter(
+                PropertyModel.valor <= max_preco
+            )
+
+        if qtn_quartos is not None:
+            query = query.filter(
+                or_(
+                    PropertyModel.casa.has(
+                        HouseModel.quartos >= qtn_quartos
+                    ),
+                    PropertyModel.apartamento.has(
+                        ApartmentModel.quartos >= qtn_quartos
+                    )
+                )
+            )
+
+        if ordem == 'preco-asc':
+            query = query.order_by(
+                PropertyModel.valor.asc()
+            )
+        elif ordem == 'preco-desc':
+            query = query.order_by(
+                PropertyModel.valor.desc()
+            )
+        elif ordem == 'codigo':
+            query = query.order_by(
+                PropertyModel.codigo.asc()
+            )
+        else:
+            query = query.order_by(
+                PropertyModel.criado_em.desc()
+            )
+
         total_propertys = query.count()
 
-        total_pages = ceil(
-            total_propertys / por_pagina
-        ) if total_propertys >  0 else 1
+
+        total_pages = (
+            ceil(
+                total_propertys / por_pagina
+            )
+            if total_propertys > 0
+            else 1
+        )
 
         propertys = (
             query
-            .offset((pagina - 1) * por_pagina)
-            .limit(por_pagina)
+            .offset(
+                (pagina - 1) * por_pagina
+            )
+            .limit(
+                por_pagina
+            )
             .all()
         )
 
         return PaginatedPropertyResponse(
-            imoveis=[self.create_response(property) for property in propertys],
+            imoveis=[
+                self.create_response(property)
+                for property in propertys
+            ],
             total=total_propertys,
             total_paginas=total_pages,
             pagina=pagina,
