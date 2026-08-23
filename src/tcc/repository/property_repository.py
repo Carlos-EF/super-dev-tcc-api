@@ -147,7 +147,6 @@ class PropertyRepository:
     content_type: str,
     extension: str
     ) -> PropertyImageResponse:
-
         property_image_id = uuid7()
 
         path = (
@@ -155,17 +154,13 @@ class PropertyRepository:
             f'{property_image_id}.{extension}'
         )
 
-        # Faz upload para o Supabase Storage
         url = self.storage.upload(
             file_bytes=file_bytes,
             path=path,
             content_type=content_type
         )
 
-        # Se a nova imagem for a capa,
-        # remove a capa das imagens anteriores
         if image.principal:
-
             self.session.query(
                 PropertyImageModel
             ).filter(
@@ -891,3 +886,93 @@ class PropertyRepository:
             self.create_image_response(image)
             for image in images
         ]
+
+
+    def get_total_propertys_cond(
+            self,
+            cond_id: UUID
+    ) -> int:
+        total = 0
+
+        query = self.session.query(
+                    PropertyModel
+                ).options(
+                    joinedload(
+                        PropertyModel.casa
+                    ),
+                    joinedload(
+                        PropertyModel.apartamento
+                    ),
+                    joinedload(
+                        PropertyModel.terreno
+                    ),
+                    joinedload(
+                        PropertyModel.imagens
+                    ),
+                    joinedload(
+                        PropertyModel.proprietario
+                    ),
+                    joinedload(
+                        PropertyModel.corretor
+                    ),
+                    joinedload(
+                        PropertyModel.condominio_relacionado
+                    ),
+                ).filter(
+                    PropertyModel.condominio == cond_id
+                ).all()
+
+
+        total_query = len(query)
+
+        if total_query != total:
+            total = total_query
+
+            return total
+        else:
+            return total
+
+        
+    def get_total_propertys_broker(
+            self,
+            broker_id: UUID
+    ) -> int:
+        total = 0
+
+        query = self.session.query(
+                    PropertyModel
+                ).options(
+                    joinedload(
+                        PropertyModel.casa
+                    ),
+                    joinedload(
+                        PropertyModel.apartamento
+                    ),
+                    joinedload(
+                        PropertyModel.terreno
+                    ),
+                    joinedload(
+                        PropertyModel.imagens
+                    ),
+                    joinedload(
+                        PropertyModel.proprietario
+                    ),
+                    joinedload(
+                        PropertyModel.corretor
+                    ),
+                    joinedload(
+                        PropertyModel.condominio_relacionado
+                    ),
+                ).filter(
+                    PropertyModel.corretor_id == broker_id
+                ).all()
+
+
+        total_query = len(query)
+
+        if total_query != total:
+            total = total_query
+
+            return total
+        else:
+            return total

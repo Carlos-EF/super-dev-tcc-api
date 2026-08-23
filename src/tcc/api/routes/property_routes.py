@@ -674,7 +674,8 @@ async def get_image_by_id(
     storage= Depends(get_storage),
 ):
     repository = PropertyRepository(
-        session=session
+        session=session,
+        storage=storage
     )
 
     image = repository.get_image_by_id(
