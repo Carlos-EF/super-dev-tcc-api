@@ -2,6 +2,7 @@ import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from supabase import create_client, Client
+from tcc.infrastructure.services.supabase_storage import SupabaseStorage
 from tcc.api.configurations import configurations
 
 logger = logging.getLogger(__name__)
@@ -39,4 +40,10 @@ supabase: Client = create_client(
 
 
 def get_storage():
-    return supabase.storage
+    settings = configurations
+
+    return SupabaseStorage(
+        url=settings.SUPABASE_URL,
+        key=settings.SUPABASE_KEY,
+        bucket=settings.SUPABASE_BUCKET
+    )

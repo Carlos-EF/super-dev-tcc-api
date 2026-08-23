@@ -141,11 +141,11 @@ class PropertyRepository:
 
 
     def create_image(
-        self,
-        image: CreatePropertyImageRequest,
-        file_bytes: bytes,
-        content_type: str,
-        extension: str
+    self,
+    image: CreatePropertyImageRequest,
+    file_bytes: bytes,
+    content_type: str,
+    extension: str
     ) -> PropertyImageResponse:
 
         property_image_id = uuid7()
@@ -155,20 +155,15 @@ class PropertyRepository:
             f'{property_image_id}.{extension}'
         )
 
-        bucket = self.storage.from_(
-            configurations.SUPABASE_BUCKET
+        # Faz upload para o Supabase Storage
+        url = self.storage.upload(
+            file_bytes=file_bytes,
+            path=path,
+            content_type=content_type
         )
 
-        bucket.upload(
-            path,
-            file_bytes,
-            {
-                "content-type": content_type
-            }
-        )
-
-        url = bucket.get_public_url(path)
-
+        # Se a nova imagem for a capa,
+        # remove a capa das imagens anteriores
         if image.principal:
 
             self.session.query(
@@ -196,6 +191,10 @@ class PropertyRepository:
         )
 
         self.session.commit()
+
+        self.session.refresh(
+            image_to_create
+        )
 
         return self.create_image_response(
             image_to_create
@@ -504,46 +503,27 @@ class PropertyRepository:
 
 
     def delete_image(
-        self,
-        id: UUID
-    ) -> bool:
-        image_to_delete = self.session.query(
-            PropertyImageModel
-        ).filter(
-            PropertyImageModel.id == id
-        ).first()
+            self, 
+            imagem_id: UUID
+            ):
 
-        if not image_to_delete:
-            return False
-
-        imovel_id = image_to_delete.imovel_id
-        was_principal = image_to_delete.principal
-
-        self.storage.delete(
-            image_to_delete.caminho
+        image = (
+            self.session.query(PropertyImageModel)
+            .filter(PropertyImageModel.id == imagem_id)
+            .first()
         )
 
-        self.session.delete(
-            image_to_delete
-        )
+        if not image:
+            return None
 
-        self.session.flush()
+        # Remove a imagem do Supabase Storage
+        self.storage.delete(image.caminho)
 
-        if was_principal:
-            next_image = self.session.query(
-                PropertyImageModel
-            ).filter(
-                PropertyImageModel.imovel_id == imovel_id
-            ).order_by(
-                PropertyImageModel.criado_em.asc()
-            ).first()
-
-            if next_image:
-                next_image.principal = True
-
+        # Remove o registro do banco
+        self.session.delete(image)
         self.session.commit()
 
-        return True
+        return image
 
 
     def edit_property(
