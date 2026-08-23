@@ -1,10 +1,13 @@
 from uuid import UUID
 from uuid6 import uuid7
 from datetime import datetime
-from sqlalchemy import or_, func
+from sqlalchemy import String, or_, func
 from sqlalchemy.orm import Session, joinedload
 from math import ceil
 
+from tcc.infrastructure.models.broker_models import BrokerModel
+from tcc.infrastructure.models.client_models import ClientModel
+from tcc.infrastructure.models.condominium_models import CondominiumModel
 from tcc.api.configurations import configurations
 from tcc.api.schemas.property_schemas import BrokerData, CondData, CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, OwnerData, PaginatedPropertyResponse, CreatePropertyImageRequest, EditPropertyImageRequest, PropertyImageResponse, HouseData, ApartmentData, LandData
 from tcc.infrastructure.models.property_models import PropertyModel, LandModel, HouseModel, ApartmentModel, PropertyImageModel
@@ -138,13 +141,12 @@ class PropertyRepository:
 
 
     def create_image(
-        self,
-        image: CreatePropertyImageRequest,
-        file_bytes: bytes,
-        content_type: str,
-        extension: str
+    self,
+    image: CreatePropertyImageRequest,
+    file_bytes: bytes,
+    content_type: str,
+    extension: str
     ) -> PropertyImageResponse:
-
         property_image_id = uuid7()
 
         path = (
@@ -152,22 +154,13 @@ class PropertyRepository:
             f'{property_image_id}.{extension}'
         )
 
-        bucket = self.storage.from_(
-            configurations.SUPABASE_BUCKET
+        url = self.storage.upload(
+            file_bytes=file_bytes,
+            path=path,
+            content_type=content_type
         )
-
-        bucket.upload(
-            path,
-            file_bytes,
-            {
-                "content-type": content_type
-            }
-        )
-
-        url = bucket.get_public_url(path)
 
         if image.principal:
-
             self.session.query(
                 PropertyImageModel
             ).filter(
@@ -194,9 +187,14 @@ class PropertyRepository:
 
         self.session.commit()
 
+        self.session.refresh(
+            image_to_create
+        )
+
         return self.create_image_response(
             image_to_create
         )
+
 
     def create_image_response(
         self,
@@ -500,46 +498,27 @@ class PropertyRepository:
 
 
     def delete_image(
-        self,
-        id: UUID
-    ) -> bool:
-        image_to_delete = self.session.query(
-            PropertyImageModel
-        ).filter(
-            PropertyImageModel.id == id
-        ).first()
+            self, 
+            imagem_id: UUID
+            ):
 
-        if not image_to_delete:
-            return False
-
-        imovel_id = image_to_delete.imovel_id
-        was_principal = image_to_delete.principal
-
-        self.storage.delete(
-            image_to_delete.caminho
+        image = (
+            self.session.query(PropertyImageModel)
+            .filter(PropertyImageModel.id == imagem_id)
+            .first()
         )
 
-        self.session.delete(
-            image_to_delete
-        )
+        if not image:
+            return None
 
-        self.session.flush()
+        # Remove a imagem do Supabase Storage
+        self.storage.delete(image.caminho)
 
-        if was_principal:
-            next_image = self.session.query(
-                PropertyImageModel
-            ).filter(
-                PropertyImageModel.imovel_id == imovel_id
-            ).order_by(
-                PropertyImageModel.criado_em.asc()
-            ).first()
-
-            if next_image:
-                next_image.principal = True
-
+        # Remove o registro do banco
+        self.session.delete(image)
         self.session.commit()
 
-        return True
+        return image
 
 
     def edit_property(
@@ -713,10 +692,22 @@ class PropertyRepository:
 
     
     def get_all(
-            self,
-            pagina: int,
-            por_pagina: int
-    ) -> PaginatedPropertyResponse:
+        self,
+        pagina: int,
+        por_pagina: int,
+        busca: str | None = None,
+        finalidade: str | None = None,
+        ordem: str = 'recente-asc',
+        tipo: str | None = None,
+        cond: str | None = None,
+        corr: str | None = None,
+        prop: str | None = None,
+        bairro: str | None = None,
+        min_preco: float | None = None,
+        max_preco: float | None = None,
+        qtn_quartos: int | None = None
+) -> PaginatedPropertyResponse:
+
         query = self.session.query(
             PropertyModel
         ).options(
@@ -730,34 +721,147 @@ class PropertyRepository:
                 PropertyModel.terreno
             ),
             joinedload(
-            PropertyModel.imagens
-            ),
-             joinedload(
-            PropertyModel.proprietario
+                PropertyModel.imagens
             ),
             joinedload(
-            PropertyModel.corretor
+                PropertyModel.proprietario
             ),
             joinedload(
-            PropertyModel.condominio_relacionado
+                PropertyModel.corretor
+            ),
+            joinedload(
+                PropertyModel.condominio_relacionado
             ),
         )
 
+        if busca:
+            termo = f'%{busca.strip()}%'
+
+            query = query.filter(
+                or_(
+                    PropertyModel.codigo.ilike(termo),
+                    PropertyModel.logradouro.ilike(termo),
+                    PropertyModel.bairro.ilike(termo),
+                    PropertyModel.cidade.ilike(termo),
+                    PropertyModel.uf.ilike(termo),
+                    PropertyModel.cep.ilike(termo),
+                    PropertyModel.complemento.ilike(termo),
+                    func.cast(
+                        PropertyModel.numero,
+                        String
+                    ).ilike(termo),
+                    ClientModel.nome.ilike(termo),
+                    ClientModel.numero.ilike(termo),
+                    BrokerModel.nome.ilike(termo),
+                    BrokerModel.numero.ilike(termo),
+                    CondominiumModel.nome.ilike(termo),
+                )
+            )
+
+        if finalidade:
+            query = query.filter(
+                PropertyModel.finalidade == finalidade
+            )
+
+        if tipo:
+            query = query.filter(
+                PropertyModel.tipo == tipo
+            )
+
+
+        if cond:
+            if cond == 'null':
+                query = query.filter(
+                    PropertyModel.condominio.is_(None)
+                )
+            else:
+                query = query.filter(
+                    PropertyModel.condominio == UUID(cond)
+                )
+
+        if corr:
+            query = query.filter(
+                PropertyModel.corretor_id == UUID(corr)
+            )
+
+        if prop:
+            query = query.filter(
+                PropertyModel.proprietario_id == UUID(prop)
+            )
+
+        if bairro:
+            query = query.filter(
+                func.lower(
+                    PropertyModel.bairro
+                ) == bairro.strip().lower()
+            )
+
+        if min_preco is not None:
+            query = query.filter(
+                PropertyModel.valor >= min_preco
+            )
+
+        if max_preco is not None:
+            query = query.filter(
+                PropertyModel.valor <= max_preco
+            )
+
+        if qtn_quartos is not None:
+            query = query.filter(
+                or_(
+                    PropertyModel.casa.has(
+                        HouseModel.quartos >= qtn_quartos
+                    ),
+                    PropertyModel.apartamento.has(
+                        ApartmentModel.quartos >= qtn_quartos
+                    )
+                )
+            )
+
+        if ordem == 'preco-asc':
+            query = query.order_by(
+                PropertyModel.valor.asc()
+            )
+        elif ordem == 'preco-desc':
+            query = query.order_by(
+                PropertyModel.valor.desc()
+            )
+        elif ordem == 'codigo':
+            query = query.order_by(
+                PropertyModel.codigo.asc()
+            )
+        else:
+            query = query.order_by(
+                PropertyModel.criado_em.desc()
+            )
+
         total_propertys = query.count()
 
-        total_pages = ceil(
-            total_propertys / por_pagina
-        ) if total_propertys >  0 else 1
+
+        total_pages = (
+            ceil(
+                total_propertys / por_pagina
+            )
+            if total_propertys > 0
+            else 1
+        )
 
         propertys = (
             query
-            .offset((pagina - 1) * por_pagina)
-            .limit(por_pagina)
+            .offset(
+                (pagina - 1) * por_pagina
+            )
+            .limit(
+                por_pagina
+            )
             .all()
         )
 
         return PaginatedPropertyResponse(
-            imoveis=[self.create_response(property) for property in propertys],
+            imoveis=[
+                self.create_response(property)
+                for property in propertys
+            ],
             total=total_propertys,
             total_paginas=total_pages,
             pagina=pagina,
@@ -782,3 +886,93 @@ class PropertyRepository:
             self.create_image_response(image)
             for image in images
         ]
+
+
+    def get_total_propertys_cond(
+            self,
+            cond_id: UUID
+    ) -> int:
+        total = 0
+
+        query = self.session.query(
+                    PropertyModel
+                ).options(
+                    joinedload(
+                        PropertyModel.casa
+                    ),
+                    joinedload(
+                        PropertyModel.apartamento
+                    ),
+                    joinedload(
+                        PropertyModel.terreno
+                    ),
+                    joinedload(
+                        PropertyModel.imagens
+                    ),
+                    joinedload(
+                        PropertyModel.proprietario
+                    ),
+                    joinedload(
+                        PropertyModel.corretor
+                    ),
+                    joinedload(
+                        PropertyModel.condominio_relacionado
+                    ),
+                ).filter(
+                    PropertyModel.condominio == cond_id
+                ).all()
+
+
+        total_query = len(query)
+
+        if total_query != total:
+            total = total_query
+
+            return total
+        else:
+            return total
+
+        
+    def get_total_propertys_broker(
+            self,
+            broker_id: UUID
+    ) -> int:
+        total = 0
+
+        query = self.session.query(
+                    PropertyModel
+                ).options(
+                    joinedload(
+                        PropertyModel.casa
+                    ),
+                    joinedload(
+                        PropertyModel.apartamento
+                    ),
+                    joinedload(
+                        PropertyModel.terreno
+                    ),
+                    joinedload(
+                        PropertyModel.imagens
+                    ),
+                    joinedload(
+                        PropertyModel.proprietario
+                    ),
+                    joinedload(
+                        PropertyModel.corretor
+                    ),
+                    joinedload(
+                        PropertyModel.condominio_relacionado
+                    ),
+                ).filter(
+                    PropertyModel.corretor_id == broker_id
+                ).all()
+
+
+        total_query = len(query)
+
+        if total_query != total:
+            total = total_query
+
+            return total
+        else:
+            return total

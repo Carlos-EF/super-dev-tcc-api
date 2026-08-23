@@ -221,6 +221,8 @@ class CondominiumResponse(BaseModel):
         examples=[None]
     )
 
+    total_imoveis: int
+
     model_config = {
         'json_schema_extra': {
             'examples': [
@@ -234,7 +236,8 @@ class CondominiumResponse(BaseModel):
                     'estado': 'SC',
                     'cidade': 'Blumenau',
                     'criado_em': '2026-03-26T08:35:00',
-                    'alterado_em': None
+                    'alterado_em': None,
+                    'total_imoveis': 1
                 }
             ]
         }

@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 from math import ceil
+from tcc.infrastructure.models.property_models import PropertyModel
 from tcc.api.schemas.condominium_schemas import CitiesResponse, CreateCondominiumRequest, DistrictsResponse, EditCondominiumRequest, CondominiumResponse, PaginatedCondominiumResponse
 from tcc.infrastructure.models.condominium_models import CondominiumModel
 from tcc.infrastructure.models.enums.cond_tables_types import CondTablesTypes
@@ -94,12 +95,25 @@ class CondominiumRepository:
             busca: str | None = None,
             cidade: str | None = None,
             bairro: str | None = None,
+            sem_imoveis: str | None = None,
+            com_imoveis: str | None = None,
             pagina: int = 1,
             por_pagina: int = 10,
-            ordenar_por: CondTablesTypes = CondTablesTypes.NOME,
+            ordenar_por: CondTablesTypes | None = None,
             direcao: SortTypes = SortTypes.ASC,
     ) -> PaginatedCondominiumResponse:
-        query = self.session.query(CondominiumModel)
+        query = (
+            self.session
+            .query(
+                CondominiumModel,
+                func.count(PropertyModel.id).label("total_imoveis")
+            )
+            .outerjoin(
+                PropertyModel,
+                PropertyModel.condominio == CondominiumModel.id
+            )
+            .group_by(CondominiumModel.id)
+            )
 
         if busca:
             query = query.filter(
@@ -118,6 +132,16 @@ class CondominiumRepository:
         if bairro:
             query = query.filter(
                 CondominiumModel.bairro == bairro
+            )
+
+        if com_imoveis:
+             query = query.having(
+                func.count(PropertyModel.id) > 0
+            )
+             
+        if sem_imoveis:
+             query = query.having(
+                func.count(PropertyModel.id) == 0
             )
 
         total = query.count()
@@ -140,7 +164,7 @@ class CondominiumRepository:
             ).all())
 
         return PaginatedCondominiumResponse(
-            condominios=[self.create_response(condominium) for condominium in condominiums],
+            condominios=[self.create_response(condominium, total_imoveis) for condominium, total_imoveis in condominiums],
             pagina=pagina,
             por_pagina=por_pagina,
             total=total,
@@ -151,11 +175,20 @@ class CondominiumRepository:
     def get_all_for_list(
             self
     ) -> list[CondominiumResponse]:
-        condominiums = self.session.query(
-            CondominiumModel
-        ).all()
+        condominiums = (
+                    self.session
+                    .query(
+                        CondominiumModel,
+                        func.count(PropertyModel.id).label("total_imoveis")
+                    )
+                    .outerjoin(
+                        PropertyModel,
+                        PropertyModel.condominio == CondominiumModel.id
+                    )
+                    .group_by(CondominiumModel.id)
+                    )
 
-        return [self.create_response(condominium) for condominium in condominiums]
+        return [self.create_response(condominium, total_imoveis) for condominium, total_imoveis in condominiums]
 
 
     def get_all_cities(
@@ -216,7 +249,8 @@ class CondominiumRepository:
 
     def create_response(
             self,
-            condominium: CondominiumModel
+            condominium: CondominiumModel,
+            total_imoveis: int
     ) -> CondominiumResponse:
         condominium_response = CondominiumResponse(
             id= condominium.id,
@@ -229,6 +263,7 @@ class CondominiumRepository:
             uf= condominium.uf,
             criado_em= condominium.criado_em,
             alterado_em= condominium.alterado_em,
+            total_imoveis=total_imoveis
         )
 
         return condominium_response

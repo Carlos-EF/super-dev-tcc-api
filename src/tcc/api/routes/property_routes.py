@@ -30,6 +30,52 @@ router = APIRouter(
 def get_all(
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(10, ge=1, le=100),
+    busca: str | None = Query(
+        None
+    ),
+
+    finalidade: str | None = Query(
+        None
+    ),
+
+    ordem: str = Query(
+        'recente-asc'
+    ),
+
+    tipo: str | None = Query(
+        None
+    ),
+
+    cond: str | None = Query(
+        None
+    ),
+
+    corr: str | None = Query(
+        None
+    ),
+
+    prop: str | None = Query(
+        None
+    ),
+
+    bairro: str | None = Query(
+        None
+    ),
+
+    min_preco: float | None = Query(
+        None,
+        ge=0
+    ),
+
+    max_preco: float | None = Query(
+        None,
+        ge=0
+    ),
+
+    qtn_quartos: int | None = Query(
+        None,
+        ge=1
+    ),
     session: Session = Depends(get_session),
     storage= Depends(get_storage),
 ):
@@ -42,6 +88,17 @@ def get_all(
     propertys = repository.get_all(
         pagina=pagina,
         por_pagina=por_pagina,
+        busca=busca,
+        finalidade=finalidade,
+        ordem=ordem,
+        tipo=tipo,
+        cond=cond,
+        corr=corr,
+        prop=prop,
+        bairro=bairro,
+        min_preco=min_preco,
+        max_preco=max_preco,
+        qtn_quartos=qtn_quartos,
     )
 
     return propertys
@@ -56,7 +113,8 @@ async def get_all_images(
     storage= Depends(get_storage),
 ):
     repository = PropertyRepository(
-        session=session
+        session=session,
+        storage=storage
     )
 
     images = repository.get_images_by_property_id(
@@ -616,7 +674,8 @@ async def get_image_by_id(
     storage= Depends(get_storage),
 ):
     repository = PropertyRepository(
-        session=session
+        session=session,
+        storage=storage
     )
 
     image = repository.get_image_by_id(
