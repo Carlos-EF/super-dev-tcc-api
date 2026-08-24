@@ -301,3 +301,14 @@ class ClientRepository:
         ).all()
 
         return [self.create_response_for_owners(client) for client in clients]
+
+
+    def get_all_for_list(
+        self
+    ) -> list[ClientResponse]:
+        clients = self.session.query(
+                                ClientModel,
+                            ).all()
+    
+        return [self.create_response_for_owners(client) for client in clients]
+    
