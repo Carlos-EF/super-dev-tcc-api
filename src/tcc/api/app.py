@@ -11,6 +11,7 @@ from tcc.api.routes.broker_routes import router as broker_router
 from tcc.api.routes.search_cep_routes import router as cep_router
 from tcc.api.routes.clients_routes import router as clients_router
 from tcc.api.routes.property_routes import router as property_router
+from tcc.api.routes.user_routes import router as auth_router
 
 logging.basicConfig(
     level=configurations.LOG_LEVEL,
@@ -70,6 +71,9 @@ def create_app() -> FastAPI:
 
     logger.info('Registrando rotas')
     
+    app.include_router(auth_router)
+    logger.info('Rota "/auth" registrada com sucesso.')
+
     app.include_router(condominium_router)
     logger.info('Rota "/condominiums" registrada com sucesso.')
 
