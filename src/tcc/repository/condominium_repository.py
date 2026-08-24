@@ -39,7 +39,7 @@ class CondominiumRepository:
         self.session.flush()
         self.session.commit()
 
-        return self.create_response(condominium_to_create)
+        return self.create_response(condominium_to_create, 0)
 
 
     def edit(
@@ -244,7 +244,7 @@ class CondominiumRepository:
         if not condominium:
             return False
 
-        return self.create_response(condominium)
+        return self.create_response(condominium, 0)
 
 
     def create_response(
@@ -264,6 +264,7 @@ class CondominiumRepository:
             criado_em= condominium.criado_em,
             alterado_em= condominium.alterado_em,
             total_imoveis=total_imoveis
+            if total_imoveis else 0
         )
 
         return condominium_response

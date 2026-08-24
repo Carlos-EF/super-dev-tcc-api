@@ -2,6 +2,7 @@ import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from supabase import create_client, Client
+from supabase.lib.client_options import ClientOptions
 from tcc.infrastructure.services.supabase_storage import SupabaseStorage
 from tcc.api.configurations import configurations
 
@@ -19,7 +20,8 @@ engine = create_engine(
 SessionLocal = sessionmaker(
     autoflush=False,
     autocommit=False,
-    bind=engine
+    bind=engine,
+    expire_on_commit=False,
 )
 
 
@@ -35,7 +37,7 @@ def get_session() -> Session:
 
 supabase: Client = create_client(
     configurations.SUPABASE_URL,
-    configurations.SUPABASE_KEY
+    configurations.SUPABASE_KEY,
 )
 
 

@@ -3,13 +3,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Configurations(BaseSettings):
        DATABASE_URL: str
-
        SUPABASE_URL: str
        SUPABASE_KEY: str
        SUPABASE_BUCKET: str
-
        ENVIROMENT: str = 'dev'
-
        LOG_LEVEL: str = 'INFO'
 
        model_config = SettingsConfigDict(
