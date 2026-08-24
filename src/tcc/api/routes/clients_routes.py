@@ -50,6 +50,27 @@ def get_all(
 
     return clients
 
+@router.get(
+    '/list',
+    summary='Buscar clientes para listas',
+    response_model=list[ClientResponse],
+    status_code=status.HTTP_200_OK,
+    responses= {
+        200: {
+            'description': 'Lista dos clientes cadastrados',
+            'model': list[ClientResponse]
+        },
+    },
+)
+def get_all(
+    session: Session = Depends(get_session)
+):
+    """Listagem de todos os clientes cadastrados."""
+    repository = ClientRepository(session=session)
+
+    clients = repository.get_all_for_list()
+
+    return clients
 
 @router.get(
     '/owners',
