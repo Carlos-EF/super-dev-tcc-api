@@ -40,7 +40,7 @@ class BrokerRepository:
         self.session.flush()
         self.session.commit()
 
-        return self.create_response(broker_to_create)
+        return self.create_response(broker_to_create, 0)
 
 
     def edit(
@@ -165,7 +165,7 @@ class BrokerRepository:
         if not broker:
             return False
 
-        return self.create_response(broker)
+        return self.create_response(broker, 0)
 
 
     

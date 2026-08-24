@@ -156,3 +156,17 @@ CREATE TABLE
         REFERENCES imoveis(id)
         ON DELETE CASCADE
     );
+
+CREATE TABLE
+    usuarios (
+        id UUID PRIMARY KEY NOT NULL,
+        nome VARCHAR(60) NOT NULL,
+        email VARCHAR(60) NOT NULL,
+        senha_hash VARCHAR(255) NOT NULL,
+        ativo BOOLEAN NOT NULL DEFAULT TRUE,
+        criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        alterado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+        CONSTRAINT uq_usuario_email
+            UNIQUE (email)
+    );

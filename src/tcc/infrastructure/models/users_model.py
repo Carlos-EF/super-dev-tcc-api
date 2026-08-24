@@ -1,9 +1,10 @@
-from datetime import datetime
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import ARRAY, Column, Integer, Numeric, String, Date, ForeignKey, Boolean
+from sqlalchemy import  Column,String, Date, Boolean
 from tcc.infrastructure.models.base_model import BaseModel
 
 class UserModel(BaseModel):
+    __tablename__= 'usuarios'
+
     id = Column(
         UUID(
             as_uuid=True

@@ -38,11 +38,6 @@ def get_session() -> Session:
 supabase: Client = create_client(
     configurations.SUPABASE_URL,
     configurations.SUPABASE_KEY,
-    options=ClientOptions(
-        auto_refresh_token=False,
-        persist_session=False,
-        detect_session_in_url=False,
-    ),
 )
 
 
