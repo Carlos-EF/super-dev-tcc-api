@@ -228,6 +228,8 @@ class BrokerResponse(BaseModel):
         examples=['123.456.789-00']
     )
 
+    total_imoveis: int
+
     criado_em: datetime = Field(
         ...,
         description='Data e hora da criação do registro do corretor.',
