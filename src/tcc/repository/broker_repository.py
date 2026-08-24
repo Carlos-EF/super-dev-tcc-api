@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 from math import ceil
+from tcc.infrastructure.models.property_models import PropertyModel
 from tcc.api.schemas.broker_schemas import CreateBrokerRequest, EditBrokerRequest, PaginatedBrokerResponse, BrokerResponse
 from tcc.infrastructure.models.broker_models import BrokerModel
 from tcc.infrastructure.models.enums.broker_tables_types import BrokerTablesTypes
@@ -74,12 +75,21 @@ class BrokerRepository:
     def get_all(
                 self,
                 busca: str | None = None,
+                sem_imoveis: str | None = None,
+                com_imoveis: str | None = None,
                 pagina: int = 1,
                 por_pagina: int = 10,
                 ordenar_por: BrokerTablesTypes = BrokerTablesTypes.NOME ,
                 direcao: SortTypes = SortTypes.ASC,
         ) -> PaginatedBrokerResponse:
-            query = self.session.query(BrokerModel)
+            query = self.session.query(
+                        BrokerModel,
+                        func.count(PropertyModel.id).label("total_imoveis")
+                    ).outerjoin(
+                        PropertyModel,
+                        PropertyModel.corretor_id == BrokerModel.id
+                    ).group_by(BrokerModel.id)
+            
     
             if busca:
                 query = query.filter(
@@ -90,6 +100,16 @@ class BrokerRepository:
                     BrokerModel.email.ilike(f"%{busca}%"),
                     BrokerModel.numero.ilike(f"%{busca}%"),
                     )
+                )
+
+            if com_imoveis:
+                query = query.having(
+                    func.count(PropertyModel.id) > 0
+                )
+                        
+            if sem_imoveis:
+                query = query.having(
+                    func.count(PropertyModel.id) == 0
                 )
 
             total = query.count()
@@ -110,7 +130,7 @@ class BrokerRepository:
                 ).all())
     
             return PaginatedBrokerResponse(
-                corretores=[self.create_response(broker) for broker in brokers],
+                corretores=[self.create_response(broker, total_imoveis) for broker, total_imoveis in brokers],
                 pagina=pagina,
                 por_pagina=por_pagina,
                 total=total,
@@ -122,10 +142,14 @@ class BrokerRepository:
             self
     ) -> list[BrokerResponse]:
         brokers = self.session.query(
-            BrokerModel
-        ).all()
+                        BrokerModel,
+                        func.count(PropertyModel.id).label("total_imoveis")
+                    ).outerjoin(
+                        PropertyModel,
+                        PropertyModel.corretor_id == BrokerModel.id
+                    ).group_by(BrokerModel.id)
 
-        return [self.create_response(broker) for broker in brokers]
+        return [self.create_response(broker, total_imoveis) for broker, total_imoveis in brokers]
 
 
     def get_by_id(
@@ -166,7 +190,8 @@ class BrokerRepository:
     
     def create_response(
             self,
-            broker: BrokerModel
+            broker: BrokerModel,
+            total_imoveis: int
     ) -> BrokerResponse:
         broker_response = BrokerResponse(
             id= broker.id,
@@ -178,6 +203,7 @@ class BrokerRepository:
             data_nascimento= broker.data_nascimento, 
             rg= broker.rg, 
             cpf= broker.cpf,
+            total_imoveis=total_imoveis,
             criado_em=broker.criado_em,
             alterado_em=broker.alterado_em,
         )

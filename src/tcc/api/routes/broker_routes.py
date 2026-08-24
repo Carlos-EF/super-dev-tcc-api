@@ -31,6 +31,8 @@ router = APIRouter(
 )
 def get_all(
     busca: Optional[str] = None,
+    com_imoveis: Optional[str] = None,
+    sem_imoveis: Optional[str] = None,
     pagina: int = Query(1, ge=1),
     por_pagina: int = Query(10, ge=1, le=100),
     ordenar_por: BrokerTablesTypes = Query(BrokerTablesTypes.NOME),
@@ -42,6 +44,8 @@ def get_all(
 
     brokers = repository.get_all(
         busca=busca,
+        com_imoveis=com_imoveis,
+        sem_imoveis=sem_imoveis,
         pagina=pagina,
         por_pagina=por_pagina,
         ordenar_por=ordenar_por,
