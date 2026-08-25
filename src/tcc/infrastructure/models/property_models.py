@@ -421,12 +421,12 @@ class PropertyImageModel(BaseModel):
 
     caminho = Column(
         String(500),
-        nullable=False
+        nullable=True
     )
 
     url = Column(
         String(1000),
-        nullable=False
+        nullable=True
     )
 
     principal = Column(

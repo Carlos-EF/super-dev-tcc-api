@@ -1278,17 +1278,17 @@ class PropertyImageResponse(BaseModel):
         description='ID do imóvel'
     )
 
-    caminho: str = Field(
+    caminho: str | None = Field(
         ...,
         description='Caminho da imagem no bucket'
     )
 
-    url: str = Field(
+    url: str | None = Field(
         ...,
         description='URL pública da imagem'
     )
 
-    principal: bool = Field(
+    principal: bool | None = Field(
         ...,
         description='Indica se esta é a imagem principal do imóvel'
     )
