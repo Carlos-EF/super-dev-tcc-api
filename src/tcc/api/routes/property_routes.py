@@ -395,7 +395,7 @@ def edit_land(
 
 
 @router.put(
-    '/{id}/land',
+    '/{id}/apartment',
     summary='Editar apartamento',
     response_model=ApartmentResponse,
     status_code=status.HTTP_200_OK,

@@ -145,9 +145,9 @@ CREATE TABLE
     imagens_imoveis (
         id UUID PRIMARY KEY,
         imovel_id UUID NOT NULL,
-        caminho VARCHAR(500) NOT NULL,
-        url VARCHAR(1000) NOT NULL,
-        principal BOOLEAN NOT NULL DEFAULT FALSE,
+        caminho VARCHAR(500),
+        url VARCHAR(1000),
+        principal BOOLEAN DEFAULT FALSE,
         criado_em DATE NOT NULL,
         alterado_em DATE,
 
