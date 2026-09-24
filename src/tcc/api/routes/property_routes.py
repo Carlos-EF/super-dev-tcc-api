@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from http import HTTPStatus
 from uuid import UUID
 
+from src.tcc.api.dependencies import get_current_user
 from tcc.infrastructure.connection import get_session, get_storage
 from tcc.repository.property_repository import PropertyRepository
 from tcc.api.schemas.property_schemas import CreatePropertyImageRequest, CreatePropertyRequest, CreateHouseRequest, CreateApartmentRequest, CreateLandRequest, EditPropertyImageRequest, EditPropertyRequest, EditHouseRequest, EditApartmentRequest, EditLandRequest, PropertyResponse, HouseResponse, ApartmentResponse, LandResponse, CompletePropertyResponse, PaginatedPropertyResponse, HouseData, ApartmentData, LandData
@@ -13,7 +14,11 @@ from tcc.api.schemas.property_schemas import CreatePropertyImageRequest, CreateP
 router = APIRouter(
     prefix='/propertys',
     tags=['Propertys'],
+    dependencies=[
+        Depends(get_current_user),
+    ],
 )
+
 
 @router.get(
     '',

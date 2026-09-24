@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from http import HTTPStatus
 from uuid import UUID
 
+from src.tcc.api.dependencies import get_current_user
 from tcc.repository.client_repository import ClientRepository
 from tcc.infrastructure.connection import get_session
 from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateInterestedClientRequest, EditClientRequest, EditInterestedClientRequest, InterestedClientResponse, PaginatedClientResponse, ClientResponse
@@ -13,7 +14,11 @@ from tcc.api.schemas.clients_schemas import CreateClientRequest, CreateIntereste
 router = APIRouter(
     prefix='/clients',
     tags=['Clients'],
+    dependencies=[
+        Depends(get_current_user),
+    ],
 )
+
 
 @router.get(
     '',
