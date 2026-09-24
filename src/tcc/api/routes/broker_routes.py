@@ -5,15 +5,20 @@ from sqlalchemy.orm import Session
 from http import HTTPStatus
 from uuid import UUID
 
+from src.tcc.api.dependencies import get_current_user
 from tcc.infrastructure.connection import get_session
 from tcc.api.schemas.broker_schemas import CreateBrokerRequest, EditBrokerRequest, PaginatedBrokerResponse, BrokerResponse
 from tcc.repository.broker_repository import BrokerRepository
 from tcc.infrastructure.models.enums.broker_tables_types import BrokerTablesTypes
 from tcc.infrastructure.models.enums.sort_types import SortTypes
 
+
 router = APIRouter(
     prefix='/brokers',
     tags=['Brokers'],
+    dependencies=[
+    Depends(get_current_user),
+    ],
 )
 
 

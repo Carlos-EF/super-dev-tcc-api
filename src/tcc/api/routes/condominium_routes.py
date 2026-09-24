@@ -5,15 +5,20 @@ from sqlalchemy.orm import Session
 from http import HTTPStatus
 from uuid import UUID
 
+from src.tcc.api.dependencies import get_current_user
 from tcc.infrastructure.models.enums.cond_tables_types import CondTablesTypes
 from tcc.infrastructure.models.enums.sort_types import SortTypes
 from tcc.infrastructure.connection import get_session
 from tcc.api.schemas.condominium_schemas import CitiesResponse, CondominiumResponse, CreateCondominiumRequest, DistrictsResponse, EditCondominiumRequest, PaginatedCondominiumResponse
 from tcc.repository.condominium_repository import CondominiumRepository
 
+
 router = APIRouter(
     prefix='/condominiums',
     tags=['Condominiums'],
+    dependencies=[
+        Depends(get_current_user),
+    ],
 )
 
 
